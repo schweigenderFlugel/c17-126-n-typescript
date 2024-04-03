@@ -4,7 +4,7 @@
 
 > Ejecutar los comandos dentro de la carpeta `frontend`
 
-#### 1 - Instalar las dependenciás
+#### 1 - Instalar las dependencias
 
 ```bash
 npm install
