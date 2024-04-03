@@ -1,8 +1,13 @@
 import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
+import { AuthProvider } from './Context/AuthContext';
+import { SignUp } from './Pages/SignUp';
+import "./index.css";
+import { Login } from './Pages/Login';
 
 function App() {
   return (
-    <BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
       {/* NAVBAR DE PRUEBA */}
       <div className="flex space-x-5 p-5">
         <Link to="/">Landing Page</Link>
@@ -14,14 +19,16 @@ function App() {
       </div>
       <Routes>
         <Route path="/" element={<h1>Landing Page</h1>} />
-        <Route path="/login" element={<h1>Login</h1>} />
-        <Route path="/registro" element={<h1>Registro</h1>} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/registro" element={<SignUp/>} />
         {/* 🔏 RUTAS PRIVADAS 👇*/}
         <Route path="/dashboard" element={<h1>Dashboard</h1>} />
         <Route path="/transferencias" element={<h1>Transferencias</h1>} />
         <Route path="/inversiones" element={<h1>Inversiones</h1>} />
       </Routes>
     </BrowserRouter>
+    </AuthProvider>
+    
   );
 }
 
