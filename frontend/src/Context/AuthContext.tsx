@@ -6,8 +6,8 @@ interface AuthContextInterface {
   setAccessToken: Dispatch<SetStateAction<string | null>>;
   refresh: boolean;
   setRefresh: Dispatch<SetStateAction<boolean>>;
-  trust: boolean;
-  setTrust: Dispatch<SetStateAction<boolean>>;
+  remember: boolean;
+  setRemember: Dispatch<SetStateAction<boolean>>;
 }
 
 interface AuthProviderProps {
@@ -19,8 +19,8 @@ const defaultValues = {
   setAccessToken: () => {},
   refresh: false,
   setRefresh: () => {},
-  trust: false,
-  setTrust: () => {},
+  remember: false,
+  setRemember: () => {},
 } as AuthContextInterface;
 
 export const AuthContext = createContext<AuthContextInterface>(defaultValues);
@@ -28,7 +28,7 @@ export const AuthContext = createContext<AuthContextInterface>(defaultValues);
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [ accessToken, setAccessToken ] = useState<string | null>(null);
   const [ refresh, setRefresh ] = useState<boolean>(false);
-  const [ trust, setTrust ] = useState<boolean>(false);
+  const [ remember, setRemember ] = useState<boolean>(false);
 
   return (
     <AuthContext.Provider value={{
@@ -36,8 +36,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
        setAccessToken,
        refresh,
        setRefresh,
-       trust,
-       setTrust,
+       remember,
+       setRemember,
     }}>
       {children}
     </AuthContext.Provider>

@@ -10,7 +10,7 @@ type options  = {
 }
 
 export const useLogin = ({ onSuccess, onReject }: options) => {
-  const { setAccessToken, trust, setTrust } = useContext(AuthContext);
+  const { setAccessToken, remember, setRemember } = useContext(AuthContext);
 
   const setLogin = async (payload: ILoginPayload) => {
     await login(payload)
@@ -22,5 +22,5 @@ export const useLogin = ({ onSuccess, onReject }: options) => {
         onReject?.(error)
       })
   }
-  return { setLogin, trust, setTrust }
+  return { setLogin, remember, setRemember }
 }
