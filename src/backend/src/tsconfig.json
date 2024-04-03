@@ -10,7 +10,8 @@
         "skipLibCheck": true,
         "experimentalDecorators": true,
         "strictPropertyInitialization": false,
-        "emitDecoratorMetadata": true
+        "emitDecoratorMetadata": true,
+        "alwaysStrict": true
     },
     "include": ["**/*.ts"],
     "exclude": ["node_modules", "distBE"]
