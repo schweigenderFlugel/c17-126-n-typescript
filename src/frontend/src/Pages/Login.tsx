@@ -4,6 +4,7 @@ import { useLogin } from "../Hooks/useLogin";
 import { Modal } from "../Components/Modal";
 import { ErrorMessage } from "../Components/ErrorMessage";
 import { AxiosError } from "axios";
+import { Layout } from "../Components/Layout";
 
 export const Login = () => {
   const [ email, setEmail ] = useState<string>('');
@@ -42,7 +43,7 @@ export const Login = () => {
           {error}
         </ErrorMessage>
       </Modal>
-      <body className="h-screen w-screen flex justify-center items-center bg-gradient-to-br from-indigo-300 from-20% via-white via-50% to-indigo-300 to-95%">
+      <Layout>
         <main className="grid justify-items-center p-12 bg-white bg-opacity-25 rounded-2xl">
         <h1 className="text-[28px] font-bold">Banco nc.</h1>
         <h2>Nos alegra tenerte de vuelta</h2>
@@ -96,8 +97,7 @@ export const Login = () => {
           </div>
         </form>
       </main>
-      </body>
-      
+      </Layout>
     </>
   )
 }
