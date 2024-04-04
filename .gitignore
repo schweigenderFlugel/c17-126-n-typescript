@@ -9,11 +9,16 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
+node_modules/
+node_modules/*
+src/frontend/node_modules/*
+**/node_modules/*
 
 dist
 dist-ssr
 *.local
 src/backend/distBE
+**/distBE/*
 
 # Editor directories and files
 .vscode/*
