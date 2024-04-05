@@ -46,7 +46,7 @@ export const Login = () => {
           {error}
         </ErrorMessage>
       </Modal>
-        <main className="inline-grid justify-items-center p-12 bg-white dark:bg-black bg-opacity-25 dark:bg-opacity-25 rounded-2xl border border-indigo-500">
+        <main className="absolute justify-items-center p-12 bg-white dark:bg-black bg-opacity-25 dark:bg-opacity-25 rounded-2xl border border-indigo-500">
           <h1 className="text-[28px] dark:text-white font-bold text-center">Banco nc.</h1>
           <h2 className="text-center dark:text-white mb-4">Nos alegra tenerte de vuelta</h2>
           <form onSubmit={handleSubmit}>
@@ -56,7 +56,7 @@ export const Login = () => {
                 type="text" 
                 id="email" 
                 name="email" 
-                className="w-full h-8 rounded-md px-2"
+                className="w-full h-8 rounded-md px-2 border text-black dark:text-white dark:border-white bg-gray-200 dark:bg-transparent"
                 onChange={(e) => setEmail(e.target.value)} 
                 value={email}
               />
@@ -68,17 +68,17 @@ export const Login = () => {
                   type={passwordInputType} 
                   id="password" 
                   name="password"
-                  className="w-full h-8 rounded-md px-2"
+                  className="w-full h-8 rounded-md px-2 border text-black dark:text-white dark:border-white bg-gray-200 dark:bg-transparent"
                   onChange={(e) => setPassword(e.target.value)} 
                   value={password} 
                 />
                 {showPassword 
                   ? <BsEyeSlash 
-                      className="absolute right-3 cursor-pointer hover:text-indigo-500"
+                      className="absolute right-3 cursor-pointer text-black dark:text-white hover:text-indigo-500 dark:hover:text-indigo-500"
                       onClick={() => setShowPassword(!showPassword)}
                     />
                   : <BsEye 
-                      className="absolute right-3 cursor-pointer hover:text-indigo-500"
+                      className="absolute right-3 cursor-pointer text-black dark:text-white hover:text-indigo-500 dark:hover:text-indigo-500"
                       onClick={() => setShowPassword(!showPassword)}
                     />
                 }
