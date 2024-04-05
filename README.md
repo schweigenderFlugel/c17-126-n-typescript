@@ -2,18 +2,19 @@
 
 > Ejecutar los comandos dentro de la carpeta `c17-126-n-typescript`
 
-#### 1 - crear o actualizar el archivo .env siguiendo el archivo .env.example
+#### 1 - crear o actualizar el archivo .env siguiendo el archivo .env.example en cada proyecto
 
-#### 2 - Instalar las dependencias
+#### 2 - Instalar las dependencias a nivel global
 
 ```bash
-npm install
+npm run back:init
+npm run front:init
 ```
 
 #### 3 - Ejecutar localmente solo para el `front`
 
 ```bash
-npm run start-dev
+npm run front:dev
 ```
 
 > Este comando compila el backend en una carpeta llamada distBE y ejecuta el front como el back compilado.
@@ -21,7 +22,7 @@ npm run start-dev
 #### 3 - Ejecutar localmente solo para el `back`
 
 ```bash
-npm run build-backend
+npm run back:dev
 ```
 
 > Este comando ejecuta nodemon para mantener el servidor activo a medida que se hagan cambios en el back, no levanta el front.
@@ -36,4 +37,12 @@ o alternativamente para el front
 
 ```bash
 npm run test:ui
+```
+
+### Deploy
+
+> Para deployar el proyecto se trabajara con Docker Compose `npm run deploy`
+
+```bash
+docker compose up
 ```
