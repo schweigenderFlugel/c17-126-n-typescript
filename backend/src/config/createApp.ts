@@ -2,7 +2,7 @@ import express from 'express'
 import cluster from 'cluster'
 import { cpus } from 'os'
 import { envs } from './constants'
-import { sequelize } from '../models/db/postgres.manager'
+import morgan from 'morgan'
 
 export default function createExpressApp() {
   const app = express()
@@ -26,6 +26,8 @@ export default function createExpressApp() {
       cluster.fork()
     })
   } else {
+    envs.NODE_ENV !== 'prod' && app.use(morgan('dev'))
+
     app.listen(envs.PORT, () => {
       console.log(
         `Servidor de express escuchando puerto ${envs.PORT} - PID WORKER ${process.pid}`
