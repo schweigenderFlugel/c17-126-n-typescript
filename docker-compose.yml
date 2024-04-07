@@ -1,0 +1,30 @@
+version: "3.8"
+services:
+  db:
+    container_name: postgres
+    image: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_DB=no-country
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgres:/var/lib/postgresql/data
+
+  back-prd:
+    container_name: back-prd
+    build:
+      target: production
+      context: ./backend
+      dockerfile: Dockerfile
+      args:
+        - PORT=8081
+    depends_on:
+      - db
+    ports:
+      - 8081:8081
+
+volumes:
+  postgres:
