@@ -46,7 +46,7 @@ export const Login = () => {
           {error}
         </ErrorMessage>
       </Modal>
-        <main className="absolute justify-items-center p-12 bg-white dark:bg-black bg-opacity-25 dark:bg-opacity-25 rounded-2xl border border-indigo-500">
+        <main className="absolute justify-items-center top-12 p-12 bg-white dark:bg-black bg-opacity-25 dark:bg-opacity-25 rounded-2xl border border-indigo-500">
           <h1 className="text-[28px] dark:text-white font-bold text-center">Banco nc.</h1>
           <h2 className="text-center dark:text-white mb-4">Nos alegra tenerte de vuelta</h2>
           <form onSubmit={handleSubmit}>

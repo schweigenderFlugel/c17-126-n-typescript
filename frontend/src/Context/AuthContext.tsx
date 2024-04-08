@@ -11,7 +11,7 @@ interface AuthContextInterface {
   remember: boolean;
   setRemember: Dispatch<SetStateAction<boolean>>;
   darkMode: boolean;
-  setDarkMode: Dispatch<SetStateAction<boolean>>;
+  toggleDarkMode: Dispatch<SetStateAction<void>>;
 }
 
 interface AuthProviderProps {
@@ -26,17 +26,16 @@ const defaultValues = {
   remember: false,
   setRemember: () => {},
   darkMode: false,
-  setDarkMode: () => {},
+  toggleDarkMode: () => {},
 } as AuthContextInterface;
 
 export const AuthContext = createContext<AuthContextInterface>(defaultValues);
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [ accessToken, setAccessToken ] = useState<string | null>(null);
+  const [ accessToken, setAccessToken ] = useState<string | null>("d");
   const [ refresh, setRefresh ] = useState<boolean>(false);
   const [ remember, setRemember ] = useState<boolean>(false);
-  const [ darkMode, setDarkMode ] = useState<boolean>(false);
-  const { item, saveItem, loading, error } = useLocalStorage(darkMode, remember);
+  const { darkMode, toggleDarkMode } = useLocalStorage()
 
   setSession(accessToken);
 
@@ -49,7 +48,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
        remember,
        setRemember,
        darkMode,
-       setDarkMode,
+       toggleDarkMode,
     }}>
       {children}
     </AuthContext.Provider>

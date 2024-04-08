@@ -39,7 +39,7 @@ export const SignUp = () => {
       <Modal open={openModal}>
         <ErrorMessage>{error}</ErrorMessage>
       </Modal>
-      <main className="absolute top-24 my-auto grid justify-items-center p-12 bg-white dark:bg-black bg-opacity-25 dark:bg-opacity-25 rounded-2xl border border-indigo-500">
+      <main className="absolute grid justify-items-center p-12 bg-white dark:bg-black bg-opacity-25 dark:bg-opacity-25 rounded-2xl border border-indigo-500">
         <h1 className="text-[28px] text-black dark:text-white font-bold text-center">Banco nc.</h1>
         <h2 className="text-center dark:text-white mb-4">Nos alegra tenerte por acá</h2>
         <form onSubmit={handleSubmit}>
