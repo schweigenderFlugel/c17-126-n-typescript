@@ -32,7 +32,7 @@ const defaultValues = {
 export const AuthContext = createContext<AuthContextInterface>(defaultValues);
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [ accessToken, setAccessToken ] = useState<string | null>("d");
+  const [ accessToken, setAccessToken ] = useState<string | null>(null);
   const [ refresh, setRefresh ] = useState<boolean>(false);
   const [ remember, setRemember ] = useState<boolean>(false);
   const { darkMode, toggleDarkMode } = useLocalStorage()
