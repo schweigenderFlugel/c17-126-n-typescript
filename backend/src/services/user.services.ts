@@ -1,5 +1,15 @@
+import userDao from '../models/daos/user.dao'
+
 export default class userServices {
   static async createUser(): Promise<void> {
-    // TODO: Create user connecting to the DAO
+    const user = await userDao.getInstance().createUser({
+      name: 'test',
+      lastname: 'test',
+      address: 'test',
+      email: 'test',
+      phone: 'test',
+      authId: 1,
+    })
+    return user
   }
 }

@@ -12,7 +12,7 @@ async function main() {
   const app = createExpressApp()
 
   // Conection to DB
-  await sequelize.sync({ force: true })
+  await sequelize.sync({ alter: true })
 
   // SETUP GLOBAL MIDDLEWARES
   middlewaresConfig.config(app)

@@ -1,15 +1,15 @@
 {
-  "name": "c17-126-n-typescript",
-  "version": "1.0.0",
-  "description": "Scripts para ejecutar de manera general",
-  "main": "index.js",
-  "scripts": {
-    "back:init": "cd backend && npm run i",
-    "front:init": "cd frontend && npm run i",
-    "back:dev": "cd backend && npm run dev",
-    "frond:dev": "cd frontend && npm run dev"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+    "name": "c17-126-n-typescript",
+    "version": "1.0.0",
+    "description": "Scripts para ejecutar de manera general",
+    "main": "index.js",
+    "scripts": {
+        "back:init": "cd backend && npm run i",
+        "front:init": "cd frontend && npm run i",
+        "back:dev": "cd backend && npm run dev",
+        "frond:dev": "cd frontend && npm run dev"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC"
 }

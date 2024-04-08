@@ -1,3 +1,6 @@
+import { IUser } from '../../interfaces/user.interface'
+import { User } from '../db'
+
 export default class userDao {
   private static intance: userDao | null = null
 
@@ -11,7 +14,8 @@ export default class userDao {
     return this.intance
   }
 
-  async createUser(): Promise<void> {
-    // TODO: Create user with a DB query
+  async createUser(userPayload: IUser): Promise<any> {
+    const userCreated = await User.create(userPayload as Omit<IUser, 'id'>)
+    return userCreated
   }
 }
