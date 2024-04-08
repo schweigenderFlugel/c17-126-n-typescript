@@ -3,7 +3,7 @@ import { InformationLandingPage } from '../Components/InformationLandingPage';
 
 export const LandingPage = () => {
   return (
-    <main>
+    <main className="relative overflow-hidden">
       <HeroLandingPage />
       <InformationLandingPage />
     </main>

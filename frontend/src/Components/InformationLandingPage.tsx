@@ -8,9 +8,9 @@ import {
 
 export const InformationLandingPage = () => {
   return (
-    <section className="bg-gradient-to-r from-indigo-500/40 via-white to-indigo-500/40 px-16 max-md:px-4 max-lg:px-8 w-full">
-      <article className="max-lg:block items-center gap-56 grid grid-cols-2 py-24">
-        <div className="flex flex-col gap-4">
+    <section className="bg-gradient-to-r from-indigo-500/40 via-white to-indigo-500/40 px-48 max-[1300px]:px-16 max-md:px-4 max-lg:px-8 w-full">
+      <article className="max-lg:block items-center grid grid-cols-2 py-24">
+        <div className="flex flex-col gap-4 max-w-[600px]">
           <h2 className="font-bold text-5xl max-[520px]:text-4xl leading-tight">
             Simplifica la gestión de tus gastos e inversiones
           </h2>
@@ -30,7 +30,7 @@ export const InformationLandingPage = () => {
         <div>
           <img
             src="./img/dashboard.webp"
-            className="max-lg:hidden w-full h-full translate-x-16"
+            className="max-lg:hidden w-full h-full translate-x-48"
           />
         </div>
       </article>
@@ -42,7 +42,7 @@ export const InformationLandingPage = () => {
             className="m-auto w-[75%] max-sm:w-full h-[50%] max-sm:h-full -translate-x-2"
           />
         </div>
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 max-w-[600px]">
           <h2 className="font-bold text-5xl max-[520px]:text-4xl leading-tight">
             Oportunidades para hacer crecer tu capital
           </h2>
