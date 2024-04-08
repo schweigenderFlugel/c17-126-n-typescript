@@ -1,11 +1,11 @@
 import './models/db/postgres.manager'
 import { sequelize } from './models/db/postgres.manager'
-import apiRouter from './routers/api.router'
 import createExpressApp from './config/createApp'
 import middlewaresConfig from './config/middlewares.config'
 
 // Import Entities for Sequelize
 import './models/db'
+import RegisterRoutes from './utils/register.routes'
 
 // CREATE EXPRESS APP
 async function main() {
@@ -17,7 +17,15 @@ async function main() {
   // SETUP GLOBAL MIDDLEWARES
   middlewaresConfig.config(app)
 
-  app.use('/api/v1', apiRouter) //
+  /**
+   * * Load of Routes for V1
+   */
+  await RegisterRoutes(app, 'v1')
+
+  /**
+   * * Loading of routes for new functions in V2
+   */
+  await RegisterRoutes(app, 'v2')
 }
 
 main()
