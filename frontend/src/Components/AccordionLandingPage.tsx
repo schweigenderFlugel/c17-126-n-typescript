@@ -29,11 +29,11 @@ export const AccordionLandingPage = () => {
 
   return (
     <>
-      <section className="flex flex-col items-center bg-gradient-to-r from-indigo-500/40 via-white to-indigo-500/40 px-48 max-md:px-4 max-lg:px-8 py-48 w-full">
+      <section className="flex flex-col items-center px-24 max-md:px-4 max-lg:px-8 py-48 max-sm:py-24 w-full">
         <h3 className="font-semibold text-7xl text-center max-sm:text-5xl max-[400px]:text-5xl">
           Preguntas Frequentes
         </h3>
-        <h4 className="py-4 text-2xl text-center text-gray-500 max-sm:text-xl">
+        <h4 className="pt-4 pb-10 text-2xl text-center text-gray-500 max-sm:text-xl">
           Todo lo que necesitas saber de Banco nc.
         </h4>
         <ul className="w-[950px] max-xl:w-full">
@@ -75,7 +75,7 @@ const AccordionItem = ({
   };
 
   return (
-    <li onClick={() => handleToggle(num)} className="py-4 cursor-pointer">
+    <li onClick={() => handleToggle(num)} className="pt-4 cursor-pointer">
       <div className="flex justify-between items-center">
         <h5 className="font-medium text-2xl max-sm:text-xl">{title}</h5>
         <span className="border-gray-800 [&_svg]:w-8 [&_svg]:h-8">
@@ -83,7 +83,7 @@ const AccordionItem = ({
         </span>
       </div>
       {isOpen && <p className="py-4">{text}</p>}
-      <div className="bg-gray-400 my-3 w-full h-[1px]"></div>
+      <div className="bg-gray-400 my-5 w-full h-[1px]"></div>
     </li>
   );
 };

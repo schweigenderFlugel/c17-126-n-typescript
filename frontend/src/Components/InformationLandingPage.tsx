@@ -8,7 +8,7 @@ import {
 
 export const InformationLandingPage = () => {
   return (
-    <section className="bg-gradient-to-r from-indigo-500/40 via-white to-indigo-500/40 px-48 max-[1300px]:px-16 max-md:px-4 max-lg:px-8 w-full">
+    <section className="px-48 max-md:px-4 max-lg:px-8 max-xl:px-16 w-full">
       <article className="max-lg:block items-center grid grid-cols-2 py-24">
         <div className="flex flex-col gap-4 max-w-[600px]">
           <h2 className="font-bold text-5xl max-[520px]:text-4xl leading-tight">
