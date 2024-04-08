@@ -4,12 +4,16 @@
   "description": "Scripts para ejecutar de manera general",
   "main": "index.js",
   "scripts": {
-    "back:init": "cd backend && npm run i",
-    "front:init": "cd frontend && npm run i",
+    "back:init": "cd backend && npm i",
+    "front:init": "cd frontend && npm i",
     "back:dev": "cd backend && npm run dev",
-    "frond:dev": "cd frontend && npm run dev"
+    "front:dev": "cd frontend && npm run dev"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@types/react": "^18.2.74",
+    "@types/react-dom": "^18.2.24"
+  }
 }
