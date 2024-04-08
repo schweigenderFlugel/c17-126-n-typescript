@@ -1,7 +1,8 @@
-import { AccordionLandingPage } from '../Components/AccordionLandingPage';
-import { CTALandingPage } from '../Components/CTALandingPage';
 import { HeroLandingPage } from '../Components/HeroLandingPage';
 import { InformationLandingPage } from '../Components/InformationLandingPage';
+import { AccordionLandingPage } from '../Components/AccordionLandingPage';
+import { CTALandingPage } from '../Components/CTALandingPage';
+import { FooterLandingPage } from '../Components/FooterLandingPage';
 
 export const LandingPage = () => {
   return (
@@ -10,6 +11,7 @@ export const LandingPage = () => {
       <InformationLandingPage />
       <AccordionLandingPage />
       <CTALandingPage />
+      <FooterLandingPage />
     </main>
   );
 };

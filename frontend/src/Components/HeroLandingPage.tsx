@@ -10,8 +10,8 @@ export const HeroLandingPage = () => {
           Operaciones bancarias rápidas, fáciles y seguras.
         </h1>
         <p className="py-4 max-w-[80%] text-gray-50 text-xl">
-          En simples pasos puedes registrarte y empezar a operar ahora mismo,
-          con la seguridad respaldada por nuestros ingenieros.
+          En simples pasos puedes registrarte y empezar a operar ahora mismo con
+          la seguridad respaldada por nuestros ingenieros.
         </p>
         <div>
           <input
