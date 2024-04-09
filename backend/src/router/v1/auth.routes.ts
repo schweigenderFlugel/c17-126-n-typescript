@@ -1,17 +1,13 @@
 import { Router } from 'express'
-import authService from '../../services/auth.services'
+import schemaValidator from '../../middlewares/schemasValidator.middlewares'
+import { signUpSchema } from '../../middlewares/validators/auth.validator'
+import authsController from '../../controllers/auths.controllers'
 
 const authRouter = Router()
 
-authRouter.post('/', async (req, res) => {
-  try {
-    const authCreated = await authService.createAuth()
-    res.json({
-      authCreated,
-    })
-  } catch (error: any) {
-    console.log(error.message)
-  }
-})
-
+authRouter.post(
+  '/signup',
+  schemaValidator(signUpSchema, null),
+  authsController.signUp
+)
 export default authRouter

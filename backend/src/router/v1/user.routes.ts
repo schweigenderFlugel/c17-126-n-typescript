@@ -5,15 +5,6 @@ import userService from '../../services/user.services'
 
 const userRouter = Router()
 
-userRouter.get('/', async (req, res) => {
-  try {
-    const userCreated = await userService.createUser()
-    res.json({
-      userCreated,
-    })
-  } catch (error: any) {
-    console.log(error.message)
-  }
-})
+userRouter.get('/')
 
 export default userRouter

@@ -10,7 +10,65 @@ export default class userService {
    * @return {Promise<Model<IUser> | null>} the created user model, or null if creation fails
    */
   static async createUser(userPayload: IUser): Promise<Model<IUser> | null> {
-    const user = await userDao.getInstance().createUser(userPayload)
-    return user
+    const userCreated = await userDao.getInstance().createUser(userPayload)
+    return userCreated
+  }
+
+  /**
+   * Retrieves a user by their ID.
+   *
+   * @param {number} id - The ID of the user to retrieve
+   * @return {Promise<Model<IUser> | null>} The user found, or null if not found
+   */
+  static async getUserById(id: number): Promise<Model<IUser> | null> {
+    const userFound = await userDao.getInstance().getUserById(id)
+    return userFound
+  }
+
+  /**
+   * Retrieve all users from the database.
+   *
+   * @return {Promise<Model<IUser>[]>} Array of user models
+   */
+  static async getAllUsers(): Promise<Model<IUser>[]> {
+    const usersFound = await userDao.getInstance().getAllUsers()
+    return usersFound
+  }
+
+  /**
+   * Get a user by their email address.
+   *
+   * @param {string} email - the email address of the user
+   * @return {Promise<Model<IUser> | null>} the user found or null if not found
+   */
+  static async getUserByEmail(email: string): Promise<Model<IUser> | null> {
+    const userFound = await userDao.getInstance().getUserByEmail(email)
+    return userFound
+  }
+
+  /**
+   * Update a user by their ID with the provided user payload.
+   *
+   * @param {number} id - The ID of the user to update
+   * @param {IUser} userPayload - The payload containing the updated user information
+   * @return {Promise<Model<IUser> | null>} A Promise resolving to the updated user model or null if the user was not found
+   */
+  static async updateUser(
+    id: number,
+    userPayload: IUser
+  ): Promise<Model<IUser> | null> {
+    const userUpdated = await userDao.getInstance().updateUser(id, userPayload)
+    return userUpdated
+  }
+
+  /**
+   * A description of the entire function.
+   *
+   * @param {number} id - description of parameter
+   * @return {Promise<number>} description of return value
+   */
+  static async deleteUser(id: number): Promise<number> {
+    const qtyDeleted = await userDao.getInstance().deleteUser(id)
+    return qtyDeleted
   }
 }
