@@ -4,16 +4,14 @@ import { Axios, AxiosAuth } from './axios'
 
 const controller = new AbortController()
 
-export const login = async (
-  payload: ILoginPayload
-): Promise<{ accessToken: string }> => {
+export const login = async (payload: ILoginPayload): Promise<{ accessToken: string }> => {
   const res: AxiosResponse<{ accessToken: string }> = await AxiosAuth({
     method: 'POST',
     url: '/login',
-    data: payload,
+    data: payload, 
     signal: controller.signal,
   })
-  return res.data
+  return res.data;
 }
 
 export const signup = async (payload: ISignUpPayload): Promise<void> => {
@@ -25,13 +23,22 @@ export const signup = async (payload: ISignUpPayload): Promise<void> => {
   })
 }
 
-export const logout = async (token: string | null): Promise<void> => {
+export const logout = async (): Promise<void> => {
   await AxiosAuth({
     method: 'GET',
     url: '/logout',
     signal: controller.signal,
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
   })
+}
+
+export const setSession = (accessToken: string | null ) => {
+  Axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`
+}
+
+export const refreshSession = async (): Promise<{ accessToken: string | null}> => {
+  const res: AxiosResponse<{ accessToken: string }> = await AxiosAuth({
+    method: 'GET',
+    url: '/refresh'
+  })
+  return res.data; 
 }
