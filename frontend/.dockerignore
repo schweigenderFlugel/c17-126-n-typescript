@@ -1,0 +1,16 @@
+*
+!/package.json
+!/pnpm-lock.yaml
+!/tsconfig.json
+!/tsconfig.node.json
+!/index.html
+!/.env
+
+!/src
+!/config
+!/dist
+
+!/tailwind.config.js
+!/postcss.config.js
+
+!/vite.config.ts
