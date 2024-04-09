@@ -1,17 +1,19 @@
-import { AxiosResponse } from "axios";
-import { ILoginPayload, ISignUpPayload } from "../Interfaces/interfaces";
-import { Axios, AxiosAuth } from "./axios";
+import { AxiosResponse } from 'axios'
+import { ILoginPayload, ISignUpPayload } from '../Interfaces/interfaces'
+import { Axios, AxiosAuth } from './axios'
 
-const controller = new AbortController();
+const controller = new AbortController()
 
-export const login = async (payload: ILoginPayload): Promise<{ accessToken: string }> => {
-    const res: AxiosResponse<{ accessToken: string }> = await AxiosAuth({
-      method: 'POST',
-      url: '/login',
-      data: payload, 
-      signal: controller.signal,
-    })
-    return res.data;
+export const login = async (
+  payload: ILoginPayload
+): Promise<{ accessToken: string }> => {
+  const res: AxiosResponse<{ accessToken: string }> = await AxiosAuth({
+    method: 'POST',
+    url: '/login',
+    data: payload,
+    signal: controller.signal,
+  })
+  return res.data
 }
 
 export const signup = async (payload: ISignUpPayload): Promise<void> => {
@@ -29,7 +31,7 @@ export const logout = async (token: string | null): Promise<void> => {
     url: '/logout',
     signal: controller.signal,
     headers: {
-      'Authorization': `Bearer ${token}`
-    }
+      Authorization: `Bearer ${token}`,
+    },
   })
 }
