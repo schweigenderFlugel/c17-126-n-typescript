@@ -33,7 +33,7 @@ export default class authDao {
    * @param {string} id - The ID of the authentication information to retrieve.
    * @return {Promise<Model<IAuth> | null>} The retrieved authentication information, or null if not found.
    */
-  async getAuthById(id: string): Promise<Model<IAuth> | null> {
+  async getAuthById(id: number): Promise<Model<IAuth> | null> {
     const authFound: Model<IAuth> | null = await Auth.findByPk(id)
     return authFound
   }
@@ -54,7 +54,7 @@ export default class authDao {
    * @param {string} userName - The username to search for
    * @return {Promise<Model<IAuth> | null>} The authentication information found, or null if not found
    */
-  async getAuthByUserName(userName: string): Promise<Model<IAuth> | null> {
+  async getAuthByUsername(userName: string): Promise<Model<IAuth> | null> {
     const authFound: Model<IAuth> | null = await Auth.findOne({
       where: {
         username: userName,
@@ -71,7 +71,7 @@ export default class authDao {
    * @return {Promise<Model<IAuth> | null>} the updated authentication model or null if not found
    */
   async updateAuth(
-    id: string,
+    id: number,
     authPayload: IAuth
   ): Promise<Model<IAuth> | null> {
     const authUpdated = await Auth.update(authPayload, {
@@ -87,7 +87,7 @@ export default class authDao {
    * @param {string} id - The ID of the authentication record to delete
    * @return {Promise<Model<IAuth> | null>} The deleted authentication record or null if not found
    */
-  async deleteAuth(id: string): Promise<Model<IAuth> | null> {
+  async deleteAuth(id: number): Promise<Model<IAuth> | null> {
     const authDeleted = await Auth.update(
       { status: 'false' },
       {
