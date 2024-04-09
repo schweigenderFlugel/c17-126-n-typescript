@@ -6,8 +6,8 @@ import { useLocalStorage } from "./useLocalStorage";
 interface AuthContextInterface {
   accessToken: string | null;
   setAccessToken: Dispatch<SetStateAction<string | null>>;
-  refresh: boolean;
-  setRefresh: Dispatch<SetStateAction<boolean>>;
+  loading: boolean;
+  setLoading: Dispatch<SetStateAction<boolean>>;
   remember: boolean;
   setRemember: Dispatch<SetStateAction<boolean>>;
   darkMode: boolean;
@@ -21,8 +21,8 @@ interface AuthProviderProps {
 const defaultValues = {
   accessToken: null,
   setAccessToken: () => {},
-  refresh: false,
-  setRefresh: () => {},
+  loading: false,
+  setLoading: () => {},
   remember: false,
   setRemember: () => {},
   darkMode: false,
@@ -33,7 +33,7 @@ export const AuthContext = createContext<AuthContextInterface>(defaultValues);
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [ accessToken, setAccessToken ] = useState<string | null>(null);
-  const [ refresh, setRefresh ] = useState<boolean>(false);
+  const [ loading, setLoading ] = useState<boolean>(true);
   const [ remember, setRemember ] = useState<boolean>(false);
   const { darkMode, toggleDarkMode } = useLocalStorage()
 
@@ -43,8 +43,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     <AuthContext.Provider value={{
        accessToken,
        setAccessToken,
-       refresh,
-       setRefresh,
+       loading,
+       setLoading,
        remember,
        setRemember,
        darkMode,

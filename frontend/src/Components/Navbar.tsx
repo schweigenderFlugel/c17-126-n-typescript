@@ -13,18 +13,11 @@ export const Navbar = () => {
   }) 
 
   return (
-    <nav className="fixed flex justify-between items-center z-10 top-0 w-full py-4 px-5 text-black dark:text-white">
+    <nav className="flex justify-between items-center w-full py-6 px-8 mb-2 text-black dark:text-white">
       <div className="flex space-x-5">
         <Link to="/">
           <BsArrowLeftCircle className="w-[28px] h-[28px] text-black dark:text-white hover:text-indigo-600 dark:hover:bg-indigo-500 rounded-full"/>
         </Link>
-        {accessToken &&
-          <>
-            <Link to="/dashboard">Dashboard</Link>
-            <Link to="/transferencias">Transferencias</Link>
-            <Link to="/inversiones">Inversiones</Link>
-          </>
-        }
       </div>
       <div className="flex space-x-5">
         <label className="inline-flex items-center space-x-2">
