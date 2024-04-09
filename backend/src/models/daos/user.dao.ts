@@ -14,6 +14,12 @@ export default class userDao {
     return this.intance
   }
 
+  /**
+   * Create a new user with the given user payload.
+   *
+   * @param {IUser} userPayload - the payload for creating a new user
+   * @return {Promise<any>} a promise that resolves to the created user
+   */
   async createUser(userPayload: IUser): Promise<any> {
     const userCreated = await User.create(userPayload as Omit<IUser, 'id'>)
     return userCreated

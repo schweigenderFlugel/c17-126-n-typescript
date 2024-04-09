@@ -1,13 +1,13 @@
 // LIBRERIES
 import { Router } from 'express'
-import { IUser } from '../interfaces/user.interface'
-import userServices from '../services/user.services'
+import { IUser } from '../../interfaces/user.interface'
+import userService from '../../services/user.services'
 
 const userRouter = Router()
 
 userRouter.get('/', async (req, res) => {
   try {
-    const userCreated = await userServices.createUser()
+    const userCreated = await userService.createUser()
     res.json({
       userCreated,
     })
