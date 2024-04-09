@@ -82,7 +82,7 @@ const AccordionItem = ({
           {isOpen ? <HiOutlineMinusCircle /> : <HiOutlinePlusCircle />}
         </span>
       </div>
-      {isOpen && <p className="py-4">{text}</p>}
+      {isOpen && <p className="py-4 text-lg max-[520px]:text-base">{text}</p>}
       <div className="bg-gray-400 my-5 w-full h-[1px]"></div>
     </li>
   );

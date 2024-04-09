@@ -11,15 +11,15 @@ export const FooterLandingPage = () => {
           Abriendo caminos hacia nuevas oportunidades
         </p>
         <div className="flex gap-8 [&_svg]:w-10 [&_svg]:h-10 [&_svg]:text-gray-500/70">
-          <span>
+          <a href="https://twitter.com/" target="_blank">
             <FaXTwitter />
-          </span>
-          <span>
+          </a>
+          <a href="https://www.instagram.com/" target="_blank">
             <FaInstagram />
-          </span>
-          <span>
+          </a>
+          <a href="https://www.facebook.com/" target="_blank">
             <FaFacebook />
-          </span>
+          </a>
         </div>
       </div>
       <nav>
@@ -39,7 +39,9 @@ export const FooterLandingPage = () => {
         </ul>
       </nav>
       <nav>
-        <h5 className="mb-5 font-medium text-gray-600 text-lg max-[470px]:text-base">Ayuda</h5>
+        <h5 className="mb-5 font-medium text-gray-600 text-lg max-[470px]:text-base">
+          Ayuda
+        </h5>
         <ul className="flex flex-col gap-4 [&_li_a]:max-[470px]:text-sm [&_li_a]:text-gray-500">
           <li>
             <Link to="#">Soporte</Link>
@@ -53,7 +55,9 @@ export const FooterLandingPage = () => {
         </ul>
       </nav>
       <nav>
-        <h5 className="mb-5 font-medium text-gray-600 text-lg max-[470px]:text-base">Compañia</h5>
+        <h5 className="mb-5 font-medium text-gray-600 text-lg max-[470px]:text-base">
+          Compañia
+        </h5>
         <ul className="flex flex-col gap-4 [&_li_a]:max-[470px]:text-sm [&_li_a]:text-gray-500">
           <li>
             <Link to="#">Quienes Somos</Link>
@@ -67,7 +71,9 @@ export const FooterLandingPage = () => {
         </ul>
       </nav>
       <nav>
-        <h5 className="mb-5 font-medium text-gray-600 text-lg max-[470px]:text-base">Contacto</h5>
+        <h5 className="mb-5 font-medium text-gray-600 text-lg max-[470px]:text-base">
+          Contacto
+        </h5>
         <ul className="flex flex-col gap-4 [&_li_a]:max-[470px]:text-sm [&_li_a]:text-gray-500">
           <li>
             <a href="mailto:info@bankme.com">info@bankme.com</a>
@@ -76,7 +82,9 @@ export const FooterLandingPage = () => {
             <a href="tel:0-800-200-300">0-800-200-300</a>
           </li>
           <li>
-            <Link to="https://www.google.com/maps">5603 - Rama Caida, AR</Link>
+            <a href="https://www.google.com/maps" target="_blank">
+              5603 - Rama Caida, AR
+            </a>
           </li>
         </ul>
       </nav>

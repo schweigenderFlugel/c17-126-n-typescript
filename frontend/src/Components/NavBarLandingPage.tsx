@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 
 import { HiBars3, HiMiniXMark } from 'react-icons/hi2';
 import { Logo } from './Logo';
@@ -18,7 +18,9 @@ export const NavBarLadingPage = () => {
 
   return (
     <nav className="flex items-center place-content-between py-6 w-full h-fit">
-      <Logo isWhite className="max-sm:text-4xl" />
+      <Link to="/">
+        <Logo isWhite className="max-sm:text-4xl" />
+      </Link>
       <ul
         className={`transition-all flex items-center justify-center gap-6 text-center text-white duration-500 ${menuMobileClasses} ${navBarChildrenClasses}`}
       >
