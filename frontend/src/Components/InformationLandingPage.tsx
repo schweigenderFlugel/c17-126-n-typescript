@@ -8,20 +8,20 @@ import {
 
 export const InformationLandingPage = () => {
   return (
-    <section className="bg-gradient-to-r from-indigo-500/40 via-white to-indigo-500/40 px-16 max-md:px-4 max-lg:px-8 w-full">
-      <article className="max-lg:block items-center gap-56 grid grid-cols-2 py-24">
-        <div className="flex flex-col gap-4">
-          <h2 className="font-bold text-5xl max-[520px]:text-4xl leading-tight">
+    <section className="px-48 max-md:px-4 max-lg:px-8 max-xl:px-16 w-full">
+      <article className="max-lg:block items-center grid grid-cols-2 py-24">
+        <div className="flex flex-col gap-4 max-w-[600px]">
+          <h2 className="font-bold text-6xl max-[520px]:text-5xl leading-tight">
             Simplifica la gestión de tus gastos e inversiones
           </h2>
-          <p>
+          <p className="text-lg max-[520px]:text-base">
             Con nuestro sistema de gestión de gastos e inversiones obtén una
             visión detallada de tus flujos de efectivo, identifica oportunidades
             de ahorro y maximiza el rendimiento de tus inversiones.
           </p>
           <Link
             to="#"
-            className="flex items-center gap-2 hover:gap-4 text-indigo-600 transition-all duration-300"
+            className="flex items-center gap-2 hover:gap-4 text-indigo-600 text-lg max-[520px]:text-base transition-all duration-300"
           >
             <span>Saber más</span>
             <HiArrowRight />
@@ -30,23 +30,23 @@ export const InformationLandingPage = () => {
         <div>
           <img
             src="./img/dashboard.webp"
-            className="max-lg:hidden w-full h-full translate-x-16"
+            className="max-lg:hidden w-full h-full translate-x-48"
           />
         </div>
       </article>
 
-      <article className="justify-center items-center gap-56 max-lg:gap-20 grid grid-cols-2 max-lg:grid-cols-1">
+      <article className="justify-center items-center gap-40 max-2xl:gap-20 grid grid-cols-2 max-lg:grid-cols-1">
         <div>
           <img
             src="./img/dashboard-mobile.webp"
             className="m-auto w-[75%] max-sm:w-full h-[50%] max-sm:h-full -translate-x-2"
           />
         </div>
-        <div className="flex flex-col gap-4">
-          <h2 className="font-bold text-5xl max-[520px]:text-4xl leading-tight">
-            Oportunidades para hacer crecer tu capital
+        <div className="flex flex-col gap-4 max-w-[600px]">
+          <h2 className="max-lg:mt-24 font-bold text-6xl text-balance max-[520px]:text-5xl leading-tight">
+            Sugerencias para hacer crecer tu capital
           </h2>
-          <p>
+          <p className="text-balance text-lg max-[520px]:text-base">
             Descubre nuevas oportunidades para hacer crecer tu capital con
             nuestra banca digital. Gestiona fácilmente tus inversiones y recibe
             recomendaciones personalizadas para maximizar tus ganancias. Accede
@@ -59,7 +59,7 @@ export const InformationLandingPage = () => {
                 <HiOutlineArrowTrendingUp className="w-[24px] h-[24px] text-indigo-500" />
               </span>
               <div>
-                <h3 className="font-medium text-gray-700">
+                <h3 className="font-medium text-gray-700 text-lg max-[520px]:text-base">
                   Mayores oportunidades de inversión
                 </h3>
                 <p className="text-gray-500">
@@ -73,7 +73,7 @@ export const InformationLandingPage = () => {
                 <HiOutlineChartPie className="w-[24px] h-[24px] text-indigo-500" />
               </span>
               <div>
-                <h3 className="font-medium text-gray-700">
+                <h3 className="font-medium text-gray-700 text-lg max-[520px]:text-base">
                   Estadísticas detalladas
                 </h3>
                 <p className="text-gray-500">
@@ -88,7 +88,7 @@ export const InformationLandingPage = () => {
                 <HiOutlineShieldCheck className="w-[24px] h-[24px] text-indigo-500" />
               </span>
               <div>
-                <h3 className="font-medium text-gray-700">
+                <h3 className="font-medium text-gray-700 text-lg max-[520px]:text-base">
                   Seguridad en las inversiones
                 </h3>
                 <p className="text-gray-500">
