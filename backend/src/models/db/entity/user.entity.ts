@@ -17,11 +17,11 @@ const User = sequelize.define('users', {
     type: STRING,
     allowNull: false,
   },
-  address: {
+  alias: {
     type: STRING,
     allowNull: false,
   },
-  email: {
+  address: {
     type: STRING,
     allowNull: false,
   },
