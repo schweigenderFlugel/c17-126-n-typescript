@@ -37,12 +37,12 @@ export default class authsController {
     const payload: IAuth = req.body;
     try {
       const authFound = await authService.getAuthByEmail(payload.email);
-      isValidPassword(authFound?.password, payload.password)
+      isValidPassword(authFound.password, payload.password)
       const tokenPayload: ITokenPayload = { 
         id: authFound.id,
         role: authFound.role,
       }
-      const accessToken = SessionUtils.generateToken(tokenPayload);
+      const accessToken = await SessionUtils.generateToken(tokenPayload);
       return accessToken;
     } catch (err: any) {
       const response: HttpError = new HttpError(
@@ -51,5 +51,9 @@ export default class authsController {
       )
       return res.status(err.status || HTTP_STATUS.SERVER_ERROR).json(response)
     }
+  }
+
+  static async logout(req: Request, res: Response): Promise<void> {
+
   }
 }
