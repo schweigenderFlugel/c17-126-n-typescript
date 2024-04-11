@@ -7,6 +7,11 @@ import { SignUp } from './Pages/SignUp';
 import { Login } from './Pages/Login';
 
 import { Layout } from './Components/Layout';
+import { RequireLogin } from './Components/ProtectedRoutes';
+import { Dashboard } from './Pages/Dashboard';
+import { DashboardStart } from './Components/DashboardStart';
+import { TransfersList } from './Components/TransfersList';
+import { Settings } from './Components/Settings';
 
 function App() {
   return (
@@ -18,9 +23,13 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/registro" element={<SignUp />} />
             {/* 🔏 RUTAS PRIVADAS 👇*/}
-            <Route path="/dashboard" element={<h1>Dashboard</h1>} />
-            <Route path="/transferencias" element={<h1>Transferencias</h1>} />
-            <Route path="/inversiones" element={<h1>Inversiones</h1>} />
+            <Route element={<RequireLogin />}>
+              <Route path="/dashboard" element={<Dashboard />}>
+                <Route path="/dashboard" element={<DashboardStart />} />
+                <Route path="/dashboard/transferencias" element={<TransfersList />} />
+                <Route path="/dashboard/configuracion" element={<Settings />} />
+              </Route>
+            </Route>
           </Route>
         </Routes>
       </BrowserRouter>
