@@ -1,17 +1,17 @@
 import { Model } from 'sequelize'
-import { IAuth } from '../../interfaces/auth.interfaces'
-import { Auth, User } from '../db'
+import { IAuth } from '../../interfaces/auth.interface'
+import { Auth } from '../db'
 
 export default class authDao {
-  private static intance: authDao | null = null
+  private static instance: authDao | null = null
 
   private constructor() {}
 
   static getInstance(): authDao {
-    if (!this.intance) {
-      this.intance = new authDao()
+    if (!this.instance) {
+      this.instance = new authDao()
     }
-    return this.intance
+    return this.instance
   }
 
   /**
@@ -49,15 +49,15 @@ export default class authDao {
   }
 
   /**
-   * Get authentication information by username.
+   * Get authentication information by email.
    *
-   * @param {string} userName - The username to search for
-   * @return {Promise<Model<IAuth> | null>} The authentication information found, or null if not found
+   * @param {string} email - The email to search for
+   * @return {Promise<IAuth | null>} The authentication information found, or null if not found
    */
-  async getAuthByUsername(userName: string): Promise<Model<IAuth> | null> {
-    const authFound: Model<IAuth> | null = await Auth.findOne({
+  async getAuthByEmail(email: string): Promise<IAuth | null> {
+    const authFound = await Auth.findOne({
       where: {
-        username: userName,
+        email: email,
       },
     })
     return authFound
@@ -89,7 +89,7 @@ export default class authDao {
    */
   async deleteAuth(id: number): Promise<Model<IAuth> | null> {
     const authDeleted = await Auth.update(
-      { status: 'false' },
+      { status: false },
       {
         where: { id },
       }

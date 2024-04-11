@@ -1,10 +1,12 @@
 import { Request, Response } from 'express'
-import { IAuth } from '../interfaces/auth.interfaces'
-import { createHash } from '../utils/bcrypt.utils'
+import { IAuth } from '../interfaces/auth.interface';
+import { ITokenPayload } from '../interfaces/token.interface';
+import { createHash, isValidPassword } from '../utils/bcrypt.utils'
 import authService from '../services/auth.services'
 import apiSuccessResponse from '../utils/apiResponse.utils'
 import { HTTP_STATUS } from '../config/constants'
 import HttpError from '../utils/HttpError.utils'
+import SessionUtils from '../utils/session.util';
 
 export default class authsController {
   /**
@@ -16,9 +18,7 @@ export default class authsController {
    */
   static async signUp(req: Request, res: Response): Promise<Response> {
     const payload: IAuth = req.body
-
     payload.password = createHash(payload.password)
-
     try {
       const newAuth = await authService.createAuth(payload)
       const response = apiSuccessResponse(newAuth)
@@ -31,5 +31,15 @@ export default class authsController {
       )
       return res.status(err.status || HTTP_STATUS.SERVER_ERROR).json(response)
     }
+  }
+
+  static async login(req: Request, res: Response): Promise<string> {
+    const payload: IAuth = req.body;
+      const authFound = await authService.getAuthByEmail(payload.email);
+      const userPassword = authFound?.password ?? '';
+      isValidPassword(userPassword, payload.password);
+      const tokenPayload: ITokenPayload = { id: authFound?.id ?? 0 }
+      const accessToken = SessionUtils.generateToken(tokenPayload);
+      return accessToken
   }
 }

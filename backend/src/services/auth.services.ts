@@ -1,5 +1,5 @@
 import { Model } from 'sequelize'
-import { IAuth } from '../interfaces/auth.interfaces'
+import { IAuth } from '../interfaces/auth.interface'
 import authDao from '../models/daos/auth.dao'
 
 export default class authService {
@@ -38,13 +38,13 @@ export default class authService {
   /**
    * A description of the entire function.
    *
-   * @param {string} userName - description of parameter
-   * @return {Promise<Model<IAuth> | null>} description of return value
+   * @param {string} email - description of parameter
+   * @return {Promise<IAuth | null>} description of return value
    */
-  static async getAuthByUsername(
-    userName: string
-  ): Promise<Model<IAuth> | null> {
-    const authFound = await authDao.getInstance().getAuthByUsername(userName)
+  static async getAuthByEmail(
+    email: string
+  ): Promise<IAuth | null> {
+    const authFound = await authDao.getInstance().getAuthByEmail(email)
     return authFound
   }
 

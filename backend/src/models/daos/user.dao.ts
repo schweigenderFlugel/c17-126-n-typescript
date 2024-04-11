@@ -1,6 +1,6 @@
 import { Model } from 'sequelize'
-import { IUser } from '../../interfaces/user.interface'
 import { User } from '../db'
+import { IUser } from '../../interfaces/user.interface'
 
 export default class userDao {
   private static intance: userDao | null = null

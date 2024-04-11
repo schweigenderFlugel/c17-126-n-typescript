@@ -10,4 +10,10 @@ authRouter.post(
   schemaValidator(signUpSchema, null),
   authsController.signUp
 )
+
+authRouter.post(
+  '/login',
+  authsController.login
+)
+
 export default authRouter
