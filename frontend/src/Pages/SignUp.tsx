@@ -6,7 +6,6 @@ import { signup } from "../Services/user";
 import { Modal } from "../Components/Modal";
 import { ErrorMessage } from "../Components/ErrorMessage";
 
-
 export const SignUp = () => {
   const [ fullname, setFullname ] = useState<string>('');
   const [ email, setEmail ] = useState<string>('');
@@ -18,15 +17,15 @@ export const SignUp = () => {
   const [ error, setError ] = useState<string>('');
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async e => {
+    e.preventDefault()
     try {
-      await signup({ email, password });
-      navigate('/login', { replace: true });
+      await signup({ email, password })
+      navigate('/login', { replace: true })
     } catch (error) {
       if (error instanceof AxiosError) {
-        setError(error.message);
-        setOpenModal(true);
+        setError(error.message)
+        setOpenModal(true)
       }
     }
   }

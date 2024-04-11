@@ -1,4 +1,9 @@
-export interface userInterface {
+export interface IUser {
+  id?: number
   name: string
-  // TODO: Add more properties
+  lastname: string
+  address: string
+  alias: string
+  phone: string
+  authId: number
 }

@@ -7,9 +7,14 @@
     "back:init": "cd backend && npm i",
     "front:init": "cd frontend && npm i",
     "back:dev": "cd backend && npm run dev",
-    "front:dev": "cd frontend && npm run dev"
+    "frond:dev": "cd frontend && npm run dev",
+    "prepare": "husky"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2"
+  }
 }
