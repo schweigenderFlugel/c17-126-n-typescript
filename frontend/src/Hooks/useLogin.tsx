@@ -4,21 +4,23 @@ import { login } from "../Services/user";
 import { ILoginPayload } from "../Interfaces/interfaces";
 import { AuthContext } from "../Context/AuthContext";
 
-type options  = {
-  onSuccess?: () => void;
-  onReject?: (error: AxiosError) => void;
+type options = {
+  onSuccess?: () => void
+  onReject?: (error: AxiosError) => void
 }
 
 export const useLogin = ({ onSuccess, onReject }: options) => {
-  const { setAccessToken, remember, setRemember } = useContext(AuthContext);
+  const { setAccessToken, remember, setRemember } = useContext(AuthContext)
 
   const setLogin = async (payload: ILoginPayload) => {
     await login(payload)
-      .then((res) => {
+      .then(res => {
         setAccessToken(res.accessToken)
-      }).then(() => {
+      })
+      .then(() => {
         onSuccess?.()
-      }).catch((error) => {
+      })
+      .catch(error => {
         onReject?.(error)
       })
   }
