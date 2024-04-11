@@ -1,38 +1,25 @@
 import { Express } from 'express'
-import fs from 'fs/promises'
 import path from 'path'
 
-const removeExtension = (fileName: string) => fileName.split('.').shift()
-
 /**
- * Registers routes for a specific version of the API.
+ * Register routes for the given version using Express.
  *
- * @param express - The Express application instance.
- * @param version - The version of the API.
- * @returns {Promise<void>} - A promise that resolves when all routes are registered.
+ * @param {Express} express - the Express instance
+ * @param {string} version - the version of the routes to register
  */
 const RegisterRoutes = async (express: Express, version: string) => {
   const dirname = path.join(__dirname, '../router', version)
   const startTime = Date.now()
 
   try {
-    const fileNames = await fs.readdir(dirname)
-
-    await Promise.all(
-      fileNames.map(async fileName => {
-        const file = removeExtension(fileName)
-
-        const item = await import(path.join(dirname, fileName))
-
-        if (typeof item.default === 'function' && item.default.stack) {
-          express.use(`/api/${version}/${file}`, item.default)
-        } else {
-          console.error(
-            `La ruta '${file}' en la versión '${version}' no es una ruta express válida.`
-          )
-        }
-      })
-    )
+    const item = await import(path.join(dirname, 'api.routes'))
+    if (typeof item.default === 'function' && item.default.stack) {
+      express.use(`/api/${version}`, item.default)
+    } else {
+      console.error(
+        `La ruta en la versión '${version}' no es una ruta express válida.`
+      )
+    }
   } catch (error) {
     console.log(error)
   } finally {
