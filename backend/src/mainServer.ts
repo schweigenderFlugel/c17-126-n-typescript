@@ -2,7 +2,6 @@ import './models/db/postgres.manager'
 import { sequelize } from './models/db/postgres.manager'
 import createExpressApp from './config/createApp'
 import middlewaresConfig from './config/middlewares.config'
-import apiRouter from './router/v1/api.routes'
 
 // Import Entities for Sequelize
 import './models/db'
