@@ -26,5 +26,16 @@ services:
     ports:
       - 8081:8081
 
+  front-prd:
+    container_name: front-prd
+    build:
+      target: production
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - PORT=80
+    ports:
+      - 80:80
+
 volumes:
   postgres:

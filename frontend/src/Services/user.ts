@@ -1,8 +1,8 @@
-import { AxiosResponse } from "axios";
-import { ILoginPayload, ISignUpPayload } from "../Interfaces/interfaces";
-import { Axios, AxiosAuth } from "./axios";
+import { AxiosResponse } from 'axios'
+import { ILoginPayload, ISignUpPayload } from '../Interfaces/interfaces'
+import { Axios, AxiosAuth } from './axios'
 
-const controller = new AbortController();
+const controller = new AbortController()
 
 export const login = async (payload: ILoginPayload): Promise<{ accessToken: string }> => {
   const res: AxiosResponse<{ accessToken: string }> = await AxiosAuth({

@@ -16,24 +16,24 @@ export const Login = () => {
 
   const onLoginError = (error: AxiosError) => {
     if (error.response?.status === 401) {
-      setError('Datos inválidos');
-      setOpenModal(true);
+      setError('Datos inválidos')
+      setOpenModal(true)
     } else if (error.response?.status === 404) {
-      setError('Usuario no encontrado');
-      setOpenModal(true);
+      setError('Usuario no encontrado')
+      setOpenModal(true)
     } else {
-      setError('Error desconocido');
-      setOpenModal(true);
+      setError('Error desconocido')
+      setOpenModal(true)
     }
   }
 
-  const { setLogin, remember, setRemember } = useLogin({ 
+  const { setLogin, remember, setRemember } = useLogin({
     onSuccess: () => navigate('/', { replace: true }),
-    onReject: (error) => onLoginError(error),
+    onReject: error => onLoginError(error),
   })
-  
-  const handleSubmit = (e) => {
-    e.preventDefault();
+
+  const handleSubmit = e => {
+    e.preventDefault()
     setLogin({ email, password })
   }
 
@@ -42,9 +42,7 @@ export const Login = () => {
   return (
     <>
       <Modal open={openModal}>
-        <ErrorMessage>
-          {error}
-        </ErrorMessage>
+        <ErrorMessage>{error}</ErrorMessage>
       </Modal>
         <main className="absolute justify-items-center p-12 bg-white dark:bg-black bg-opacity-25 dark:bg-opacity-25 rounded-2xl border border-indigo-500">
           <h1 className="text-[28px] dark:text-white font-bold text-center">Banco nc.</h1>

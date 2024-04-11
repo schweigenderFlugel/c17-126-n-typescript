@@ -15,7 +15,7 @@ interface AuthContextInterface {
 }
 
 interface AuthProviderProps {
-  children: ReactNode;
+  children: ReactNode
 }
 
 const defaultValues = {
@@ -29,7 +29,7 @@ const defaultValues = {
   setDarkMode: () => {},
 } as AuthContextInterface;
 
-export const AuthContext = createContext<AuthContextInterface>(defaultValues);
+export const AuthContext = createContext<AuthContextInterface>(defaultValues)
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [ accessToken, setAccessToken ] = useState<string | null>(null);
@@ -53,6 +53,5 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }}>
       {children}
     </AuthContext.Provider>
-  );
-};
-
+  )
+}
