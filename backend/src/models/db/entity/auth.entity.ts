@@ -1,13 +1,16 @@
-import { DataTypes } from 'sequelize'
+import { DataTypes, Model } from 'sequelize'
 import { sequelize } from '../postgres.manager'
+import { IAuth } from '../../../interfaces/auth.interface'
 
-const Auth = sequelize.define('Auth', {
+interface AuthInstance extends Model<IAuth>, IAuth {}
+
+const Auth = sequelize.define<AuthInstance>('Auth', {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
     primaryKey: true,
   },
-  username: {
+  email: {
     type: DataTypes.STRING,
     allowNull: false,
   },
@@ -15,7 +18,7 @@ const Auth = sequelize.define('Auth', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  token: {
+  refreshToken: {
     type: DataTypes.STRING,
     allowNull: true,
   },

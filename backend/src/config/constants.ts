@@ -7,4 +7,17 @@ export const envs = {
   DB_URL: env.get('DB_URL').required().asString(),
   NODE_ENV: env.get('NODE_ENV').required().asString(),
   CLUSTER: env.get('IS_CLUSTER').asBool(),
+  SECRET_KEY: env.get('SECRET_KEY').required().asString(),
+}
+
+export enum HTTP_STATUS {
+  OK = 200,
+  CREATED = 201,
+  ACCEPTED = 202,
+  BAD_REQUEST = 400,
+  UNAUTHORIZED = 401,
+  FORBIDDEN = 403,
+  NOT_FOUND = 404,
+  CONFLICT = 409,
+  SERVER_ERROR = 500,
 }
