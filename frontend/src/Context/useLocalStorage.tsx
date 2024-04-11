@@ -1,45 +1,25 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
+export const useLocalStorage = () => {
+  const [ darkMode, setDarkMode ] = useState<boolean>(() => {
+    const savedMode = localStorage.getItem('darkMode');
+    return savedMode ? JSON.parse(savedMode) : false;
+  });
 
-export const useLocalStorage = (darkMode: boolean, remember: boolean) => {
-  const [ item, setItem ] = useState<object>({})
-  const [ error, setError ] = useState<unknown>()
-  const [ loading, setLoading ] = useState<boolean>(true);
-
-  const config = {
-    darkMode: darkMode,
-    remember: remember,
+  const toggleDarkMode = () => {
+    setDarkMode(prevMode => {
+      const newMode = !prevMode;
+      localStorage.setItem('darkMode', JSON.stringify(newMode));
+      return newMode; 
+    })
   }
 
   useEffect(() => {
-    try {
-      const localStorageItem = localStorage.getItem('banco-nc-config');
-      let parsedItem;
-
-      if (!localStorageItem) {
-        localStorage.setItem('banco-nc-config', JSON.stringify(config));
-        parsedItem = config;
-      } else {
-        parsedItem = JSON.parse(localStorageItem);
-        setItem(parsedItem);
-      }
-    } catch (error) {
-      setError(error)
-    } finally {
-      setLoading(false);
+    const savedMode = localStorage.getItem('darkMode');
+    if (savedMode !== null) {
+      setDarkMode(JSON.parse(savedMode));
     }
-  }, [])
+  })
 
-
-  const saveItem = (newItem) => {
-    localStorage.setItem('banco-nc-config', JSON.stringify(config));
-    setItem(newItem);
-  };
-
-  return {
-    item, 
-    saveItem, 
-    loading, 
-    error
-  };
+  return { darkMode, toggleDarkMode };
 }

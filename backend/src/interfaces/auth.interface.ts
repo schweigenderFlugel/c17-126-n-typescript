@@ -1,7 +1,8 @@
 export interface IAuth {
-  id?: number
+  id: number
   email: string
   password: string
-  refreshToken?: string
-  status?: boolean
+  role: string;
+  refreshToken: string
+  status: boolean
 }

@@ -1,36 +1,37 @@
 import { Model } from 'sequelize'
 import { IAuth } from '../interfaces/auth.interface'
 import authDao from '../models/daos/auth.dao'
+import { AuthModel } from '../models/db'
 
 export default class authService {
   /**
    * A description of the entire function.
    *
    * @param {IAuth} authPayload - description of parameter
-   * @return {Promise<Model<IAuth> | null>} description of return value
+   * @return {Promise<AuthModel | null>} description of return value
    */
-  static async createAuth(authPayload: IAuth): Promise<Model<IAuth> | null> {
+  static async createAuth(authPayload: IAuth): Promise<IAuth> {
     const authCreated = await authDao.getInstance().createAuth(authPayload)
-    return authCreated
+    return authCreated;
   }
 
   /**
    * A description of the entire function.
    *
    * @param {number} id - description of parameter
-   * @return {Promise<Model<IAuth> | null>} description of return value
+   * @return {Promise<IAuth>} description of return value
    */
-  static async getAuthById(id: number): Promise<Model<IAuth> | null> {
+  static async getAuthById(id: number): Promise<IAuth> {
     const authFound = await authDao.getInstance().getAuthById(id)
-    return authFound
+    return authFound as IAuth
   }
 
   /**
    * Retrieve all authentication records.
    *
-   * @return {Promise<Model<IAuth>[]>} Found authentication records
+   * @return {Promise<AuthModel[]>} Found authentication records
    */
-  static async getAllAuth(): Promise<Model<IAuth>[]> {
+  static async getAllAuth(): Promise<IAuth[]> {
     const authsFound = await authDao.getInstance().getAllAuth()
     return authsFound
   }
@@ -39,13 +40,13 @@ export default class authService {
    * A description of the entire function.
    *
    * @param {string} email - description of parameter
-   * @return {Promise<IAuth | null>} description of return value
+   * @return {Promise<IAuth>} description of return value
    */
   static async getAuthByEmail(
     email: string
-  ): Promise<IAuth | null> {
+  ): Promise<IAuth> {
     const authFound = await authDao.getInstance().getAuthByEmail(email)
-    return authFound
+    return authFound as IAuth;
   }
 
   /**
@@ -53,24 +54,24 @@ export default class authService {
    *
    * @param {number} id - The ID of the authentication information.
    * @param {IAuth} authPayload - The updated authentication payload.
-   * @return {Promise<Model<IAuth> | null>} The updated authentication information or null if not found.
+   * @return {Promise<IAuth>} The updated authentication information or null if not found.
    */
   static async updateAuth(
     id: number,
     authPayload: IAuth
-  ): Promise<Model<IAuth> | null> {
+  ): Promise<IAuth> {
     const authUpdated = await authDao.getInstance().updateAuth(id, authPayload)
-    return authUpdated
+    return authUpdated as IAuth;
   }
 
   /**
    * Delete authentication by ID.
    *
    * @param {number} id - The ID of the authentication to delete.
-   * @return {Promise<Model<IAuth> | null>} The deleted authentication if successful, otherwise null.
+   * @return {Promise<AuthModel | null>} The deleted authentication if successful, otherwise null.
    */
-  static async deleteAuth(id: number): Promise<Model<IAuth> | null> {
+  static async deleteAuth(id: number): Promise<IAuth> {
     const authDeleted = await authDao.getInstance().deleteAuth(id)
-    return authDeleted
+    return authDeleted as IAuth
   }
 }

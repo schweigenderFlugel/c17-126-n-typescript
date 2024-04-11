@@ -33,13 +33,27 @@ export default class authsController {
     }
   }
 
-  static async login(req: Request, res: Response): Promise<string> {
+  static async login(req: Request, res: Response): Promise<string | Response> {
     const payload: IAuth = req.body;
+    try {
       const authFound = await authService.getAuthByEmail(payload.email);
-      const userPassword = authFound?.password ?? '';
-      isValidPassword(userPassword, payload.password);
-      const tokenPayload: ITokenPayload = { id: authFound?.id ?? 0 }
-      const accessToken = SessionUtils.generateToken(tokenPayload);
-      return accessToken
+      isValidPassword(authFound.password, payload.password)
+      const tokenPayload: ITokenPayload = { 
+        id: authFound.id,
+        role: authFound.role,
+      }
+      const accessToken = await SessionUtils.generateToken(tokenPayload);
+      return accessToken;
+    } catch (err: any) {
+      const response: HttpError = new HttpError(
+        err.description || err.message,
+        err.details || err.message
+      )
+      return res.status(err.status || HTTP_STATUS.SERVER_ERROR).json(response)
+    }
+  }
+
+  static async logout(req: Request, res: Response): Promise<void> {
+
   }
 }

@@ -1,6 +1,6 @@
 import { Model } from 'sequelize'
 import { IAuth } from '../../interfaces/auth.interface'
-import { Auth } from '../db'
+import { Auth, AuthModel } from '../db'
 
 export default class authDao {
   private static instance: authDao | null = null
@@ -20,11 +20,11 @@ export default class authDao {
    * @param {IAuth} authPayload - the authentication payload to create
    * @return {Promise<any>} the created authentication record
    */
-  async createAuth(authPayload: IAuth): Promise<Model<IAuth>> {
-    const authCreated: Model<IAuth> = await Auth.create(
-      authPayload as Omit<IAuth, 'id'>
+  async createAuth(authPayload: IAuth): Promise<AuthModel> {
+    const authCreated: AuthModel = await Auth.create(
+      authPayload as Omit<AuthModel, 'id'>
     )
-    return authCreated
+    return authCreated;
   }
 
   /**
@@ -33,8 +33,8 @@ export default class authDao {
    * @param {string} id - The ID of the authentication information to retrieve.
    * @return {Promise<Model<IAuth> | null>} The retrieved authentication information, or null if not found.
    */
-  async getAuthById(id: number): Promise<Model<IAuth> | null> {
-    const authFound: Model<IAuth> | null = await Auth.findByPk(id)
+  async getAuthById(id: number): Promise<AuthModel | null> {
+    const authFound: AuthModel | null = await Auth.findByPk(id)
     return authFound
   }
 
@@ -43,8 +43,8 @@ export default class authDao {
    *
    * @return {Promise<Model<IAuth>[]>} List of auth data
    */
-  async getAllAuth(): Promise<Model<IAuth>[]> {
-    const authsFound: Model<IAuth>[] = await Auth.findAll()
+  async getAllAuth(): Promise<AuthModel[]> {
+    const authsFound: AuthModel[] = await Auth.findAll()
     return authsFound
   }
 
@@ -54,13 +54,13 @@ export default class authDao {
    * @param {string} email - The email to search for
    * @return {Promise<IAuth | null>} The authentication information found, or null if not found
    */
-  async getAuthByEmail(email: string): Promise<IAuth | null> {
+  async getAuthByEmail(email: string): Promise<AuthModel | null> {
     const authFound = await Auth.findOne({
       where: {
         email: email,
       },
     })
-    return authFound
+    return authFound;
   }
 
   /**
@@ -73,7 +73,7 @@ export default class authDao {
   async updateAuth(
     id: number,
     authPayload: IAuth
-  ): Promise<Model<IAuth> | null> {
+  ): Promise<AuthModel | null> {
     const authUpdated = await Auth.update(authPayload, {
       where: { id },
       returning: true,
@@ -85,9 +85,9 @@ export default class authDao {
    * A function that deletes an authentication record.
    *
    * @param {string} id - The ID of the authentication record to delete
-   * @return {Promise<Model<IAuth> | null>} The deleted authentication record or null if not found
+   * @return {Promise<AuthModel | null>} The deleted authentication record or null if not found
    */
-  async deleteAuth(id: number): Promise<Model<IAuth> | null> {
+  async deleteAuth(id: number): Promise<AuthModel | null> {
     const authDeleted = await Auth.update(
       { status: false },
       {

@@ -7,7 +7,7 @@ const controller = new AbortController()
 export const login = async (payload: ILoginPayload): Promise<{ accessToken: string }> => {
   const res: AxiosResponse<{ accessToken: string }> = await AxiosAuth({
     method: 'POST',
-    url: '/login',
+    url: '/auth/login',
     data: payload, 
     signal: controller.signal,
   })
@@ -17,7 +17,7 @@ export const login = async (payload: ILoginPayload): Promise<{ accessToken: stri
 export const signup = async (payload: ISignUpPayload): Promise<void> => {
   await Axios({
     method: 'POST',
-    url: '/signup',
+    url: '/auth/signup',
     data: payload,
     signal: controller.signal,
   })
