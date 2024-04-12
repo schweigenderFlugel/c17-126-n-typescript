@@ -33,17 +33,17 @@ export default class authsController {
     }
   }
 
-  static async login(req: Request, res: Response): Promise<string | Response> {
+  static async login(req: Request, res: Response): Promise<Response> {
     const payload: IAuth = req.body;
+    const authFound = await authService.getAuthByEmail(payload.email);
     try {
-      const authFound = await authService.getAuthByEmail(payload.email);
       isValidPassword(authFound.password, payload.password)
       const tokenPayload: ITokenPayload = { 
         id: authFound.id,
         role: authFound.role,
       }
       const accessToken = await SessionUtils.generateToken(tokenPayload);
-      return accessToken;
+      return res.json({ accessToken });
     } catch (err: any) {
       const response: HttpError = new HttpError(
         err.description || err.message,

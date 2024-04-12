@@ -28,7 +28,7 @@ export const Login = () => {
   }
 
   const { setLogin, remember, setRemember } = useLogin({
-    onSuccess: () => navigate('/', { replace: true }),
+    onSuccess: () => navigate('/dashboard', { replace: true }),
     onReject: error => onLoginError(error),
   })
 

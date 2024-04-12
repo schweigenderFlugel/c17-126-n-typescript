@@ -1,5 +1,5 @@
 import { DataTypes, Model } from 'sequelize'
-import { sequelize } from '../postgres.manager'
+import { sequelize } from '../database.manager'
 import { IAuth } from '../../../interfaces/auth.interface'
 
 export enum Roles {

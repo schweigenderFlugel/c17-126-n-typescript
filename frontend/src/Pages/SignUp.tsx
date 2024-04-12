@@ -7,7 +7,6 @@ import { Modal } from "../Components/Modal";
 import { ErrorMessage } from "../Components/ErrorMessage";
 
 export const SignUp = () => {
-  const [ fullname, setFullname ] = useState<string>('');
   const [ email, setEmail ] = useState<string>('');
   const [ password, setPassword ] = useState<string>('');
   const [ confirmPassword, setConfirmPassword ] = useState<string>('');
@@ -42,17 +41,6 @@ export const SignUp = () => {
         <h1 className="text-[28px] text-black dark:text-white font-bold text-center">Banco nc.</h1>
         <h2 className="text-center dark:text-white mb-4">Nos alegra tenerte por acá</h2>
         <form onSubmit={handleSubmit}>
-          <div className="mb-6">
-            <label htmlFor="fullname" className="text-black dark:text-white">Nombre completo</label>
-            <input 
-              type="text" 
-              id="fullname"
-              name="fullname"
-              className="w-full h-8 rounded-md px-2 border text-black dark:text-white dark:border-white bg-gray-200 dark:bg-transparent"
-              onChange={(e) => setFullname(e.target.value)} 
-              value={fullname}
-            />
-          </div>
           <div className="mb-6">
             <label htmlFor="email" className="text-black dark:text-white">Email</label>
             <input 
@@ -115,7 +103,6 @@ export const SignUp = () => {
               type="submit"
               className="w-full text-white bg-indigo-600 px-2 py-1 cursor-pointer rounded-lg enabled:hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-default"
               disabled={
-                fullname === '' ||
                 email === '' ||
                 password === '' ||
                 confirmPassword === ''

@@ -26,7 +26,7 @@ export const signup = async (payload: ISignUpPayload): Promise<void> => {
 export const logout = async (): Promise<void> => {
   await AxiosAuth({
     method: 'GET',
-    url: '/logout',
+    url: '/auth/logout',
     signal: controller.signal,
   })
 }

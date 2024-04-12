@@ -21,9 +21,7 @@ export default class authDao {
    * @return {Promise<any>} the created authentication record
    */
   async createAuth(authPayload: IAuth): Promise<AuthModel> {
-    const authCreated: AuthModel = await Auth.create(
-      authPayload as Omit<AuthModel, 'id'>
-    )
+    const authCreated: AuthModel = await Auth.create(authPayload)
     return authCreated;
   }
 

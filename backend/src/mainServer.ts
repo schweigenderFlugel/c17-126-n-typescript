@@ -1,5 +1,5 @@
-import './models/db/postgres.manager'
-import { sequelize } from './models/db/postgres.manager'
+import './models/db/database.manager'
+import { sequelize } from './models/db/database.manager'
 import createExpressApp from './config/createApp'
 import middlewaresConfig from './config/middlewares.config'
 
