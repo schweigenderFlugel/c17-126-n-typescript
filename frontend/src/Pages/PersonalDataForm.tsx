@@ -105,7 +105,7 @@ export const PersonalDataForm = () => {
                 formValues.phone.length < 1
               }
               isLoading={isLoading}
-              label="Restablecer contraseña"
+              label="Terminar Registro"
             />
           </div>
         </form>
