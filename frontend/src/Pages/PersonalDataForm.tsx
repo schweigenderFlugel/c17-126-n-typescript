@@ -10,6 +10,7 @@ type FormPersonalDataType = {
   lastName: string;
   address: string;
   phone: string;
+  alias: string;
 };
 
 const initialValue: FormPersonalDataType = {
@@ -17,6 +18,7 @@ const initialValue: FormPersonalDataType = {
   lastName: '',
   address: '',
   phone: '',
+  alias: '',
 };
 
 const sendPersonalData = (formValues: FormPersonalDataType) => {
@@ -73,6 +75,16 @@ export const PersonalDataForm = () => {
               key="lastName"
               name="lastName"
               autoComplete="name"
+              required
+            />
+            <AuthFormRow
+              onChange={handleChange}
+              value={formValues.alias}
+              type="text"
+              label="Alias"
+              key="alias"
+              name="alias"
+              autoComplete="username"
               required
             />
             <AuthFormRow

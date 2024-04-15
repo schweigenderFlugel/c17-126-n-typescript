@@ -15,7 +15,7 @@ export const Navbar = () => {
   });
 
   return (
-    <nav className="flex justify-between items-center mb-2 px-8 py-6 w-full text-black dark:text-white">
+    <nav className="flex justify-between items-center px-8 max-sm:px-6 py-6 max-sm:py-4 w-full text-black dark:text-white">
       <div className="flex space-x-5">
         <button onClick={() => navigate(-1)}>
           <HiOutlineArrowLeftCircle className="dark:hover:bg-indigo-500 rounded-full w-9 h-9 text-black hover:text-indigo-600 dark:text-white" />
