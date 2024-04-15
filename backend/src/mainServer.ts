@@ -1,11 +1,10 @@
 import './models/db/database.manager'
 import { sequelize } from './models/db/database.manager'
 import createExpressApp from './config/createApp'
-import middlewaresConfig from './config/middlewares.config'
 
 // Import Entities for Sequelize
 import './models/db'
-import RegisterRoutes from './utils/register.routes'
+import { envs } from './config/constants'
 
 // CREATE EXPRESS APP
 async function main() {
@@ -14,18 +13,11 @@ async function main() {
   // Conection to DB
   await sequelize.sync({ alter: true })
 
-  // SETUP GLOBAL MIDDLEWARES
-  middlewaresConfig.config(app)
-
-  /**
-   * * Load of Routes for V1
-   */
-  await RegisterRoutes(app, 'v1')
-
-  /**
-   * * Loading of routes for new functions in V2
-   */
-  // await RegisterRoutes(app, 'v2')
+  app.listen(envs.PORT, () => {
+    console.log(
+    `Servidor de express escuchando puerto ${envs.PORT} - PID WORKER ${process.pid}`
+    )
+  })
 }
 
 main()

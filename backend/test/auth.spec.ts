@@ -1,9 +1,12 @@
 import request from 'supertest';
 import Test from 'supertest/lib/test';
 import TestAgent from 'supertest/lib/agent';
+import { Server } from 'http';
+import { decode } from 'jsonwebtoken';
 import { signUpSchema } from '../src/middlewares/validators/auth.validator';
 import createExpressApp from '../src/config/createApp';
-import { Server, IncomingMessage, ServerResponse } from 'http';
+import { sequelize } from '../src/models/db/database.manager';
+import { Roles } from '../src/models/db/entity/auth.entity';
 
 describe('testing auth route', () => {
   let app;
@@ -14,10 +17,11 @@ describe('testing auth route', () => {
     app = createExpressApp()
     server = app.listen(9000)
     api = request(app);
+    await sequelize.sync();
   })
 
   describe('POST /signup', () => {
-    it('Should reguster an user succesfully', async () => {
+    it('Should not register an user with invalid data', async () => {
       const inputData = {
         email: 'newuser',
         password: 'newuser1234'
@@ -33,12 +37,46 @@ describe('testing auth route', () => {
       }
       const validationResult = signUpSchema.safeParse(inputData);
       expect(validationResult.success).toBe(true);
-      const { statusCode } = await api.post('auth/signup').send(inputData)
+      const { statusCode } = await api.post('/api/v1/auth/signup').send(inputData)
       expect(statusCode).toBe(201);
+    })
+
+    it('Should not register an existing user', async () => {
+      const inputData = {
+        email: 'newuser@email.com',
+        password: 'newuser1234'
+      }
+      const validationResult = signUpSchema.safeParse(inputData);
+      expect(validationResult.success).toBe(true);
+      const { statusCode } = await api.post('/api/v1/auth/signup').send(inputData)
+      expect(statusCode).toBe(409);
     })
   })
 
-  afterAll(() => {
+  describe('POST /login', () => {
+    it('Should not login', async () => {
+      const inputData = {
+        email: 'newuser',
+        password: 'newuser123'
+      }
+      const { statusCode } = await api.post('/api/v1/auth/login').send(inputData)
+      expect(statusCode).toBe(201);
+    })
+
+    it('Should login and get an access token', async () => {
+      const inputData = {
+        email: 'newuser',
+        password: 'newuser1234'
+      }
+      const { statusCode, body } = await api.post('/api/v1/auth/login').send(inputData);
+      const token = decode(body.accessToken);
+      expect(statusCode).toBe(201);
+      expect(token).toMatchObject({ id: 1, role: Roles.NORMAL });
+    })
+  })
+
+  afterAll(async () => {
     server.close()
+    await sequelize.close()
   })
 })

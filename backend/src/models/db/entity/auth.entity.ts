@@ -18,6 +18,7 @@ export const Auth = sequelize.define<AuthModel>('auth', {
   email: {
     type: DataTypes.STRING,
     allowNull: false,
+    unique: true,
   },
   password: {
     type: DataTypes.STRING,

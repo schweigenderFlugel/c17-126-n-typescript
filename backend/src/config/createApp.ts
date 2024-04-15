@@ -5,6 +5,11 @@ import { envs } from './constants'
 import morgan from 'morgan'
 import passport from 'passport'
 import { JwtStrategy } from '../strategies/jwt-strategy'
+import '../models/db/database.manager'
+import '../models/db'
+import { sequelize } from '../models/db/database.manager'
+import middlewaresConfig from './middlewares.config'
+import RegisterRoutes from '../utils/register.routes'
 
 export default function createExpressApp() {
   const app = express()
@@ -30,15 +35,23 @@ export default function createExpressApp() {
   } else {
     envs.NODE_ENV !== 'prod' && app.use(morgan('dev'))
 
-    app.listen(envs.PORT, () => {
-      console.log(
-        `Servidor de express escuchando puerto ${envs.PORT} - PID WORKER ${process.pid}`
-      )
-    })
+    // app.listen(envs.PORT, () => {
+    // console.log(
+    //    `Servidor de express escuchando puerto ${envs.PORT} - PID WORKER ${process.pid}`
+    //  )
+    // })
   }
+
+  /**
+   * * Load of Routes for V1
+   */
+  RegisterRoutes(app, 'v1')
+
+  // SETUP GLOBAL MIDDLEWARES
+  middlewaresConfig.config(app)
 
   // PASSPORT
   passport.use(JwtStrategy);
 
-  return app
+  return app;
 }

@@ -1,4 +1,4 @@
-import { DataTypes, Model } from 'sequelize'
+import { DataTypes } from 'sequelize'
 import { sequelize } from '../database.manager'
 
 const { STRING, INTEGER } = DataTypes

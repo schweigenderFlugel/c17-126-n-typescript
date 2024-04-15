@@ -4,17 +4,13 @@ import { envs } from '../../config/constants';
 import { ENVIROMENTS } from '../../../enviroments';
 
 
-export const sequelize = envs.NODE_ENV === ENVIROMENTS.PRODUCTION 
+export const sequelize = envs.NODE_ENV === ENVIROMENTS.PRODUCTION
   ? new Sequelize(envs.DB_URL, {
       logging: false,
     })
-  : envs.NODE_ENV === ENVIROMENTS.DEVELOPMENT 
-    ? 
-      new Sequelize(envs.DB_URL, {
-        logging: false,
-      })
-    : new Sequelize({
-        dialect: 'sqlite',
-        storage: `data/tests/test.${Math.random()}.sqlite`,
-      })
+  : new Sequelize({
+      dialect: 'sqlite',
+      storage: `data/tests/test.${Math.random()}.sqlite`,
+      logging: false,
+    })
 

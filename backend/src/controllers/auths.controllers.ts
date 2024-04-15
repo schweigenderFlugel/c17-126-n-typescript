@@ -7,6 +7,8 @@ import apiSuccessResponse from '../utils/apiResponse.utils'
 import { HTTP_STATUS } from '../config/constants'
 import HttpError from '../utils/HttpError.utils'
 import SessionUtils from '../utils/session.util';
+import CookiesUtils from '../utils/cookies.utils';
+import { UniqueConstraintError } from 'sequelize';
 
 export default class authsController {
   /**
@@ -17,19 +19,26 @@ export default class authsController {
    * @return {Promise<Response>} response containing the result of the operation
    */
   static async signUp(req: Request, res: Response): Promise<Response> {
-    const payload: IAuth = req.body
-    payload.password = createHash(payload.password)
+    const payload: IAuth = req.body;
+    payload.password = createHash(payload.password);
     try {
-      const newAuth = await authService.createAuth(payload)
-      const response = apiSuccessResponse(newAuth)
-      return res.status(HTTP_STATUS.CREATED).json(response)
+      const newAuth = await authService.createAuth(payload);
+      const response = apiSuccessResponse(newAuth);
+      return res.status(HTTP_STATUS.CREATED).json(response);
     } catch (err: any) {
-      console.log(err) // FIXME: Replace with a Morgan
-      const response: HttpError = new HttpError(
-        err.description || err.message,
-        err.details || err.message
-      )
-      return res.status(err.status || HTTP_STATUS.SERVER_ERROR).json(response)
+      if (err instanceof UniqueConstraintError) {
+        const response: HttpError = new HttpError(
+          err.message, err.stack, 409
+        )
+        return res.status(409 || HTTP_STATUS.SERVER_ERROR).json(response)
+      } else {
+        console.log(err) // FIXME: Replace with a Morgan
+        const response: HttpError = new HttpError(
+          err.description || err.message,
+          err.details || err.message
+        )
+        return res.status(err.status || HTTP_STATUS.SERVER_ERROR).json(response)
+      }
     }
   }
 
@@ -43,8 +52,11 @@ export default class authsController {
         role: authFound.role,
       }
       const accessToken = await SessionUtils.generateToken(tokenPayload);
+      const refreshToken = await SessionUtils.generateRefreshToken(tokenPayload);
+      await CookiesUtils.setJwtCookie(res, refreshToken)
       return res.json({ accessToken });
     } catch (err: any) {
+      console.error(err)
       const response: HttpError = new HttpError(
         err.description || err.message,
         err.details || err.message
@@ -53,7 +65,15 @@ export default class authsController {
     }
   }
 
-  static async logout(req: Request, res: Response): Promise<void> {
-
+  static async logout(res: Response): Promise<void | Response> {
+    try {
+      await CookiesUtils.removeJwtCookie(res);
+    } catch (err: any) {
+      const response: HttpError = new HttpError(
+        err.description || err.message,
+        err.details || err.message
+      )
+      return res.status(err.status || HTTP_STATUS.SERVER_ERROR).json(response)
+    }
   }
 }
