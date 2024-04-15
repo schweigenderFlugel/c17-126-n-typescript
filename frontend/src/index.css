@@ -37,3 +37,7 @@
 .dark ::-webkit-scrollbar-track {
   background-color: rgba(0, 0, 0, 0.4);
 }
+
+body{
+  font-family: 'Poppins';
+}

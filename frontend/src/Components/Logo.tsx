@@ -1,21 +1,23 @@
 export const Logo = ({
-  isWhite = false,
   className = '',
   classNameIcon = '',
+  small = false,
 }: {
-  isWhite?: boolean;
-  className?: string;
-  classNameIcon?: string;
+  className?: string
+  classNameIcon?: string
+  small?: boolean
 }) => {
   return (
-    <h2 className="flex items-center gap-4">
+    <h2
+      className={`flex items-center max-sm:gap-2 ${small ? 'gap-2' : 'gap-4'}`}
+    >
       <div>
         <svg
           width="41"
           height="47"
           viewBox="0 0 41 47"
           fill="none"
-          className={classNameIcon}
+          className={`max-sm:h-9 max-sm:w-9 ${small ? 'h-9 w-9' : ''} ${classNameIcon}`}
         >
           <path
             d="M20.45 4.57L28.26 9.08L32.22 6.8L20.45 0L0.790039 11.36L4.73004 13.64L20.45 4.57Z"
@@ -44,12 +46,10 @@ export const Logo = ({
         </svg>
       </div>
       <span
-        className={`font-extrabold text-5xl align-middle ${
-          isWhite ? 'text-white' : 'text-gray-900'
-        } ${className}`}
+        className={`font-extrabold align-middle text-gray-900 max-sm:text-4xl ${small ? 'text-4xl' : 'text-5xl'} ${className}`}
       >
         Bank<span className="text-indigo-500">me.</span>
       </span>
     </h2>
-  );
-};
+  )
+}
