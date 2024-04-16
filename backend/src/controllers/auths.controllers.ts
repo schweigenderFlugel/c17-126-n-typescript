@@ -9,7 +9,7 @@ import HttpError from '../utils/HttpError.utils'
 import SessionUtils from '../utils/session.util';
 import CookiesUtils from '../utils/cookies.utils';
 import { UniqueConstraintError } from 'sequelize';
-import { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
+import { TokenExpiredError } from 'jsonwebtoken';
 
 export default class authsController {
   /**
@@ -90,15 +90,18 @@ export default class authsController {
     }
   }
 
-  static async logout(res: Response): Promise<void | Response> {
+  static async logout(req: Request, res: Response): Promise<void | Response> {
     try {
+      const jwtCookie = req.cookies[envs.HTTPONLY_COOKIE_NAME];
+      if (!jwtCookie) throw new HttpError('cookie not found', 'Not Found', 404);
       await CookiesUtils.removeJwtCookie(res);
+      return res.status(HTTP_STATUS.OK).json({ message: 'logout succesfully' });
     } catch (err: any) {
       const response: HttpError = new HttpError(
         err.description || err.message,
         err.details || err.message
       )
-      return res.status(err.status || HTTP_STATUS.SERVER_ERROR).json(response)
+      return res.status(err.status || HTTP_STATUS.NOT_FOUND).json(response)
     }
   }
 }

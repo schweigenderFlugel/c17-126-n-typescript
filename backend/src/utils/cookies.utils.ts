@@ -9,7 +9,7 @@ export default class CookiesUtils {
       httpOnly: true,
       secure: true,
       sameSite: 'none',
-      expires: new Date(new Date().getTime() + 24 * 60 * 60)
+      expires: new Date(new Date().getTime() + 2 * 60 * 60 * 1000)
     }
     res.cookie(HTTPONLY_COOKIE_NAME, refreshToken, options)
   }

@@ -1,12 +1,15 @@
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { AiFillHome } from "react-icons/ai";
 import { BsArrowLeftRight } from "react-icons/bs";
 import { VscSettingsGear } from "react-icons/vsc";
 import { useAuth } from "../Hooks/useAuth"
 import { LoadingPage } from "../Components/LoadingPage"
+import { useLogout } from "../Hooks/useLogout";
 
 export const Dashboard = () => {
+  const navigate = useNavigate()
   const { loading, setLoading } = useAuth();
+  const { setLogout } = useLogout({ onSuccess: () => navigate('/login', { replace: true })});
 
   setTimeout(() => {
     setLoading(false);
@@ -42,6 +45,9 @@ export const Dashboard = () => {
           </div>
           <div className="rounded-md p-1 dark:text-white dark:bg-indigo-500">
             <p>Reporte</p>
+          </div>
+          <div className="rounded-md p-1 dark:text-white dark:bg-indigo-500 cursor-pointer" onClick={setLogout}>
+            <p>Cerrar sesión</p>
           </div>
         </div>
       </div>

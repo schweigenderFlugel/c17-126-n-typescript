@@ -23,15 +23,18 @@ export const signup = async (payload: ISignUpPayload): Promise<void> => {
   })
 }
 
-export const logout = async (): Promise<void> => {
+export const logout = async (accessToken: string | null): Promise<void> => {
   await AxiosAuth({
     method: 'GET',
     url: '/auth/logout',
     signal: controller.signal,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
   })
 }
 
-export const setSession = (accessToken: string | null ) => {
+export const setSession = (accessToken: string | null) => {
   Axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`
 }
 
