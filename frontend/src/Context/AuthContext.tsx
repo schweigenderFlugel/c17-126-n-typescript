@@ -1,6 +1,8 @@
 import { Dispatch, SetStateAction, ReactNode, createContext, useState } from "react";
 import { setSession } from "../Services/user";
 import { useLocalStorage } from "./useLocalStorage";
+import { useRefresh } from "../Hooks/useRefresh";
+import { useNavigate } from "react-router-dom";
 
 
 interface AuthContextInterface {
@@ -35,9 +37,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [ accessToken, setAccessToken ] = useState<string | null>(null);
   const [ loading, setLoading ] = useState<boolean>(true);
   const [ remember, setRemember ] = useState<boolean>(false);
-  const { darkMode, toggleDarkMode } = useLocalStorage()
+  const { darkMode, toggleDarkMode } = useLocalStorage();
+  const navigate = useNavigate();
 
   setSession(accessToken);
+
+  useRefresh({
+    onSuccess: () => navigate('/'),
+    setToken: (token: string | null) => setAccessToken(token),
+  });
 
   return (
     <AuthContext.Provider value={{

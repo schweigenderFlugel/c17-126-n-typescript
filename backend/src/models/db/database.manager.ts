@@ -1,5 +1,5 @@
 // HERE WILL BE THE DATABASE CONNECTION
-import { Sequelize, Options } from 'sequelize';
+import { Sequelize } from 'sequelize';
 import { envs } from '../../config/constants';
 import { ENVIROMENTS } from '../../../enviroments';
 

@@ -1,15 +1,18 @@
 import { Router, Request } from "express";
 import { DBLoader } from "./db.loader";
-import { TableName } from "sequelize";
-
+import { ModelAttributes, ModelStatic } from "sequelize";
+import { AuthModel } from "../models/db";
 const router = Router();
 
 interface ILoader {
-  fixtures: object[],
-  tableName: TableName,
+  fixtures: object[]
+  entity: string;
+  attributes: ModelAttributes;
 }
 
-router.post('/loader', (req: Request) => {
+router.post('/', (req: Request) => {
   const loader: ILoader = req.body;
-  DBLoader.loadFixtures(loader.fixtures, loader.tableName)
+  DBLoader.loadFixtures(loader.fixtures, loader.entity, loader.attributes);
 })
+
+export default router;

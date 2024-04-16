@@ -3,6 +3,6 @@ export interface IAuth {
   email: string
   password: string
   role: string;
-  refreshToken: string |null
+  refreshToken: string | null
   status: boolean
 }

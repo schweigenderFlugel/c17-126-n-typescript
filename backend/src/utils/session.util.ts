@@ -1,4 +1,4 @@
-import { sign } from 'jsonwebtoken'
+import { decode, sign, verify } from 'jsonwebtoken'
 import { envs } from '../config/constants'
 import { ITokenPayload } from '../interfaces/token.interface'
 
@@ -11,7 +11,13 @@ export default class SessionUtils {
   }
 
   static async generateRefreshToken(payload: ITokenPayload): Promise<string> {
-    const refreshToken: string = sign(payload, REFRESH_TOKEN_SECRET, { expiresIn: '24h'})
+    const refreshToken: string = sign(payload, REFRESH_TOKEN_SECRET, { expiresIn: '2h' })
     return refreshToken;
+  }
+
+  static async verifyRefreshToken(token: string): Promise<ITokenPayload> {
+    verify(token, REFRESH_TOKEN_SECRET);
+    const decoded = decode(token);
+    return decoded as ITokenPayload;
   }
 }

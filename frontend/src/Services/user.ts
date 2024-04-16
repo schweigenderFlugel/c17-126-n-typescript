@@ -38,7 +38,7 @@ export const setSession = (accessToken: string | null ) => {
 export const refreshSession = async (): Promise<{ accessToken: string | null}> => {
   const res: AxiosResponse<{ accessToken: string }> = await AxiosAuth({
     method: 'GET',
-    url: '/refresh'
+    url: '/auth/refresh'
   })
   return res.data; 
 }

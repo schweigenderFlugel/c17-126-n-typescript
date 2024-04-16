@@ -7,6 +7,7 @@ import { signUpSchema } from '../src/middlewares/validators/auth.validator';
 import createExpressApp from '../src/config/createApp';
 import { sequelize } from '../src/models/db/database.manager';
 import { Roles } from '../src/models/db/entity/auth.entity';
+import { loadFixtures } from '../src/common/loader';
 
 describe('testing auth route', () => {
   let app;
@@ -14,10 +15,10 @@ describe('testing auth route', () => {
   let api: TestAgent<Test>;
 
   beforeAll(async() => {
-    app = createExpressApp()
-    server = app.listen(9000)
+    app = createExpressApp();
+    server = app.listen(9000);
     api = request(app);
-    await sequelize.sync();
+    await loadFixtures(api);
   })
 
   describe('POST /signup', () => {

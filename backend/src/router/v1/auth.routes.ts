@@ -18,6 +18,11 @@ authRouter.post(
 )
 
 authRouter.get(
+  '/refresh',
+  authsController.refresh
+)
+
+authRouter.get(
   '/logout',
   passport.authenticate('jwt', { session: false }),
   authsController.logout

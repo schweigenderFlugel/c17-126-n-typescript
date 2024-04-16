@@ -1,8 +1,8 @@
-import { FunctionParam, Sequelize, TableName } from "sequelize";
-
-let sequelize: Sequelize;
+import { ModelAttributes } from "sequelize";
+import { sequelize } from "../models/db/database.manager";
+import { Auth, AuthModel } from "../models/db";
 
 export class DBLoader {
-  static async loadFixtures(fixture: object[], tableName: TableName) {
+  static async loadFixtures(fixture: object[], entity: string, attributes: ModelAttributes) {
   }
 }
