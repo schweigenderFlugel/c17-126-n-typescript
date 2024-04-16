@@ -1,10 +1,17 @@
-import { DataTypes, Model } from 'sequelize'
+import { DataTypes, Model, ModelOptions } from 'sequelize'
 import { sequelize } from '../database.manager'
 import { IAuth } from '../../../interfaces/auth.interface'
 
 export enum Roles {
   ADMIN = 'admin',
   NORMAL = 'normal'
+}
+
+export const AUTH_TABLE = 'auth';
+
+const options: ModelOptions = {
+  tableName: AUTH_TABLE,
+  timestamps: false,
 }
 
 export interface AuthModel extends Model<IAuth>, IAuth {}
@@ -37,6 +44,6 @@ export const Auth = sequelize.define<AuthModel>('auth', {
     type: DataTypes.BOOLEAN,
     allowNull: false,
     defaultValue: false,
-  },
-}
+  }, 
+}, options
 )
