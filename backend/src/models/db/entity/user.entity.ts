@@ -1,9 +1,12 @@
 import { DataTypes, Model } from 'sequelize'
 import { sequelize } from '../postgres.manager'
+import { IUser } from '../../../interfaces/user.interface'
 
 const { STRING, INTEGER } = DataTypes
 
-const User = sequelize.define('users', {
+export interface UserModel extends Model<IUser>, IUser {}
+
+const User = sequelize.define<UserModel>('users', {
   id: {
     type: INTEGER,
     autoIncrement: true,
