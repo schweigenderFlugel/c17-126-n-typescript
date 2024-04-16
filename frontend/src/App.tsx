@@ -15,6 +15,8 @@ import { RequireLogin } from './Components/ProtectedRoutes';
 import { DashboardStart } from './Components/DashboardStart';
 import { TransfersList } from './Components/TransfersList';
 import { Settings } from './Components/Settings';
+import { Statistics } from './Components/Statistics';
+import { Investments } from './Components/Investments';
 
 function App() {
   return (
@@ -34,15 +36,21 @@ function App() {
               element={<ResetPasswordForm />}
             />
             <Route path="/datos-personales" element={<PersonalDataForm />} />
-            <Route element={<RequireLogin />}>
-              <Route path="/dashboard" element={<Dashboard />}>
-                <Route path="/dashboard" element={<DashboardStart />} />
-                <Route
-                  path="/dashboard/transferencias"
-                  element={<TransfersList />}
-                />
-                <Route path="/dashboard/configuracion" element={<Settings />} />
-              </Route>
+            <Route
+              element={
+                <RequireLogin>
+                  <Dashboard />
+                </RequireLogin>
+              }
+            >
+              <Route path="/dashboard" element={<DashboardStart />} />
+              <Route
+                path="/dashboard/transferencias"
+                element={<TransfersList />}
+              />
+              <Route path="/dashboard/inversiones" element={<Investments />} />
+              <Route path="/dashboard/estadisticas" element={<Statistics />} />
+              <Route path="/dashboard/configuracion" element={<Settings />} />
             </Route>
           </Route>
         </Routes>

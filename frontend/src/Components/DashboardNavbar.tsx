@@ -1,28 +1,42 @@
-import { BsBell, BsMoonStars } from "react-icons/bs";
-import { GiSun } from "react-icons/gi";
-import { FaUser } from "react-icons/fa";
-import { useAuth } from "../Hooks/useAuth";
+import { useAuth } from '../Hooks/useAuth';
+import {
+  HiMagnifyingGlass,
+  HiOutlineBell,
+  HiOutlineMoon,
+  HiOutlineSun,
+  HiOutlineUser,
+} from 'react-icons/hi2';
 
 export const DashboardNavbar = ({ children }) => {
   const { darkMode, toggleDarkMode } = useAuth();
 
   return (
-    <nav className="col-span-12 row-span-1 flex justify-between items-center w-full py-2">
-      <h2 className="text-[20px] dark:text-white font-extrabold">{children}</h2>
-      <input type="text" placeholder="Buscar" className="w-[30%] px-2 rounded-md dark:bg-transparent border dark:text-white dark:border-white"/>
-      <div className="inline-flex items-center space-x-4">
+    <nav className="items-center grid grid-cols-3 max-sm:grid-cols-2 col-span-12 row-span-1 py-2 w-full">
+      <h2 className="justify-self-start font-semibold text-3xl max-lg:text-2xl dark:text-white">
+        {children}
+      </h2>
+      <div className="relative justify-self-center max-sm:hidden w-[300px] max-lg:w-[200px]">
+        <HiMagnifyingGlass className="top-[50%] left-2 absolute text-[20px] text-indigo-600 dark:text-white translate-y-[-50%]" />
+        <input
+          type="text"
+          placeholder="Buscar"
+          className="border-indigo-300 focus:border-indigo-600 focus:dark:border-indigo-500 dark:border-white bg-transparent px-2 py-4 pl-8 rounded-md w-full focus:outline-none border h-8 text-black text-sm dark:text-white"
+        />
+      </div>
+      <div className="inline-flex justify-self-end items-center space-x-4">
         <button onClick={() => toggleDarkMode()}>
-          {darkMode 
-            ? <GiSun className="text-[20px] dark:text-white" />
-            : <BsMoonStars className="text-[20px]"/>
-          }
+          {darkMode ? (
+            <HiOutlineSun className="text-[22px] dark:text-white" />
+          ) : (
+            <HiOutlineMoon className="text-[22px]" />
+          )}
         </button>
-        <BsBell className="text-[20px] dark:text-white" />
-        <div className="inline-flex items-center space-x-4">
-          <p className="dark:text-white">Usuario</p>
-          <FaUser className="text-[20px] dark:text-white"/>
+        <HiOutlineBell className="text-[24px] dark:text-white" />
+        <div className="inline-flex items-center gap-4">
+          <p className="max-sm:hidden dark:text-white">Usuario</p>
+          <HiOutlineUser className="text-[24px] dark:text-white" />
         </div>
       </div>
     </nav>
-  )
-}
+  );
+};
