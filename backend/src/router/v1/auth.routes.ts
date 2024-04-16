@@ -1,26 +1,26 @@
 import { Router } from 'express'
 import schemaValidator from '../../middlewares/schemasValidator.middlewares'
-import { signUpSchema } from '../../middlewares/validators/auth.validator'
+import {
+  loginSchema,
+  signUpSchema,
+} from '../../middlewares/validators/auth.validator'
 import authsController from '../../controllers/auths.controllers'
-import passport from 'passport'
+import { errorHandler } from '../../middlewares/errorHandler.middleware'
 
 const authRouter = Router()
 
 authRouter.post(
   '/signup',
   schemaValidator(signUpSchema, null),
-  authsController.signUp
+  authsController.signUp,
+  errorHandler
 )
 
 authRouter.post(
   '/login',
-  authsController.login
-)
-
-authRouter.get(
-  '/logout',
-  passport.authenticate('jwt', { session: false }),
-  authsController.logout
+  schemaValidator(loginSchema, null),
+  authsController.login,
+  errorHandler
 )
 
 export default authRouter

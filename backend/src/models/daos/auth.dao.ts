@@ -21,10 +21,8 @@ export default class authDao {
    * @return {Promise<any>} the created authentication record
    */
   async createAuth(authPayload: IAuth): Promise<AuthModel> {
-    const authCreated: AuthModel = await Auth.create(
-      authPayload as Omit<AuthModel, 'id'>
-    )
-    return authCreated;
+    const authCreated: AuthModel = await Auth.create(authPayload)
+    return authCreated
   }
 
   /**
@@ -60,7 +58,7 @@ export default class authDao {
         email: email,
       },
     })
-    return authFound;
+    return authFound
   }
 
   /**
@@ -70,10 +68,7 @@ export default class authDao {
    * @param {IAuth} authPayload - the new authentication payload
    * @return {Promise<Model<IAuth> | null>} the updated authentication model or null if not found
    */
-  async updateAuth(
-    id: number,
-    authPayload: IAuth
-  ): Promise<AuthModel | null> {
+  async updateAuth(id: number, authPayload: IAuth): Promise<AuthModel | null> {
     const authUpdated = await Auth.update(authPayload, {
       where: { id },
       returning: true,

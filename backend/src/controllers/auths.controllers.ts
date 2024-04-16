@@ -1,59 +1,87 @@
-import { Request, Response } from 'express'
-import { IAuth } from '../interfaces/auth.interface';
-import { ITokenPayload } from '../interfaces/token.interface';
+import { NextFunction, Request, Response } from 'express'
+import { IAuth } from '../interfaces/auth.interface'
+import { ITokenPayload } from '../interfaces/token.interface'
 import { createHash, isValidPassword } from '../utils/bcrypt.utils'
 import authService from '../services/auth.services'
 import apiSuccessResponse from '../utils/apiResponse.utils'
 import { HTTP_STATUS } from '../config/constants'
 import HttpError from '../utils/HttpError.utils'
-import SessionUtils from '../utils/session.util';
+import SessionUtils from '../utils/session.util'
 
 export default class authsController {
   /**
-   * A description of the entire function.
+   * Sign up a new user.
    *
-   * @param {Request} req - request object
-   * @param {Response} res - response object
-   * @return {Promise<Response>} response containing the result of the operation
+   * @param {Request} req - the request object
+   * @param {Response} res - the response object
+   * @param {NextFunction} next - the next function
+   * @return {Promise<void>} a promise that resolves to void
    */
-  static async signUp(req: Request, res: Response): Promise<Response> {
+  static async signUp(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     const payload: IAuth = req.body
     payload.password = createHash(payload.password)
     try {
       const newAuth = await authService.createAuth(payload)
       const response = apiSuccessResponse(newAuth)
-      return res.status(HTTP_STATUS.CREATED).json(response)
+      res.status(HTTP_STATUS.CREATED).json(response)
     } catch (err: any) {
-      console.log(err) // FIXME: Replace with a Morgan
-      const response: HttpError = new HttpError(
-        err.description || err.message,
-        err.details || err.message
-      )
-      return res.status(err.status || HTTP_STATUS.SERVER_ERROR).json(response)
+      next(err)
     }
   }
 
-  static async login(req: Request, res: Response): Promise<string | Response> {
-    const payload: IAuth = req.body;
+  /**
+   * Authenticates a user with the provided email and password.
+   *
+   * @param {Request} req - the request object containing user data
+   * @param {Response} res - the response object to send the created user data
+   * @param {NextFunction} next - the next function in the middleware chain
+   * @return {Promise<void>} a promise that resolves when the user is authenticated
+   * @throws {HttpError} if the credentials are invalid
+   */
+  static async login(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    const payload: IAuth = req.body
     try {
-      const authFound = await authService.getAuthByEmail(payload.email);
-      isValidPassword(authFound.password, payload.password)
-      const tokenPayload: ITokenPayload = { 
+      const authFound = await authService.getAuthByEmail(payload.email)
+      if (!authFound) {
+        throw new HttpError(
+          'Invalid Credentials',
+          'Must provide valid credentials',
+          HTTP_STATUS.NOT_FOUND
+        )
+      }
+
+      const validPassword = isValidPassword(
+        authFound.password,
+        payload.password
+      )
+
+      if (!validPassword) {
+        throw new HttpError(
+          'Invalid Credentials',
+          'Must provide valid credentials',
+          HTTP_STATUS.NOT_FOUND
+        )
+      }
+
+      const tokenPayload: ITokenPayload = {
         id: authFound.id,
         role: authFound.role,
       }
-      const accessToken = await SessionUtils.generateToken(tokenPayload);
-      return accessToken;
+      const accessToken = await SessionUtils.generateToken(tokenPayload)
+
+      res.status(HTTP_STATUS.OK).json({ accessToken })
     } catch (err: any) {
-      const response: HttpError = new HttpError(
-        err.description || err.message,
-        err.details || err.message
-      )
-      return res.status(err.status || HTTP_STATUS.SERVER_ERROR).json(response)
+      next(err)
     }
   }
 
-  static async logout(req: Request, res: Response): Promise<void> {
-
-  }
+  static async logout(req: Request, res: Response): Promise<void> {}
 }

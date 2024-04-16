@@ -1,7 +1,10 @@
-import { DataTypes } from 'sequelize'
+import { DataTypes, Model } from 'sequelize'
 import { sequelize } from '../postgres.manager'
+import { ITypeAccount } from '../../../interfaces/type-account.interface'
 
-const TypeAccount = sequelize.define('TypeAccount', {
+export interface TypeAccountModel extends Model<ITypeAccount>, ITypeAccount {}
+
+const TypeAccount = sequelize.define<TypeAccountModel>('TypeAccount', {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,

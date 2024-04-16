@@ -3,8 +3,6 @@ import cluster from 'cluster'
 import { cpus } from 'os'
 import { envs } from './constants'
 import morgan from 'morgan'
-import passport from 'passport'
-import { JwtStrategy } from '../strategies/jwt-strategy'
 
 export default function createExpressApp() {
   const app = express()
@@ -36,9 +34,6 @@ export default function createExpressApp() {
       )
     })
   }
-
-  // PASSPORT
-  passport.use(JwtStrategy);
 
   return app
 }
