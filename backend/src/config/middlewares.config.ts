@@ -3,6 +3,9 @@ import express from 'express'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import dotenv from 'dotenv'
+import swaggerJsdoc from 'swagger-jsdoc'
+import swaggerUiExpress from 'swagger-ui-express'
+import { options } from './swaggerOptions'
 
 dotenv.config()
 
@@ -29,5 +32,8 @@ export default {
 
     app.use(express.json())
     app.use(express.urlencoded({ extended: true }))
+
+    const specs = swaggerJsdoc(options)
+    app.use('/apidocs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs))
   },
 }

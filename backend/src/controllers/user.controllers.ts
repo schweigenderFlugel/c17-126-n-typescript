@@ -9,6 +9,7 @@ import userService from '../services/user.services'
 import bankAccountService from '../services/bankAccount.services'
 import { IBankAccount } from '../interfaces/bankAccount.interface'
 import bankAccountHelper from '../utils/bankAccountHelper'
+
 export default class userController {
   /**
    * Creates a new user with the provided request body data.
