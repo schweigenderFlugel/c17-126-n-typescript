@@ -5,7 +5,7 @@ import request from 'supertest';
 import createExpressApp from '../src/config/createApp';
 import { upSeed } from './utils/umzug';
 import { sequelize } from '../src/models/db/database.manager';
-import { adminUserToken, normalUserToken } from '../src/models/db/seeders/auth';
+import { normalUserToken } from '../src/models/db/seeders/auth';
 
 
 describe('Testing the user route', () => {

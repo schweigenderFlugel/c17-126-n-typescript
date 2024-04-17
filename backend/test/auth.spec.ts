@@ -131,7 +131,7 @@ describe('Testing the auth route', () => {
       expect(statusCode).toBe(404);
     })
 
-    it('Should not logout because there is not any cookie', async () => {
+    it('Should logout', async () => {
       const { statusCode, header } = await api.get('/api/v1/auth/refresh').set('Cookie', `bankme=${adminUserRefreshToken}`);
       expect(statusCode).toBe(200);
       expect(header['set-cookie']).toBeUndefined();

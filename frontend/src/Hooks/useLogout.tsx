@@ -8,10 +8,10 @@ type options = {
 } 
 
 export const useLogout = ({ onSuccess, onReject }: options) => {
-  const { accessToken, setAccessToken } = useContext(AuthContext); 
+  const { setAccessToken } = useContext(AuthContext); 
 
   const setLogout = async () => {
-    await logout(accessToken)
+    await logout()
       .then(() => {
         setAccessToken(null)
       }).then(() => {

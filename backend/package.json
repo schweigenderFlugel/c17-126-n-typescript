@@ -9,7 +9,7 @@
     "build": "npm run build:clean && npm run build:tsc",
     "dev": "tsnd --respawn --clear ./src/mainServer.ts",
     "start": "node ./dist/src/mainServer.js",
-    "test": "cross-env NODE_ENV=tests jest --detectOpenHandles --forceExit --testTimeout=20000",
+    "test": "cross-env NODE_ENV=tests jest --detectOpenHandles --forceExit",
     "debug": " tsnd --inspect --respawn --transpile-only ./src/mainServer.ts",
     "format": "prettier --write ."
   },
