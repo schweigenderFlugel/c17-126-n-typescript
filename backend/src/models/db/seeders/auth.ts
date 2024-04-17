@@ -3,7 +3,7 @@ import { AUTH_TABLE, Roles } from "../entity/auth.entity";
 
 interface AuthFixture extends Omit<IAuth, 'id'> {}
 
-const adminUser: AuthFixture = {
+const adminAuth: AuthFixture = {
   email: 'admin@email.com',
   password: "$2b$10$WfM1hoVWH8R/i0fC34Lh2.lzpLYP/i3ki7mLz62lAFchQw0yJC.Ue",
   refreshToken: null,
@@ -11,7 +11,7 @@ const adminUser: AuthFixture = {
   status: true,
 }
 
-const normalUser: AuthFixture = {
+const normalAuth: AuthFixture = {
   email: 'normal@email.com',
   password: "$2b$10$85FoRWGIr7Z1Zyo5HHHA5O1a0RzC/oDvG3t/kjQSAblO3ZGGAJ1Nu",
   refreshToken: null,
@@ -29,7 +29,7 @@ export const normalUserRefreshToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJp
 
 export const expiredRefreshToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzEzMzg0MjI3LCJleHAiOjE3MTMzODQyMzd9.HQeDUcSZD-hIcmxzgVJEbFJ5HFhujANZrJ8UgIraQpg";
 
-const authFixtures = [adminUser, normalUser];
+const authFixtures = [adminAuth, normalAuth];
 
 export function up({context}: any) {
   return context.bulkInsert(AUTH_TABLE, authFixtures);

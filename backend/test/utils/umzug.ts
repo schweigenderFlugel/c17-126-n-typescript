@@ -16,7 +16,3 @@ export const upSeed = async () => {
     console.error(error);
   }
 }
-
-export const downSeed = async () => {
-  await sequelize.drop();
-}

@@ -3,16 +3,16 @@ import { User } from '../db'
 import { IUser } from '../../interfaces/user.interface'
 
 export default class userDao {
-  private static intance: userDao | null = null
+  private static instance: userDao | null = null
 
   private constructor() {}
 
   static getInstance(): userDao {
-    if (!this.intance) {
-      this.intance = new userDao()
+    if (!this.instance) {
+      this.instance = new userDao()
     }
 
-    return this.intance
+    return this.instance
   }
 
   /**

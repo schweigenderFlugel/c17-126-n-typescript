@@ -1,7 +1,12 @@
 import { CookieOptions, Response } from "express";
 import { envs } from "../config/constants";
+import { ENVIROMENTS } from "../../enviroments";
 
-const { HTTPONLY_COOKIE_NAME } = envs;
+const { NODE_ENV, HTTPONLY_COOKIE_NAME } = envs;
+
+const cookieName = NODE_ENV === ENVIROMENTS.PRODUCTION 
+  ? HTTPONLY_COOKIE_NAME
+  : 'bankme';
 
 export default class CookiesUtils {
   static async setJwtCookie(res: Response, refreshToken: string) {
@@ -11,7 +16,7 @@ export default class CookiesUtils {
       sameSite: 'none',
       expires: new Date(new Date().getTime() + 2 * 60 * 60 * 1000)
     }
-    res.cookie(HTTPONLY_COOKIE_NAME, refreshToken, options)
+    res.cookie(cookieName, refreshToken, options)
   }
 
   static async removeJwtCookie(res: Response) {
@@ -20,6 +25,6 @@ export default class CookiesUtils {
       secure: true,
       sameSite: 'none'
     }
-    res.clearCookie(HTTPONLY_COOKIE_NAME, options);
+    res.clearCookie(cookieName, options);
   }
 }

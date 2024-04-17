@@ -10,7 +10,7 @@ import { Roles } from '../src/models/db/entity/auth.entity';
 import { upSeed } from './utils/umzug';
 import { adminUserRefreshToken, expiredRefreshToken, normalUserRefreshToken } from '../src/models/db/seeders/auth';
 
-describe('testing auth route', () => {
+describe('Testing the auth route', () => {
   let app;
   let server: Server;
   let api: TestAgent<Test>;
@@ -139,7 +139,7 @@ describe('testing auth route', () => {
   })
 
   afterAll(async () => {
-    server.close()
     await sequelize.close()
+    server.close()
   })
 })
