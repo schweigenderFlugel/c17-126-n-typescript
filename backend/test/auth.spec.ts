@@ -7,7 +7,8 @@ import { signUpSchema } from '../src/middlewares/validators/auth.validator';
 import createExpressApp from '../src/config/createApp';
 import { sequelize } from '../src/models/db/database.manager';
 import { Roles } from '../src/models/db/entity/auth.entity';
-import { upSeed } from './utils/utils';
+import { upSeed } from './utils/umzug';
+import { adminUserRefreshToken, expiredRefreshToken, normalUserRefreshToken } from '../src/models/db/seeders/auth';
 
 describe('testing auth route', () => {
   let app;
@@ -55,24 +56,85 @@ describe('testing auth route', () => {
   })
 
   describe('POST /login', () => {
-    it('Should not login', async () => {
+    it('User should not exists', async () => {
       const inputData = {
-        email: 'newuser',
-        password: 'newuser123'
-      }
-      const { statusCode } = await api.post('/api/v1/auth/login').send(inputData)
-      expect(statusCode).toBe(201);
-    })
-
-    it('Should login and get an access token', async () => {
-      const inputData = {
-        email: 'newuser',
+        email: 'anon@email.com',
         password: 'newuser1234'
       }
-      const { statusCode, body } = await api.post('/api/v1/auth/login').send(inputData);
+      const { statusCode } = await api.post('/api/v1/auth/login').send(inputData)
+      expect(statusCode).toBe(404);
+    })
+
+    it('Should not login', async () => {
+      const inputData = {
+        email: 'normal@email.com',
+        password: 'newuser1234'
+      }
+      const { statusCode } = await api.post('/api/v1/auth/login').send(inputData)
+      expect(statusCode).toBe(401);
+    })
+
+    it('Should login and get an access token from the admin user', async () => {
+      const inputData = {
+        email: 'normal@email.com',
+        password: 'normal12345'
+      }
+      const { statusCode, body, header } = await api.post('/api/v1/auth/login').send(inputData);
       const token = decode(body.accessToken);
-      expect(statusCode).toBe(201);
-      expect(token).toMatchObject({ id: 1, role: Roles.NORMAL });
+      expect(statusCode).toBe(200);
+      expect(token).toMatchObject({ id: 2, role: Roles.NORMAL });
+      expect(header['set-cookie']).toBeDefined();
+    })
+
+    it('Should login and get an access and refresh token from the normal user', async () => {
+      const inputData = {
+        email: 'admin@email.com',
+        password: 'admin12345'
+      }
+      const { statusCode, body, header } = await api.post('/api/v1/auth/login').send(inputData);
+      const token = decode(body.accessToken);
+      expect(statusCode).toBe(200);
+      expect(token).toMatchObject({ id: 1, role: Roles.ADMIN });
+      expect(header['set-cookie']).toBeDefined();
+    })
+  })
+
+  describe('GET /refresh', () => {
+    it('Should not refresh the session because there is not any cookie', async () => {
+      const { statusCode } = await api.get('/api/v1/auth/refresh')
+      expect(statusCode).toBe(404);
+    })
+
+    it('Should not refresh the session because the refresh token is expired', async () => {
+      const { statusCode } = await api.get('/api/v1/auth/refresh').set('Cookie', `bankme=${expiredRefreshToken}`);
+      expect(statusCode).toBe(403);
+    })
+
+    it('Should refresh the session as admin user', async () => {
+      const { statusCode, body } = await api.get('/api/v1/auth/refresh').set('Cookie', `bankme=${adminUserRefreshToken}`);
+      const token = decode(body.accessToken);
+      expect(statusCode).toBe(200);
+      expect(token).toMatchObject({ id: 1, role: Roles.ADMIN });
+    })
+
+    it('Should refresh the session as normal user', async () => {
+      const { statusCode, body } = await api.get('/api/v1/auth/refresh').set('Cookie', `bankme=${normalUserRefreshToken}`);
+      const token = decode(body.accessToken);
+      expect(statusCode).toBe(200);
+      expect(token).toMatchObject({ id: 2, role: Roles.NORMAL });
+    })
+  })
+
+  describe('GET /logout', () => {
+    it('Should not logout because there is not any cookie', async () => {
+      const { statusCode } = await api.get('/api/v1/auth/refresh')
+      expect(statusCode).toBe(404);
+    })
+
+    it('Should not logout because there is not any cookie', async () => {
+      const { statusCode, header } = await api.get('/api/v1/auth/refresh').set('Cookie', `bankme=${adminUserRefreshToken}`);
+      expect(statusCode).toBe(200);
+      expect(header['set-cookie']).toBeUndefined();
     })
   })
 

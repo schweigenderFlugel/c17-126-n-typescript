@@ -38,11 +38,22 @@ export default class userService {
   /**
    * Get a user by their email address.
    *
-   * @param {string} email - the email address of the user
+   * @param {string} alias - the alias address of the user
    * @return {Promise<Model<IUser> | null>} the user found or null if not found
    */
-  static async getUserByEmail(email: string): Promise<Model<IUser> | null> {
-    const userFound = await userDao.getInstance().getUserByEmail(email)
+  static async getUserByAlias(alias: string): Promise<Model<IUser> | null> {
+    const userFound = await userDao.getInstance().getUserByAlias(alias)
+    return userFound
+  }
+
+  /**
+   * Retrieves a user by their authentication ID.
+   *
+   * @param {number} authId - The authentication ID of the user to retrieve.
+   * @return {Promise<Model<IUser> | null>} The user model if found, otherwise null.
+   */
+  static async getUserByAuthId(authId: number): Promise<Model<IUser> | null> {
+    const userFound = await userDao.getInstance().getUserByAuthId(authId)
     return userFound
   }
 

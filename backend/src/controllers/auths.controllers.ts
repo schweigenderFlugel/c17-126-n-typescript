@@ -1,6 +1,6 @@
-import { Request, Response } from 'express'
-import { IAuth } from '../interfaces/auth.interface';
-import { ITokenPayload } from '../interfaces/token.interface';
+import { NextFunction, Request, Response } from 'express'
+import { IAuth } from '../interfaces/auth.interface'
+import { ITokenPayload } from '../interfaces/token.interface'
 import { createHash, isValidPassword } from '../utils/bcrypt.utils'
 import authService from '../services/auth.services'
 import apiSuccessResponse from '../utils/apiResponse.utils'
@@ -13,95 +13,85 @@ import { TokenExpiredError } from 'jsonwebtoken';
 
 export default class authsController {
   /**
-   * A description of the entire function.
+   * Sign up a new user.
    *
-   * @param {Request} req - request object
-   * @param {Response} res - response object
-   * @return {Promise<Response>} response containing the result of the operation
+   * @param {Request} req - the request object
+   * @param {Response} res - the response object
+   * @param {NextFunction} next - the next function
+   * @return {Promise<void>} a promise that resolves to void
    */
-  static async signUp(req: Request, res: Response): Promise<Response> {
+  static async signUp(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const payload: IAuth = req.body;
       payload.password = createHash(payload.password);
       const newAuth = await authService.createAuth(payload);
       const response = apiSuccessResponse(newAuth);
-      return res.status(HTTP_STATUS.CREATED).json(response);
+      res.status(HTTP_STATUS.CREATED).json(response);
     } catch (err: any) {
       if (err instanceof UniqueConstraintError) {
-        const response: HttpError = new HttpError(
-          err.message, err.stack, 409
-        )
-        return res.status(409 || HTTP_STATUS.SERVER_ERROR).json(response)
+        next(new HttpError('Validation error', 'The user already exists', HTTP_STATUS.CONFLICT))
       } else {
-        // console.log(err) // FIXME: Replace with a Morgan
-        const response: HttpError = new HttpError(
-          err.description || err.message,
-          err.details || err.message
-        )
-        return res.status(err.status || HTTP_STATUS.SERVER_ERROR).json(response)
+        next(err);
       }
     }
   }
 
-  static async login(req: Request, res: Response): Promise<Response> {
+  static async login(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const payload: IAuth = req.body;
       const authFound = await authService.getAuthByEmail(payload.email);
-      isValidPassword(authFound.password, payload.password)
+      if(!authFound) throw new HttpError(
+        'Invalid Credentials',
+        'Must provide valid credentials',
+        HTTP_STATUS.NOT_FOUND
+      )
+      const validPassword = isValidPassword(
+        authFound.password, 
+        payload.password
+      );
       const tokenPayload: ITokenPayload = { 
         id: authFound.id,
         role: authFound.role,
-      }
+      };
+      if(!validPassword) throw new HttpError(
+        'Invalid Credentials',
+        'Must provide valid credentials',
+        HTTP_STATUS.UNAUTHORIZED
+      )
       const accessToken = await SessionUtils.generateToken(tokenPayload);
       const refreshToken = await SessionUtils.generateRefreshToken(tokenPayload);
       await CookiesUtils.setJwtCookie(res, refreshToken)
-      return res.json({ accessToken });
+      res.status(HTTP_STATUS.OK).json({ accessToken, refreshToken })
     } catch (err: any) {
-      // console.error(err)
-      const response: HttpError = new HttpError(
-        err.description || err.message,
-        err.details || err.message
-      )
-      return res.status(err.status || HTTP_STATUS.SERVER_ERROR).json(response)
+      next(err)
     }
   }
 
-  static async refresh(req: Request, res: Response): Promise<Response> {
+  static async refresh(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const jwtCookie = req.cookies[envs.HTTPONLY_COOKIE_NAME];
-      if (!jwtCookie) throw new HttpError('cookie not found', 'Not Found', 404);
+      if (!jwtCookie) throw new HttpError('Cookie not found', 'Cookie should exist to refresh', 404);
       const verified = await SessionUtils.verifyRefreshToken(jwtCookie);
       const payload: ITokenPayload = { id: verified.id, role: verified.role }
       const newToken = await SessionUtils.generateToken(payload);
-      return res.json({ accessToken: newToken });
+      res.status(HTTP_STATUS.OK).json({ accessToken: newToken });
     } catch (err: any) {
       if (err instanceof TokenExpiredError) {
-        const response: HttpError = new HttpError(
-          err.message, err.stack, 403
-        )
-        return res.status(403 || HTTP_STATUS.FORBIDDEN).json(response)
+        next(new HttpError(err.message, err.stack, 403));
       } else {
-        const response: HttpError = new HttpError(
-          err.description || err.message,
-          err.details || err.message
-        )
-        return res.status(err.status || HTTP_STATUS.NOT_FOUND).json(response)
+        next(err);
       }
     }
   }
 
-  static async logout(req: Request, res: Response): Promise<void | Response> {
+  static async logout(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const jwtCookie = req.cookies[envs.HTTPONLY_COOKIE_NAME];
-      if (!jwtCookie) throw new HttpError('cookie not found', 'Not Found', 404);
+      if (!jwtCookie) throw new HttpError('Cookie not found', 'Cookie should exist to logout', 404);
       await CookiesUtils.removeJwtCookie(res);
-      return res.status(HTTP_STATUS.OK).json({ message: 'logout succesfully' });
+      res.status(HTTP_STATUS.OK).json({ message: 'logout succesfully' });
     } catch (err: any) {
-      const response: HttpError = new HttpError(
-        err.description || err.message,
-        err.details || err.message
-      )
-      return res.status(err.status || HTTP_STATUS.NOT_FOUND).json(response)
+      next(err);
     }
   }
 }

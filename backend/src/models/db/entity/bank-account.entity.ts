@@ -1,7 +1,10 @@
-import { DataTypes } from 'sequelize'
-import { sequelize } from '../database.manager'
+import { DataTypes, Model } from 'sequelize'
+import { sequelize } from '../database.manager' 
+import { IBankAccount } from '../../../interfaces/bankAccount.interface'
 
-const BankAccount = sequelize.define('BankAccount', {
+export interface BankAccountModel extends Model<IBankAccount>, IBankAccount {}
+
+const BankAccount = sequelize.define<BankAccountModel>('BankAccount', {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -22,6 +25,7 @@ const BankAccount = sequelize.define('BankAccount', {
   balance: {
     type: DataTypes.INTEGER,
     allowNull: false,
+    defaultValue: 0,
   },
 })
 
