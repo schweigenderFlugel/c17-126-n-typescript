@@ -1,13 +1,14 @@
-import { useLocation, Navigate, Outlet } from "react-router-dom";
-import { useAuth } from "../Hooks/useAuth";
+import { useLocation, Navigate } from 'react-router-dom';
+import { useAuth } from '../Hooks/useAuth';
+import { PropsWithChildren } from 'react';
 
-export const RequireLogin = () => {
+export const RequireLogin = ({ children }: PropsWithChildren) => {
   const { accessToken } = useAuth();
   const location = useLocation();
 
-  return (
-    accessToken
-      ? <Outlet />
-      : <Navigate to='/login' state={{ from: location }} replace />
-    )
-}
+  return accessToken ? (
+    children
+  ) : (
+    <Navigate to="/login" state={{ from: location }} replace />
+  );
+};
