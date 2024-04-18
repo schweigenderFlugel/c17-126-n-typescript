@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios'
-import { ILoginPayload, ISignUpPayload } from '../Interfaces/interfaces'
+import { ILoginPayload, ISignUpPayload, IUserPayload } from '../Interfaces/interfaces'
 import { Axios, AxiosAuth } from './axios'
 
 const controller = new AbortController()
@@ -24,21 +24,30 @@ export const signup = async (payload: ISignUpPayload): Promise<void> => {
 }
 
 export const logout = async (): Promise<void> => {
-  await AxiosAuth({
+  await Axios({
     method: 'GET',
-    url: '/logout',
+    url: '/auth/logout',
     signal: controller.signal,
   })
 }
 
-export const setSession = (accessToken: string | null ) => {
+export const setSession = (accessToken: string | null) => {
   Axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`
 }
 
 export const refreshSession = async (): Promise<{ accessToken: string | null}> => {
   const res: AxiosResponse<{ accessToken: string }> = await AxiosAuth({
     method: 'GET',
-    url: '/refresh'
+    url: '/auth/refresh'
   })
   return res.data; 
+}
+
+export const createUser = async (payload: IUserPayload): Promise<void> => {
+  await Axios({
+    method: 'POST',
+    url: '/user',
+    data: payload,
+    signal: controller.signal,
+  })
 }

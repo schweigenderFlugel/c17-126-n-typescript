@@ -29,7 +29,7 @@ export default class userController {
         throw new HttpError(
           'User not found',
           'Must be logged in',
-          HTTP_STATUS.BAD_REQUEST
+          HTTP_STATUS.UNAUTHORIZED
         )
       }
       const tokenPayload: ITokenPayload = req.user as ITokenPayload

@@ -1,6 +1,6 @@
 import { DataTypes, Model } from 'sequelize'
-import { sequelize } from '../postgres.manager'
 import { ITypeAccount } from '../../../interfaces/type-account.interface'
+import { sequelize } from '../database.manager'
 
 export interface TypeAccountModel extends Model<ITypeAccount>, ITypeAccount {}
 

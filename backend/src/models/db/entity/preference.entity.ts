@@ -1,5 +1,5 @@
 import { DataTypes } from 'sequelize'
-import { sequelize } from '../postgres.manager'
+import { sequelize } from '../database.manager'
 
 const Preferences = sequelize.define('Preferences', {
   id: {

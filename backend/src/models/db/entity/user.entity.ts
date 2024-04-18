@@ -1,8 +1,8 @@
 import { DataTypes, Model } from 'sequelize'
-import { sequelize } from '../postgres.manager'
 import { IUser } from '../../../interfaces/user.interface'
+import { sequelize } from '../database.manager'
 
-const { STRING, INTEGER } = DataTypes
+const { STRING, INTEGER } = DataTypes;
 
 export interface UserModel extends Model<IUser>, IUser {}
 

@@ -1,20 +1,22 @@
 {
-    "name": "c17-126-n-typescript",
-    "version": "1.0.0",
-    "description": "Scripts para ejecutar de manera general",
-    "main": "index.js",
-    "scripts": {
-        "back:init": "cd backend && pnpm i",
-        "front:init": "cd frontend && pnpm i",
-        "back:dev": "cd backend && pnpm run dev",
-        "frond:dev": "cd frontend && pnpm run dev",
-        "prepare": "husky"
-    },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
-    "devDependencies": {
-        "husky": "^9.0.11",
-        "lint-staged": "^15.2.2"
-    }
+
+  "name": "c17-126-n-typescript",
+  "version": "1.0.0",
+  "description": "Scripts para ejecutar de manera general",
+  "main": "index.js",
+  "scripts": {
+    "back:init": "cd backend && npm i",
+    "front:init": "cd frontend && npm i",
+    "back:dev": "cd backend && npm run dev",
+    "front:dev": "cd frontend && npm run dev",
+    "back:test": "cd backend && npm run test",
+    "prepare": "husky"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2"
+  }
 }
