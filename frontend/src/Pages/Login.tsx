@@ -52,7 +52,7 @@ export const Login = () => {
 
   return (
     <>
-      <Modal open={openModal}>
+      <Modal onCloseModal={() => setOpenModal(false)} isOpen={openModal}>
         <ErrorMessage>{error}</ErrorMessage>
       </Modal>
       <AuthFormContainer subtitle="¡Nos alegra tenerte de vuelta!">
