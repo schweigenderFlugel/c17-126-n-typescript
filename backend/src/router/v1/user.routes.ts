@@ -10,12 +10,19 @@ import { errorHandler } from '../../middlewares/errorHandler.middleware'
 
 const userRouter = Router()
 
+userRouter.get(
+  '/',
+  userAuth,
+  userController.getUser,
+  errorHandler,
+)
+
 userRouter.post(
   '/',
   userAuth,
   schemaValidator(userCreate, null),
   userController.createUser,
-  errorHandler
+  errorHandler,
 )
 
 export default userRouter

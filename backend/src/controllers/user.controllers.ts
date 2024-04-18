@@ -4,11 +4,12 @@ import HttpError from '../utils/HttpError.utils'
 import { ITokenPayload } from '../interfaces/token.interface'
 import apiSuccessResponse from '../utils/apiResponse.utils'
 import typeAccountService from '../services/typeAccount.services'
-import { ICreateUser } from '../interfaces/user.interface'
+import { ICreateUser, IUser } from '../interfaces/user.interface'
 import userService from '../services/user.services'
 import bankAccountService from '../services/bankAccount.services'
 import { IBankAccount } from '../interfaces/bankAccount.interface'
 import bankAccountHelper from '../utils/bankAccountHelper'
+import { UserModel } from '../models/db/entity/user.entity'
 export default class userController {
   /**
    * Creates a new user with the provided request body data.
@@ -38,7 +39,7 @@ export default class userController {
         throw new HttpError(
           'Token payload error',
           'Token payload error',
-          HTTP_STATUS.BAD_REQUEST
+          HTTP_STATUS.FORBIDDEN
         )
       }
 
@@ -117,6 +118,34 @@ export default class userController {
       res.status(200).json(response)
     } catch (err: any) {
       next(err)
+    }
+  }
+
+  static async getUser(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      if (!req.user) {
+        throw new HttpError(
+          'User not found',
+          'Must be logged in',
+          HTTP_STATUS.UNAUTHORIZED
+        )
+      }
+      const tokenPayload = req.user as ITokenPayload;
+      const userFound = await userService.getUserByAuthId(tokenPayload.id);
+      if (!userFound) {
+        throw new HttpError(
+          'User not found',
+          'The user does not exist',
+          HTTP_STATUS.UNAUTHORIZED
+        )
+      }
+      res.status(200).json(userFound)
+    } catch (error) {
+      next(error);
     }
   }
 }

@@ -1,6 +1,7 @@
 import { Model } from 'sequelize'
 import { User } from '../db'
 import { ICreateUser, IUser } from '../../interfaces/user.interface'
+import { UserModel } from '../db/entity/user.entity'
 
 export default class userDao {
   private static instance: userDao | null = null
@@ -68,13 +69,13 @@ export default class userDao {
    * @param {number} authId - The authentication ID of the user to retrieve.
    * @return {Promise<Model<IUser> | null>} The user model if found, otherwise null.
    */
-  async getUserByAuthId(authId: number): Promise<Model<IUser> | null> {
-    const userFound: Model<IUser> | null = await User.findOne({
+  async getUserByAuthId(authId: number): Promise<UserModel | null> {
+    const userFound: UserModel | null = await User.findOne({
       where: {
         authId: authId,
       },
     })
-    return userFound
+    return userFound;
   }
 
   /**

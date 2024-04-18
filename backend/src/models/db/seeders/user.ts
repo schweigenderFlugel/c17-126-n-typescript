@@ -6,23 +6,23 @@ interface UserFixture extends Omit<Omit<Omit<IUser, 'id'>, 'createdAt'>, 'update
   updated_at: Date;
 }
 
-const adminUser: UserFixture = {
+export const adminUser: UserFixture = {
   name: "admin",
   lastname: "admin",
   alias: "admin",
   address: 'fake street 123',
-  phone: "0000",
+  phone: "(000)-000-0000",
   authId: 1,
   created_at: new Date(),
   updated_at: new Date(),
 }
 
-const normalUser: UserFixture = {
+export const normalUser: UserFixture = {
   name: "normal",
   lastname: "normal",
   alias: "normal",
   address: 'fake street 123',
-  phone: "0000",
+  phone: "(000)-000-0000",
   authId: 2,
   created_at: new Date(),
   updated_at: new Date(),

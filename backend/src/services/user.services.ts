@@ -52,9 +52,9 @@ export default class userService {
    * @param {number} authId - The authentication ID of the user to retrieve.
    * @return {Promise<Model<IUser> | null>} The user model if found, otherwise null.
    */
-  static async getUserByAuthId(authId: number): Promise<Model<IUser> | null> {
+  static async getUserByAuthId(authId: number): Promise<IUser> {
     const userFound = await userDao.getInstance().getUserByAuthId(authId)
-    return userFound
+    return userFound as IUser;
   }
 
   /**

@@ -14,5 +14,4 @@ export interface IUserPayload {
   alias: string;
   address: string;
   phone: string;
-  authId: number;
 }

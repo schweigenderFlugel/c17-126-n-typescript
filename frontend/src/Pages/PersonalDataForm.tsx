@@ -4,37 +4,27 @@ import { AxiosError } from 'axios';
 import { AuthFormContainer } from '../Components/AuthFormContainer';
 import { AuthFormRow } from '../Components/AuthFormRow';
 import { ButtonAuthForm } from '../Components/ButtonAuthForm';
+import { IUserPayload } from '../Interfaces/interfaces';
+import { createUser } from '../Services/user';
 
-type FormPersonalDataType = {
-  firstName: string;
-  lastName: string;
-  address: string;
-  phone: string;
-  alias: string;
-};
-
-const initialValue: FormPersonalDataType = {
-  firstName: '',
-  lastName: '',
+const initialValue: IUserPayload = {
+  name: '',
+  lastname: '',
   address: '',
   phone: '',
   alias: '',
 };
 
-const sendPersonalData = (formValues: FormPersonalDataType) => {
-  console.log(formValues);
-};
-
 export const PersonalDataForm = () => {
   const [formValues, setFormValues] =
-    useState<FormPersonalDataType>(initialValue);
+    useState<IUserPayload>(initialValue);
 
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      sendPersonalData(formValues);
+      createUser(formValues)
       navigate('/dashboard', { replace: true });
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -59,7 +49,7 @@ export const PersonalDataForm = () => {
           <div className="flex flex-col gap-2">
             <AuthFormRow
               onChange={handleChange}
-              value={formValues.firstName}
+              value={formValues.name}
               type="text"
               label="Nombre"
               key="firstName"
@@ -69,7 +59,7 @@ export const PersonalDataForm = () => {
             />
             <AuthFormRow
               onChange={handleChange}
-              value={formValues.lastName}
+              value={formValues.lastname}
               type="text"
               label="Apellido"
               key="lastName"
@@ -111,9 +101,9 @@ export const PersonalDataForm = () => {
           <div className="my-4">
             <ButtonAuthForm
               disabled={
+                formValues.name.length < 1 ||
+                formValues.lastname.length < 1 ||
                 formValues.address.length < 1 ||
-                formValues.firstName.length < 1 ||
-                formValues.lastName.length < 1 ||
                 formValues.phone.length < 1
               }
               isLoading={isLoading}
