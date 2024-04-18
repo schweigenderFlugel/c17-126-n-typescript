@@ -1,6 +1,6 @@
 import { Model } from 'sequelize'
 import { User } from '../db'
-import { IUser } from '../../interfaces/user.interface'
+import { ICreateUser, IUser } from '../../interfaces/user.interface'
 
 export default class userDao {
   private static instance: userDao | null = null
@@ -21,8 +21,8 @@ export default class userDao {
    * @param {IUser} userPayload - the payload for creating a new user
    * @return {Promise<any>} a promise that resolves to the created user
    */
-  async createUser(userPayload: IUser): Promise<Model<IUser>> {
-    const userCreated = await User.create(userPayload as Omit<IUser, 'id'>)
+  async createUser(userPayload: ICreateUser): Promise<Model<IUser>> {
+    const userCreated = await User.create(userPayload as IUser)
     return userCreated
   }
 

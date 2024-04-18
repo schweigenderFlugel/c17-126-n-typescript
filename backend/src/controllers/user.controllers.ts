@@ -4,7 +4,7 @@ import HttpError from '../utils/HttpError.utils'
 import { ITokenPayload } from '../interfaces/token.interface'
 import apiSuccessResponse from '../utils/apiResponse.utils'
 import typeAccountService from '../services/typeAccount.services'
-import { IUser } from '../interfaces/user.interface'
+import { ICreateUser } from '../interfaces/user.interface'
 import userService from '../services/user.services'
 import bankAccountService from '../services/bankAccount.services'
 import { IBankAccount } from '../interfaces/bankAccount.interface'
@@ -31,7 +31,8 @@ export default class userController {
           HTTP_STATUS.UNAUTHORIZED
         )
       }
-      const tokenPayload: ITokenPayload = req.user as ITokenPayload
+      
+      const tokenPayload: ITokenPayload = req.user as ITokenPayload;
 
       if (!tokenPayload || !tokenPayload.id) {
         throw new HttpError(
@@ -41,7 +42,7 @@ export default class userController {
         )
       }
 
-      const userFound = await userService.getUserByAuthId(tokenPayload.id)
+      const userFound = await userService.getUserByAuthId(tokenPayload.id);
 
       if (userFound) {
         throw new HttpError(
@@ -68,7 +69,7 @@ export default class userController {
         )
       }
 
-      const userPayload: IUser = {
+      const userPayload: ICreateUser = {
         name,
         lastname,
         alias,
@@ -91,13 +92,13 @@ export default class userController {
         )
       }
 
-      const numerAccount =
+      const numberAccount =
         await bankAccountHelper.generateAccountNumber(accountTypeFound)
 
       const bankAccountPayload: IBankAccount = {
         type_account_id: accountTypeFound.dataValues.id,
         user_id: userCreated.dataValues.id,
-        number_account: numerAccount,
+        number_account: numberAccount,
         balance: 0,
       }
 

@@ -1,34 +1,12 @@
 import { Auth } from './auth.entity'
 import { BankAccount } from './bank-account.entity'
 import { Preferences } from './preference.entity'
-import { RefreshToken } from './refresh-token.entity'
-import { Role } from './role.entity'
 import { Transaction } from './transaction'
 import { TypeAccount } from './type-account.entity'
 import { TypeTransfert } from './type-transfer.entity'
 import { User } from './user.entity'
 
-// RELATIONS FOR USER
-User.belongsToMany(Role, {
-  through: 'user_roles',
-  foreignKey: {
-    name: 'userId',
-  },
-  otherKey: {
-    name: 'roleId',
-  },
-})
-
-Role.belongsToMany(User, {
-  through: 'user_roles',
-  foreignKey: {
-    name: 'roleId',
-  },
-  otherKey: {
-    name: 'userId',
-  },
-})
-
+// RELATIONS FOR AUTH
 User.belongsTo(Auth, {
   foreignKey: 'authId',
 })
@@ -36,9 +14,6 @@ User.belongsTo(Auth, {
 Auth.hasOne(User, {
   foreignKey: 'authId',
 })
-
-RefreshToken.belongsTo(Auth, { foreignKey: 'authId' })
-Auth.hasOne(RefreshToken, { foreignKey: 'authId' })
 
 Preferences.belongsTo(User, {
   foreignKey: 'user_id',

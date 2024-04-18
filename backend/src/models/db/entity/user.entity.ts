@@ -1,4 +1,4 @@
-import { DataTypes, Model } from 'sequelize'
+import { DataTypes, Model, NOW } from 'sequelize'
 import { IUser } from '../../../interfaces/user.interface'
 import { sequelize } from '../database.manager'
 
@@ -36,6 +36,16 @@ const User = sequelize.define<UserModel>('users', {
     type: INTEGER,
     allowNull: false,
   },
+  createdAt: {
+    type: DataTypes.DATE,
+    field: 'created_at',
+    defaultValue: NOW,
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
+    field: 'updated_at',
+    defaultValue: NOW,
+  }
 })
 
 export { User }

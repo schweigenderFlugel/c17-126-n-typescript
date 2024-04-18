@@ -9,6 +9,7 @@ import { sequelize } from '../src/models/db/database.manager';
 import { Roles } from '../src/models/db/entity/auth.entity';
 import { upSeed } from './utils/umzug';
 import { adminUserRefreshToken, expiredRefreshToken, normalUserRefreshToken } from '../src/models/db/seeders/auth';
+import { ISign } from '../src/interfaces/auth.interface';
 
 describe('Testing the auth route', () => {
   let app;
@@ -24,7 +25,7 @@ describe('Testing the auth route', () => {
 
   describe('POST /signup', () => {
     it('Should not register an user with invalid data', async () => {
-      const inputData = {
+      const inputData: ISign = {
         email: 'newuser',
         password: 'newuser1234'
       }
@@ -33,7 +34,7 @@ describe('Testing the auth route', () => {
     })
 
     it('Should register an user succesfully', async () => {
-      const inputData = {
+      const inputData: ISign = {
         email: 'newuser@email.com',
         password: 'newuser1234'
       }
@@ -44,7 +45,7 @@ describe('Testing the auth route', () => {
     })
 
     it('Should not register an existing user', async () => {
-      const inputData = {
+      const inputData: ISign = {
         email: 'newuser@email.com',
         password: 'newuser1234'
       }
@@ -57,7 +58,7 @@ describe('Testing the auth route', () => {
 
   describe('POST /login', () => {
     it('User should not exists', async () => {
-      const inputData = {
+      const inputData: ISign = {
         email: 'anon@email.com',
         password: 'newuser1234'
       }
@@ -66,7 +67,7 @@ describe('Testing the auth route', () => {
     })
 
     it('Should not login', async () => {
-      const inputData = {
+      const inputData: ISign = {
         email: 'normal@email.com',
         password: 'newuser1234'
       }
@@ -74,8 +75,8 @@ describe('Testing the auth route', () => {
       expect(statusCode).toBe(401);
     })
 
-    it('Should login and get an access token from the admin user', async () => {
-      const inputData = {
+    it('Should login and get an access and a refresh token from the admin user', async () => {
+      const inputData: ISign = {
         email: 'normal@email.com',
         password: 'normal12345'
       }
@@ -86,8 +87,8 @@ describe('Testing the auth route', () => {
       expect(header['set-cookie']).toBeDefined();
     })
 
-    it('Should login and get an access and refresh token from the normal user', async () => {
-      const inputData = {
+    it('Should login and get an access and a refresh token from the normal user', async () => {
+      const inputData: ISign = {
         email: 'admin@email.com',
         password: 'admin12345'
       }

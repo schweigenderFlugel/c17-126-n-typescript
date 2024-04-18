@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize'
 import { sequelize } from '../database.manager'
 
-const { STRING, INTEGER, ENUM, NUMBER } = DataTypes
+const { INTEGER, ENUM } = DataTypes
 
 enum TransactionStatus {
   PENDING = 'pending',
@@ -9,7 +9,7 @@ enum TransactionStatus {
   FAILED = 'failed',
 }
 
-const Transaction = sequelize.define('Transaction', {
+const Transaction = sequelize.define('transactions', {
   id: {
     type: INTEGER,
     autoIncrement: true,

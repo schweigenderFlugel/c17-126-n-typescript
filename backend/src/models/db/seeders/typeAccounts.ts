@@ -11,7 +11,11 @@ const normalTypeAccount: TypeAccountFixture = {
   name: 'admin'
 }
 
-const typeAccountFixtures = [adminTypeAccount, normalTypeAccount];
+const nonUserTypeAccount: TypeAccountFixture = {
+  name: 'nonuser'
+}
+
+const typeAccountFixtures = [adminTypeAccount, normalTypeAccount, nonUserTypeAccount];
 
 export function up({context}: any) {
     return context.bulkInsert(TypeAccount.getTableName(), typeAccountFixtures);

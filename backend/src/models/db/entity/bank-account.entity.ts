@@ -4,7 +4,7 @@ import { IBankAccount } from '../../../interfaces/bankAccount.interface'
 
 export interface BankAccountModel extends Model<IBankAccount>, IBankAccount {}
 
-const BankAccount = sequelize.define<BankAccountModel>('BankAccount', {
+const BankAccount = sequelize.define<BankAccountModel>('bank_account', {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,

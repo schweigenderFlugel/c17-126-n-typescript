@@ -1,7 +1,10 @@
 import { IUser } from "../../../interfaces/user.interface";
 import { User } from "../entity/user.entity";
 
-interface UserFixture extends Omit<IUser, 'id'> {}
+interface UserFixture extends Omit<Omit<Omit<IUser, 'id'>, 'createdAt'>, 'updatedAt'> {
+  created_at: Date;
+  updated_at: Date;
+}
 
 const adminUser: UserFixture = {
   name: "admin",
@@ -10,6 +13,8 @@ const adminUser: UserFixture = {
   address: 'fake street 123',
   phone: "0000",
   authId: 1,
+  created_at: new Date(),
+  updated_at: new Date(),
 }
 
 const normalUser: UserFixture = {
@@ -19,6 +24,8 @@ const normalUser: UserFixture = {
   address: 'fake street 123',
   phone: "0000",
   authId: 2,
+  created_at: new Date(),
+  updated_at: new Date(),
 }
 
 const userFixtures = [adminUser, normalUser];

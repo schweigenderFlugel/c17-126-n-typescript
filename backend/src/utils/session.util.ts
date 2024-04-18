@@ -18,12 +18,12 @@ const refreshSecret = NODE_ENV === ENVIROMENTS.PRODUCTION
 
 export default class SessionUtils {
   static async generateToken(payload: ITokenPayload): Promise<string> {
-    const token: string = sign(payload, accessSecret, { expiresIn: '15m' }) // FIXME: change to 10 minutes?
+    const token: string = sign(payload, accessSecret) // FIXME: change to 10 minutes?
     return token
   }
 
   static async generateRefreshToken(payload: ITokenPayload): Promise<string> {
-    const refreshToken: string = sign(payload, refreshSecret, { expiresIn: '2h' })
+    const refreshToken: string = sign(payload, refreshSecret)
     return refreshToken;
   }
 
@@ -35,7 +35,7 @@ export default class SessionUtils {
   ): Promise<void> {
     verify(token, accessSecret, (err, user) => {
       if (err) {
-        console.log(err) // FIXME: Replace with a Morgan
+        // console.log(err) // FIXME: Replace with a Morgan
         const response: HttpError = new HttpError(err.message, err.message)
         return res.status(HTTP_STATUS.UNAUTHORIZED).json(response)
       }

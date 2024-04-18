@@ -1,17 +1,10 @@
-import { DataTypes, Model, ModelOptions } from 'sequelize'
+import { DataTypes, Model, ModelOptions, NOW, Sequelize } from 'sequelize'
 import { sequelize } from '../database.manager'
 import { IAuth } from '../../../interfaces/auth.interface'
 
 export enum Roles {
   ADMIN = 'admin',
   NORMAL = 'normal'
-}
-
-export const AUTH_TABLE = 'auth';
-
-const options: ModelOptions = {
-  tableName: AUTH_TABLE,
-  timestamps: false,
 }
 
 export interface AuthModel extends Model<IAuth>, IAuth {}
@@ -37,6 +30,7 @@ export const Auth = sequelize.define<AuthModel>('auth', {
     defaultValue: Roles.NORMAL,
   },
   refreshToken: {
+    field: 'refresh_token',
     type: DataTypes.STRING,
     allowNull: true,
   },
@@ -45,5 +39,15 @@ export const Auth = sequelize.define<AuthModel>('auth', {
     allowNull: false,
     defaultValue: false,
   }, 
-}, options
+  createdAt: {
+    field: 'created_at',
+    type: DataTypes.DATE,
+    defaultValue: NOW,
+  },
+  updatedAt: {
+    field: 'updated_at',
+    type: DataTypes.DATE,
+    defaultValue: NOW,
+  }
+}, 
 )

@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import { IAuth } from '../interfaces/auth.interface'
+import { IAuth, ISign } from '../interfaces/auth.interface'
 import { ITokenPayload } from '../interfaces/token.interface'
 import { createHash, isValidPassword } from '../utils/bcrypt.utils'
 import authService from '../services/auth.services'
@@ -22,7 +22,7 @@ export default class authsController {
    */
   static async signUp(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const payload: IAuth = req.body;
+      const payload: ISign = req.body;
       payload.password = createHash(payload.password);
       const newAuth = await authService.createAuth(payload);
       const response = apiSuccessResponse(newAuth);
@@ -38,7 +38,7 @@ export default class authsController {
 
   static async login(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const payload: IAuth = req.body;
+      const payload: ISign = req.body;
       const authFound = await authService.getAuthByEmail(payload.email);
       if(!authFound) throw new HttpError(
         'Invalid Credentials',

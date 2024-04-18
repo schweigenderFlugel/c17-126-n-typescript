@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize'
 import { sequelize } from '../database.manager'
 
-const Preferences = sequelize.define('Preferences', {
+const Preferences = sequelize.define('preferences', {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
