@@ -1,13 +1,19 @@
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../Hooks/useAuth';
 import {
+  HiArrowRightOnRectangle,
   HiMagnifyingGlass,
   HiOutlineBell,
   HiOutlineMoon,
   HiOutlineSun,
-  HiOutlineUser,
 } from 'react-icons/hi2';
+import { useLogout } from '../Hooks/useLogout';
 
 export const DashboardNavbar = ({ children }) => {
+  const navigate = useNavigate();
+  const { setLogout } = useLogout({
+    onSuccess: () => navigate('/login', { replace: true }),
+  });
   const { darkMode, toggleDarkMode } = useAuth();
 
   return (
@@ -34,7 +40,9 @@ export const DashboardNavbar = ({ children }) => {
         <HiOutlineBell className="text-[24px] dark:text-white" />
         <div className="inline-flex items-center gap-4">
           <p className="max-sm:hidden dark:text-white">Usuario</p>
-          <HiOutlineUser className="text-[24px] dark:text-white" />
+          <button onClick={setLogout}>
+            <HiArrowRightOnRectangle className="text-[24px] dark:text-white" />
+          </button>
         </div>
       </div>
     </nav>
