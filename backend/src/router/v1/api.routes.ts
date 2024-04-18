@@ -6,7 +6,7 @@ import typesAccountsRouter from './typeAccounts.routes'
 const router = Router()
 
 router.use('/user', userRouter)
-router.use('/auths', authRouter)
+router.use('/auth', authRouter)
 router.use('/types-account', typesAccountsRouter)
 
 export default router

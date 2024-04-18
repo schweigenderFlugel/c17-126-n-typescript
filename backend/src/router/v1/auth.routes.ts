@@ -23,4 +23,16 @@ authRouter.post(
   errorHandler
 )
 
+authRouter.get(
+  '/refresh',
+  authsController.refresh,
+  errorHandler,
+)
+
+authRouter.get(
+  '/logout',
+  authsController.logout,
+  errorHandler
+)
+
 export default authRouter

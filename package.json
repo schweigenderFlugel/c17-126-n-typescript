@@ -7,7 +7,8 @@
     "back:init": "cd backend && npm i",
     "front:init": "cd frontend && npm i",
     "back:dev": "cd backend && npm run dev",
-    "frond:dev": "cd frontend && npm run dev",
+    "front:dev": "cd frontend && npm run dev",
+    "back:test": "cd backend && npm run test",
     "prepare": "husky"
   },
   "keywords": [],

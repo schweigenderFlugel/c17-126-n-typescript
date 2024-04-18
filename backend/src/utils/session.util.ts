@@ -1,26 +1,39 @@
-import { sign, verify } from 'jsonwebtoken'
-import { envs, HTTP_STATUS } from '../config/constants'
+import { decode, sign, verify } from 'jsonwebtoken'
+import { HTTP_STATUS, envs } from '../config/constants'
 import { ITokenPayload } from '../interfaces/token.interface'
 import { Request, Response, NextFunction } from 'express'
 import HttpError from './HttpError.utils'
+import { ENVIROMENTS } from '../../enviroments'
 
-const { ACCESS_TOKEN_SECRET } = envs
+const { NODE_ENV, ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = envs;
+
+const accessSecret = NODE_ENV === ENVIROMENTS.PRODUCTION
+  ? ACCESS_TOKEN_SECRET
+  : 'bankme';
+
+const refreshSecret = NODE_ENV === ENVIROMENTS.PRODUCTION
+  ? REFRESH_TOKEN_SECRET
+  : 'bankme';
+
 
 export default class SessionUtils {
   static async generateToken(payload: ITokenPayload): Promise<string> {
-    const token: string = sign(payload, ACCESS_TOKEN_SECRET, {
-      expiresIn: '24h',
-    }) // FIXME: change to 10 minutes?
+    const token: string = sign(payload, accessSecret, { expiresIn: '15m' }) // FIXME: change to 10 minutes?
     return token
   }
 
-  static verifyToken(
+  static async generateRefreshToken(payload: ITokenPayload): Promise<string> {
+    const refreshToken: string = sign(payload, refreshSecret, { expiresIn: '2h' })
+    return refreshToken;
+  }
+
+  static async verifyToken(
     token: string,
     req: Request,
     res: Response,
     next: NextFunction
-  ): void {
-    verify(token, ACCESS_TOKEN_SECRET, (err, user) => {
+  ): Promise<void> {
+    verify(token, accessSecret, (err, user) => {
       if (err) {
         console.log(err) // FIXME: Replace with a Morgan
         const response: HttpError = new HttpError(err.message, err.message)
@@ -30,5 +43,11 @@ export default class SessionUtils {
       req.user = user as ITokenPayload
       return next()
     })
+  }
+
+  static async verifyRefreshToken(token: string): Promise<ITokenPayload> {
+    verify(token, refreshSecret);
+    const decoded = decode(token);
+    return decoded as ITokenPayload;
   }
 }
