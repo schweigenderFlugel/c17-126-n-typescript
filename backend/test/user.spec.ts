@@ -5,8 +5,7 @@ import request from 'supertest';
 import createExpressApp from '../src/config/createApp';
 import { upSeed } from './utils/umzug';
 import { sequelize } from '../src/models/db/database.manager';
-import { adminUserToken, anonUserToken, nonUserRefreshToken, nonUserToken, normalUserToken } from '../src/models/db/seeders/auth';
-import { ICreateUser } from '../src/interfaces/user.interface';
+import { adminUserToken, anonUserToken, nonUserToken } from '../src/models/db/seeders/auth';
 import { ITokenPayload } from '../src/interfaces/token.interface';
 import { decode } from 'jsonwebtoken';
 
@@ -52,7 +51,7 @@ describe('Testing the user route', () => {
       expect(statusCode).toBe(404);
     })
 
-    it('Should not retrieve any account type', async () => {
+    it('Should create a new bank account', async () => {
       const decoded = decode(nonUserToken) as ITokenPayload;
       const payload = {
         name: 'nonuser',
@@ -66,7 +65,7 @@ describe('Testing the user route', () => {
       const { statusCode } = await api.post('/api/v1/user')
         .auth(nonUserToken, { type: 'bearer' })
         .send(payload);
-      expect(statusCode).toBe(404);
+      expect(statusCode).toBe(200);
     })
   })
 

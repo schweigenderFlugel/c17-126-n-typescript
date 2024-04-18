@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import { IAuth, ISign } from '../interfaces/auth.interface'
+import { ISign } from '../interfaces/auth.interface'
 import { ITokenPayload } from '../interfaces/token.interface'
 import { createHash, isValidPassword } from '../utils/bcrypt.utils'
 import authService from '../services/auth.services'
@@ -61,7 +61,7 @@ export default class authsController {
       const accessToken = await SessionUtils.generateToken(tokenPayload);
       const refreshToken = await SessionUtils.generateRefreshToken(tokenPayload);
       await CookiesUtils.setJwtCookie(res, refreshToken)
-      res.status(HTTP_STATUS.OK).json({ accessToken, refreshToken })
+      res.status(HTTP_STATUS.OK).json({ accessToken })
     } catch (err: any) {
       next(err)
     }
