@@ -3,16 +3,16 @@ import { User } from '../db'
 import { IUser } from '../../interfaces/user.interface'
 
 export default class userDao {
-  private static intance: userDao | null = null
+  private static instance: userDao | null = null
 
   private constructor() {}
 
   static getInstance(): userDao {
-    if (!this.intance) {
-      this.intance = new userDao()
+    if (!this.instance) {
+      this.instance = new userDao()
     }
 
-    return this.intance
+    return this.instance
   }
 
   /**
@@ -50,13 +50,28 @@ export default class userDao {
   /**
    * Asynchronously retrieves a user by their email.
    *
-   * @param {string} email - the email of the user to retrieve
+   * @param {string} alias - the email of the user to retrieve
    * @return {Promise<Model<IUser> | null>} the user model if found, or null if not found
    */
-  async getUserByEmail(email: string): Promise<Model<IUser> | null> {
+  async getUserByAlias(alias: string): Promise<Model<IUser> | null> {
     const userFound: Model<IUser> | null = await User.findOne({
       where: {
-        email: email,
+        alias: alias,
+      },
+    })
+    return userFound
+  }
+
+  /**
+   * Retrieves a user by their authentication ID.
+   *
+   * @param {number} authId - The authentication ID of the user to retrieve.
+   * @return {Promise<Model<IUser> | null>} The user model if found, otherwise null.
+   */
+  async getUserByAuthId(authId: number): Promise<Model<IUser> | null> {
+    const userFound: Model<IUser> | null = await User.findOne({
+      where: {
+        authId: authId,
       },
     })
     return userFound

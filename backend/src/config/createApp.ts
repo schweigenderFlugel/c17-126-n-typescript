@@ -2,9 +2,9 @@ import express from 'express'
 import cluster from 'cluster'
 import { cpus } from 'os'
 import { envs } from './constants'
-import morgan from 'morgan'
-import passport from 'passport'
-import { JwtStrategy } from '../strategies/jwt-strategy'
+import morgan from 'morgan';
+import middlewaresConfig from './middlewares.config'
+import RegisterRoutes from '../utils/register.routes'
 
 export default function createExpressApp() {
   const app = express()
@@ -29,16 +29,15 @@ export default function createExpressApp() {
     })
   } else {
     envs.NODE_ENV !== 'prod' && app.use(morgan('dev'))
-
-    app.listen(envs.PORT, () => {
-      console.log(
-        `Servidor de express escuchando puerto ${envs.PORT} - PID WORKER ${process.pid}`
-      )
-    })
   }
 
-  // PASSPORT
-  passport.use(JwtStrategy);
+  /**
+   * * Load of Routes for V1
+   */
+  RegisterRoutes(app, 'v1')
 
-  return app
+  // SETUP GLOBAL MIDDLEWARES
+  middlewaresConfig.config(app)
+
+  return app;
 }

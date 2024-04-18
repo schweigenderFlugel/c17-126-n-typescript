@@ -6,7 +6,9 @@ import { LoadingPage } from '../Components/LoadingPage';
 import { Logo } from '../Components/Logo';
 
 export const Dashboard = () => {
+  const navigate = useNavigate()
   const { loading, setLoading } = useAuth();
+  const { setLogout } = useLogout({ onSuccess: () => navigate('/login', { replace: true })});
 
   setTimeout(() => {
     setLoading(false);

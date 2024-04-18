@@ -1,4 +1,3 @@
-import { Model } from 'sequelize'
 import { IAuth } from '../../interfaces/auth.interface'
 import { Auth, AuthModel } from '../db'
 
@@ -21,9 +20,7 @@ export default class authDao {
    * @return {Promise<any>} the created authentication record
    */
   async createAuth(authPayload: IAuth): Promise<AuthModel> {
-    const authCreated: AuthModel = await Auth.create(
-      authPayload as Omit<AuthModel, 'id'>
-    )
+    const authCreated: AuthModel = await Auth.create(authPayload)
     return authCreated;
   }
 
@@ -31,7 +28,7 @@ export default class authDao {
    * Retrieve authentication information by ID.
    *
    * @param {string} id - The ID of the authentication information to retrieve.
-   * @return {Promise<Model<IAuth> | null>} The retrieved authentication information, or null if not found.
+   * @return {Promise<AuthModel | null>} The retrieved authentication information, or null if not found.
    */
   async getAuthById(id: number): Promise<AuthModel | null> {
     const authFound: AuthModel | null = await Auth.findByPk(id)
@@ -41,7 +38,7 @@ export default class authDao {
   /**
    * Retrieve all auth data.
    *
-   * @return {Promise<Model<IAuth>[]>} List of auth data
+   * @return {Promise<AuthModel[]>} List of auth data
    */
   async getAllAuth(): Promise<AuthModel[]> {
     const authsFound: AuthModel[] = await Auth.findAll()
@@ -60,7 +57,7 @@ export default class authDao {
         email: email,
       },
     })
-    return authFound;
+    return authFound
   }
 
   /**
@@ -68,12 +65,9 @@ export default class authDao {
    *
    * @param {string} id - the ID of the authentication information to update
    * @param {IAuth} authPayload - the new authentication payload
-   * @return {Promise<Model<IAuth> | null>} the updated authentication model or null if not found
+   * @return {Promise<AuthModel | null>} the updated authentication model or null if not found
    */
-  async updateAuth(
-    id: number,
-    authPayload: IAuth
-  ): Promise<AuthModel | null> {
+  async updateAuth(id: number, authPayload: IAuth): Promise<AuthModel | null> {
     const authUpdated = await Auth.update(authPayload, {
       where: { id },
       returning: true,

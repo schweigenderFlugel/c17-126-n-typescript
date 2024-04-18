@@ -7,6 +7,7 @@ import {
 } from 'react';
 import { setSession } from '../Services/user';
 import { useLocalStorage } from './useLocalStorage';
+import { useRefresh } from '../Hooks/useRefresh';
 
 interface AuthContextInterface {
   accessToken: string | null;
@@ -38,6 +39,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const { darkMode, toggleDarkMode } = useLocalStorage();
 
   setSession(accessToken);
+
+  useRefresh({
+    setToken: (token: string | null) => setAccessToken(token),
+  });
 
   return (
     <AuthContext.Provider

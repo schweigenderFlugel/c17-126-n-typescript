@@ -20,8 +20,8 @@ import { Investments } from './Components/Investments';
 
 function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
+    <BrowserRouter>
+      <AuthProvider>
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route element={<Layout />}>
@@ -54,8 +54,8 @@ function App() {
             </Route>
           </Route>
         </Routes>
-      </BrowserRouter>
-    </AuthProvider>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }
 export default App;

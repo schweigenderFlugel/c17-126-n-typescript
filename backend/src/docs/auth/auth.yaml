@@ -1,0 +1,51 @@
+paths:
+  /api/auth/signup:
+    post:
+      summary: Register a new user
+      tags:
+        - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#components/schemas/AuthPayload'
+      responses:
+        '201':
+          description: User successfully registered
+        '500':
+          description: Unexpected error when trying to register a user
+
+  /api/auth/login:
+    post:
+      summary: Authenticate a user with the email and password provided.
+      tags:
+        - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#components/schemas/AuthPayload'
+      responses:
+        '200':
+          description: User successfully authenticated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+        '404':
+          description: Invalid credentials
+        '500':
+          description: Unexpected error when trying to authenticate a user
+
+components:
+  schemas:
+    AuthPayload:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
