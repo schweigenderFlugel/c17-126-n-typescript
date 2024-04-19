@@ -9,11 +9,11 @@ export default class bankAccountHelper {
    * @return {Promise<string>} The generated account number.
    */
   static async generateAccountNumber(
-    accountTypeFound: TypeAccountModel
+    accountType: string
   ): Promise<string> {
     while (true) {
       const accountNumber = `${Math.floor(Math.random() * 1000000000)}${
-        accountTypeFound.dataValues.name[0]
+        accountType[0]
       }`
       const bankAccountFound =
         await bankAccountService.getBankAccountByAccountNumber(accountNumber)

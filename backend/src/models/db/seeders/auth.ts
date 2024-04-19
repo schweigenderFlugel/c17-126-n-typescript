@@ -55,6 +55,8 @@ export const anonUserRefreshToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZC
 
 export const expiredRefreshToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzEzMzg0MjI3LCJleHAiOjE3MTMzODQyMzd9.HQeDUcSZD-hIcmxzgVJEbFJ5HFhujANZrJ8UgIraQpg";
 
+export const tokenWithInvalidPayload = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoxLCJsYXN0bmFtZSI6Im5vcm1hbCIsImlhdCI6MTcxMzUzNjE3M30.V-Eva_24DcPeumsZpX3c_xl7Px3R-g1NJQj8XqylrRc";
+
 const authFixtures = [adminAuth, normalAuth, nonAuth];
 
 export function up({context}: any) {

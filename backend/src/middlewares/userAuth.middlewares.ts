@@ -11,4 +11,4 @@ const userAuth = (req: Request, res: Response, next: NextFunction): void => {
   SessionUtils.verifyToken(token, req, res, next)
 }
 
-export default userAuth
+export default userAuth;

@@ -7,8 +7,8 @@ const phoneRegex = new RegExp(
 export const userCreate = z.object({
   name: z.string().trim().min(1, 'Name is required'),
   lastname: z.string().trim().min(1, 'Lastname is required'),
+  accountType: z.enum(['personal', 'enterprise']),
   alias: z.string().trim().optional(),
   address: z.string().trim().optional(),
   phone: z.string().trim().regex(phoneRegex, 'Invalid Number!').optional(),
-  accountType: z.number().nonnegative().positive().default(1),
 })

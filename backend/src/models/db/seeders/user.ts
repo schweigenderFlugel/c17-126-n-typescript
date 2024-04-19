@@ -1,7 +1,9 @@
-import { IUser } from "../../../interfaces/user.interface";
+import { AccountType, IUser } from "../../../interfaces/user.interface";
 import { User } from "../entity/user.entity";
 
-interface UserFixture extends Omit<Omit<Omit<IUser, 'id'>, 'createdAt'>, 'updatedAt'> {
+interface UserFixture extends Omit<Omit<Omit<Omit<Omit<IUser, 'id'>, 'authId'>, 'createdAt'>, 'updatedAt'>, 'accountType'> {
+  account_type: AccountType;
+  auth_id: number;
   created_at: Date;
   updated_at: Date;
 }
@@ -9,10 +11,11 @@ interface UserFixture extends Omit<Omit<Omit<IUser, 'id'>, 'createdAt'>, 'update
 export const adminUser: UserFixture = {
   name: "admin",
   lastname: "admin",
+  account_type: "enterprise",
   alias: "admin",
   address: 'fake street 123',
   phone: "(000)-000-0000",
-  authId: 1,
+  auth_id: 1,
   created_at: new Date(),
   updated_at: new Date(),
 }
@@ -20,10 +23,11 @@ export const adminUser: UserFixture = {
 export const normalUser: UserFixture = {
   name: "normal",
   lastname: "normal",
+  account_type: 'personal',
   alias: "normal",
   address: 'fake street 123',
   phone: "(000)-000-0000",
-  authId: 2,
+  auth_id: 2,
   created_at: new Date(),
   updated_at: new Date(),
 }

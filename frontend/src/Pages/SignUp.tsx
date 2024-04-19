@@ -48,7 +48,7 @@ export const SignUp = () => {
 
   return (
     <>
-      <Modal open={openModal}>
+      <Modal isOpen={openModal} onCloseModal={() => setOpenModal(false)}>
         <ErrorMessage>{error}</ErrorMessage>
       </Modal>
       <AuthFormContainer subtitle="¡Nos alegra tenerte por acá!">

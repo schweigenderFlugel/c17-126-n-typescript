@@ -10,8 +10,8 @@ export const AuthFormContainer = ({
   subtitle,
 }: PropsWithChildren<AuthFormContainerProps>) => {
   return (
-    <main className="justify-items-center border-indigo-200 dark:border-indigo-500 grid bg-white dark:bg-black bg-opacity-25 dark:bg-opacity-25 p-12 max-sm:p-8 border rounded-2xl w-[450px]">
-      <Logo className="dark:text-white" small />
+    <main className="justify-items-center border-indigo-200 dark:border-indigo-500 grid bg-white dark:bg-black bg-opacity-25 dark:bg-opacity-25 mx-6 p-12 max-sm:p-8 border rounded-2xl w-[450px]">
+      <Logo small />
       <h2 className="mt-2 mb-4 text-center text-lg dark:text-white">
         {subtitle}
       </h2>

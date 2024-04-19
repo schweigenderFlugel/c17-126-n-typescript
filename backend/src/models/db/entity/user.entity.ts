@@ -20,6 +20,11 @@ const User = sequelize.define<UserModel>('users', {
     type: STRING,
     allowNull: false,
   },
+  accountType: {
+    field: 'account_type',
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
   alias: {
     type: STRING,
     allowNull: false,
@@ -34,17 +39,20 @@ const User = sequelize.define<UserModel>('users', {
   },
   authId: {
     type: INTEGER,
+    field: 'auth_id',
     allowNull: false,
   },
   createdAt: {
     type: DataTypes.DATE,
     field: 'created_at',
     defaultValue: NOW,
+    allowNull: false,
   },
   updatedAt: {
     type: DataTypes.DATE,
     field: 'updated_at',
     defaultValue: NOW,
+    allowNull: false,
   }
 })
 

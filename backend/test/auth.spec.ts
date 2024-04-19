@@ -75,6 +75,12 @@ describe('Testing the auth route', () => {
       expect(statusCode).toBe(401);
     })
 
+    it('Should not login with the session open', async () => {
+      const { statusCode } = await api.post('/api/v1/auth/login')
+        .set('Cookie', `bankme=${normalUserRefreshToken}`);
+      expect(statusCode).toBe(400);
+    })
+
     it('Should login and get an access and a refresh token from the admin user', async () => {
       const inputData: ISign = {
         email: 'normal@email.com',

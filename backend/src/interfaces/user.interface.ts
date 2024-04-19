@@ -1,8 +1,11 @@
 import { ICommon } from "./common.interface";
 
+export type AccountType = "personal" | "enterprise";
+
 export interface IUser extends ICommon {
   name: string;
   lastname: string;
+  accountType: AccountType;
   address: string;
   alias: string;
   phone: string;

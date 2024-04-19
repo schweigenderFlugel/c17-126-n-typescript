@@ -3,13 +3,13 @@ export const Logo = ({
   classNameIcon = '',
   small = false,
 }: {
-  className?: string
-  classNameIcon?: string
-  small?: boolean
+  className?: string;
+  classNameIcon?: string;
+  small?: boolean;
 }) => {
   return (
     <h2
-      className={`flex items-center max-sm:gap-2 ${small ? 'gap-2' : 'gap-4'}`}
+      className={`flex items-center max-sm:gap-2 text-gray-900 dark:text-white ${small ? 'gap-2' : 'gap-4'} ${className}`}
     >
       <div>
         <svg
@@ -46,10 +46,10 @@ export const Logo = ({
         </svg>
       </div>
       <span
-        className={`font-extrabold align-middle text-gray-900 max-sm:text-4xl ${small ? 'text-4xl' : 'text-5xl'} ${className}`}
+        className={`font-extrabold align-middle max-sm:text-4xl ${small ? 'text-4xl' : 'text-5xl'}`}
       >
         Bank<span className="text-indigo-500">me.</span>
       </span>
     </h2>
-  )
-}
+  );
+};

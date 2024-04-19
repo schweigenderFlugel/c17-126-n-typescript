@@ -1,4 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
+import { UniqueConstraintError } from 'sequelize';
+import { TokenExpiredError } from 'jsonwebtoken';
 import { ISign } from '../interfaces/auth.interface'
 import { ITokenPayload } from '../interfaces/token.interface'
 import { createHash, isValidPassword } from '../utils/bcrypt.utils'
@@ -8,8 +10,13 @@ import { HTTP_STATUS, envs } from '../config/constants'
 import HttpError from '../utils/HttpError.utils'
 import SessionUtils from '../utils/session.util';
 import CookiesUtils from '../utils/cookies.utils';
-import { UniqueConstraintError } from 'sequelize';
-import { TokenExpiredError } from 'jsonwebtoken';
+import { ENVIROMENTS } from '../../enviroments'
+
+const { NODE_ENV, HTTPONLY_COOKIE_NAME } = envs;
+
+const cookieName = NODE_ENV === ENVIROMENTS.PRODUCTION 
+  ? HTTPONLY_COOKIE_NAME
+  : 'bankme';
 
 export default class authsController {
   /**
@@ -38,6 +45,8 @@ export default class authsController {
 
   static async login(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
+      const jwtCookie = req.cookies[cookieName];
+      if (jwtCookie) throw new HttpError('Session open', 'Cookie is still existing', 400);
       const payload: ISign = req.body;
       const authFound = await authService.getAuthByEmail(payload.email);
       if(!authFound) throw new HttpError(
@@ -49,15 +58,15 @@ export default class authsController {
         authFound.password, 
         payload.password
       );
-      const tokenPayload: ITokenPayload = { 
-        id: authFound.id,
-        role: authFound.role,
-      };
       if(!validPassword) throw new HttpError(
         'Invalid Credentials',
         'Must provide valid credentials',
         HTTP_STATUS.UNAUTHORIZED
       )
+      const tokenPayload: ITokenPayload = { 
+        id: authFound.id,
+        role: authFound.role,
+      };
       const accessToken = await SessionUtils.generateToken(tokenPayload);
       const refreshToken = await SessionUtils.generateRefreshToken(tokenPayload);
       await CookiesUtils.setJwtCookie(res, refreshToken)
@@ -69,7 +78,7 @@ export default class authsController {
 
   static async refresh(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const jwtCookie = req.cookies[envs.HTTPONLY_COOKIE_NAME];
+      const jwtCookie = req.cookies[cookieName];
       if (!jwtCookie) throw new HttpError('Cookie not found', 'Cookie should exist to refresh', 404);
       const verified = await SessionUtils.verifyRefreshToken(jwtCookie);
       const payload: ITokenPayload = { id: verified.id, role: verified.role }

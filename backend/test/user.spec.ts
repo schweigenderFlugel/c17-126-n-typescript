@@ -5,11 +5,8 @@ import request from 'supertest';
 import createExpressApp from '../src/config/createApp';
 import { upSeed } from './utils/umzug';
 import { sequelize } from '../src/models/db/database.manager';
-import { adminUserToken, anonUserToken, nonUserToken, normalUserToken } from '../src/models/db/seeders/auth';
-import { ITokenPayload } from '../src/interfaces/token.interface';
-import { decode } from 'jsonwebtoken';
+import { adminUserToken, anonUserToken, nonUserToken, normalUserToken, tokenWithInvalidPayload } from '../src/models/db/seeders/auth';
 import { adminUser, normalUser } from '../src/models/db/seeders/user';
-
 
 describe('Testing the user route', () => {
   let app;
@@ -45,8 +42,6 @@ describe('Testing the user route', () => {
     })
 
     it('Should get the normal user', async () => {
-      const decoded = decode(normalUserToken) as ITokenPayload;
-      console.log(decoded.id)
       const { statusCode, body } = await api.get('/api/v1/user').auth(normalUserToken, { type: 'bearer' });
       expect(statusCode).toBe(200);
       expect(body.name).toMatch(normalUser.name);
@@ -57,44 +52,66 @@ describe('Testing the user route', () => {
     })
   })
 
+  describe('GET /all', () => {
+    it('Should not access to the list of users', async () => {
+      const { statusCode } = await api.get('/api/v1/user/all');
+      expect(statusCode).toBe(401);
+    })
+
+    it('Should not access to the list of users because your role', async () => {
+      const { statusCode } = await api.get('/api/v1/user/all').auth(normalUserToken, { type: 'bearer' });
+      expect(statusCode).toBe(401);
+    })
+
+    it('Should access to the list of users', async () => {
+      const { statusCode } = await api.get('/api/v1/user/all').auth(adminUserToken, { type: 'bearer' });
+      expect(statusCode).toBe(200);
+    })
+  })
+
   describe('POST /', () => {
     it('Should not create user without login', async () => {
       const { statusCode } = await api.post('/api/v1/user');
       expect(statusCode).toBe(401);
     })
 
+    it('Should not create user without any data', async () => {
+      const { statusCode } = await api.post('/api/v1/user').auth(tokenWithInvalidPayload, { type: 'bearer' })
+      expect(statusCode).toBe(400);
+    })
+
+    it('Should not create user by using a token with invalid payload', async () => {
+      const data = {
+        name: 'wrong',
+        lastname: 'wrong',
+        accountType: 'personal',
+      }
+      const { statusCode } = await api.post('/api/v1/user')
+        .auth(tokenWithInvalidPayload, { type: 'bearer' })
+        .send(data);
+      expect(statusCode).toBe(403);
+    })
+
     it('Should not create an already existing user', async () => {
-      const payload= {
+      const data = {
         name: 'admin',
         lastname: 'admin',
+        accountType: 'personal',
       }
       const { statusCode } = await api.post('/api/v1/user')
         .auth(adminUserToken, { type: 'bearer' })
-        .send(payload);
+        .send(data);
       expect(statusCode).toBe(409);
     })
 
-    it('Should not retrieve any account type', async () => {
-      const payload = {
-        name: 'anonuser',
-        lastname: 'anonuser',
-        accountType: 4
-      }
-      const { statusCode } = await api.post('/api/v1/user')
-        .auth(anonUserToken, { type: 'bearer' })
-        .send(payload);
-      expect(statusCode).toBe(404);
-    })
-
     it('Should create a new bank account', async () => {
-      const decoded = decode(nonUserToken) as ITokenPayload;
       const payload = {
         name: 'nonuser',
         lastname: 'nonuser',
+        accountType: 'personal',
         alias: 'nonuser',
         address: 'fake street 123',
         phone: "(000)-000-0000",
-        accountType: 3,
       }
       const { statusCode } = await api.post('/api/v1/user')
         .auth(nonUserToken, { type: 'bearer' })
