@@ -1,15 +1,13 @@
-import { DataTypes } from 'sequelize'
+import { DataTypes, Model } from 'sequelize'
 import { sequelize } from '../database.manager'
+import { TRANSACTION_STATUS } from '../../../config/constants'
+import { ITransaction } from '../../../interfaces/transtations.interface'
 
 const { STRING, INTEGER, ENUM, NUMBER } = DataTypes
 
-enum TransactionStatus {
-  PENDING = 'pending',
-  SUCCESS = 'success',
-  FAILED = 'failed',
-}
+export interface TransactionModel extends Model<ITransaction>, ITransaction {}
 
-const Transaction = sequelize.define('Transaction', {
+const Transaction = sequelize.define<TransactionModel>('Transaction', {
   id: {
     type: INTEGER,
     autoIncrement: true,
@@ -36,7 +34,7 @@ const Transaction = sequelize.define('Transaction', {
   },
   status: {
     type: ENUM,
-    values: Object.values(TransactionStatus),
+    values: Object.values(TRANSACTION_STATUS),
     defaultValue: 'pending',
     allowNull: false,
   },

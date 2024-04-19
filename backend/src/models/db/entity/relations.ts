@@ -5,7 +5,7 @@ import { RefreshToken } from './refresh-token.entity'
 import { Role } from './role.entity'
 import { Transaction } from './transaction'
 import { TypeAccount } from './type-account.entity'
-import { TypeTransfert } from './type-transfer.entity'
+import { TypeTransfers } from './type-transfer.entity'
 import { User } from './user.entity'
 
 // RELATIONS FOR USER
@@ -83,10 +83,10 @@ Transaction.belongsTo(BankAccount, {
 })
 
 // RELATIONS FOR TYPE TRANSFER
-TypeTransfert.hasMany(Transaction, {
+TypeTransfers.hasMany(Transaction, {
   foreignKey: 'type_transfer_id',
 })
 
-Transaction.belongsTo(TypeTransfert, {
+Transaction.belongsTo(TypeTransfers, {
   foreignKey: 'type_transfer_id',
 })

@@ -1,12 +1,11 @@
-import { CookieOptions, Response } from "express";
-import { envs } from "../config/constants";
-import { ENVIROMENTS } from "../../enviroments";
+import { CookieOptions, Response } from 'express'
+import { envs } from '../config/constants'
+import { ENVIROMENTS } from '../../enviroments'
 
-const { NODE_ENV, HTTPONLY_COOKIE_NAME } = envs;
+const { NODE_ENV, HTTPONLY_COOKIE_NAME } = envs
 
-const cookieName = NODE_ENV === ENVIROMENTS.PRODUCTION 
-  ? HTTPONLY_COOKIE_NAME
-  : 'bankme';
+const cookieName =
+  NODE_ENV === ENVIROMENTS.PRODUCTION ? HTTPONLY_COOKIE_NAME : 'bankme'
 
 export default class CookiesUtils {
   static async setJwtCookie(res: Response, refreshToken: string) {
@@ -14,7 +13,7 @@ export default class CookiesUtils {
       httpOnly: true,
       secure: true,
       sameSite: 'none',
-      expires: new Date(new Date().getTime() + 2 * 60 * 60 * 1000)
+      expires: new Date(new Date().getTime() + 2 * 60 * 60 * 1000),
     }
     res.cookie(cookieName, refreshToken, options)
   }
@@ -23,8 +22,8 @@ export default class CookiesUtils {
     const options: CookieOptions = {
       httpOnly: true,
       secure: true,
-      sameSite: 'none'
+      sameSite: 'none',
     }
-    res.clearCookie(cookieName, options);
+    res.clearCookie(cookieName, options)
   }
 }
