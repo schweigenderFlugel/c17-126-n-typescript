@@ -5,8 +5,8 @@ import request from 'supertest';
 import createExpressApp from '../src/config/createApp';
 import { upSeed } from './utils/umzug';
 import { sequelize } from '../src/models/db/database.manager';
-import { adminUserToken, anonUserToken, nonUserToken, normalUserToken, tokenWithInvalidPayload } from '../src/models/db/seeders/auth';
-import { adminUser, normalUser } from '../src/models/db/seeders/user';
+import { adminUserToken, anonUserToken, nonUserToken, normalUserToken, tokenWithInvalidPayload } from '../src/models/db/seeders/1-auth';
+import { adminUser, normalUser } from '../src/models/db/seeders/2-user';
 
 describe('Testing the user route', () => {
   let app;

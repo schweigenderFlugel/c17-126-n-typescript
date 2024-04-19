@@ -1,6 +1,6 @@
 // LIBRERIES
 import express from 'express'
-import cookieParser from "cookie-parser";
+import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import dotenv from 'dotenv'
 
@@ -10,7 +10,6 @@ import { options } from './swaggerOptions'
 
 import { envs } from './constants'
 
-
 dotenv.config()
 
 export default {
@@ -18,7 +17,7 @@ export default {
     app.use(
       cors({
         // FIXME: Change the port to vite port
-        origin: ['http://localhost:8080', envs.FRONTEND_URL ],
+        origin: ['http://localhost:8080', envs.FRONTEND_URL],
         methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
         preflightContinue: false,
         optionsSuccessStatus: 204,

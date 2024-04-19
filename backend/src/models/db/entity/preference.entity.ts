@@ -1,7 +1,10 @@
-import { DataTypes } from 'sequelize'
+import { DataTypes, Model } from 'sequelize'
 import { sequelize } from '../database.manager'
+import { IPreferences } from '../../../interfaces/preference.interface'
 
-const Preferences = sequelize.define('preferences', {
+export interface PreferencesModel extends Model<IPreferences>, IPreferences {}
+
+const Preferences = sequelize.define<PreferencesModel>('preferences', {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -14,7 +17,12 @@ const Preferences = sequelize.define('preferences', {
   max_ammount_transfers: {
     type: DataTypes.INTEGER,
     allowNull: false,
+    defaultValue: 999999,
   },
-})
+},
+{
+  timestamps: false,
+}
+)
 
 export { Preferences }

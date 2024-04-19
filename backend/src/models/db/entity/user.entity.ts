@@ -1,6 +1,7 @@
 import { DataTypes, Model, NOW } from 'sequelize'
 import { IUser } from '../../../interfaces/user.interface'
 import { sequelize } from '../database.manager'
+import { Auth } from './auth.entity';
 
 const { STRING, INTEGER } = DataTypes;
 
@@ -41,6 +42,11 @@ const User = sequelize.define<UserModel>('users', {
     type: INTEGER,
     field: 'auth_id',
     allowNull: false,
+    unique: true,
+    references: {
+      model: Auth.getTableName(),
+      key: 'id'
+    }
   },
   createdAt: {
     type: DataTypes.DATE,

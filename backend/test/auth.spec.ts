@@ -8,7 +8,7 @@ import createExpressApp from '../src/config/createApp';
 import { sequelize } from '../src/models/db/database.manager';
 import { Roles } from '../src/models/db/entity/auth.entity';
 import { upSeed } from './utils/umzug';
-import { adminUserRefreshToken, expiredRefreshToken, normalUserRefreshToken } from '../src/models/db/seeders/auth';
+import { adminUserRefreshToken, expiredRefreshToken, normalUserRefreshToken } from '../src/models/db/seeders/1-auth';
 import { ISign } from '../src/interfaces/auth.interface';
 
 describe('Testing the auth route', () => {

@@ -1,13 +1,14 @@
 import { IAuth } from "../../../interfaces/auth.interface";
 import { Auth, Roles } from "../entity/auth.entity";
 
-interface AuthFixture extends Omit<Omit<Omit<Omit<IAuth, 'id'>, 'refreshToken'>, 'createdAt'>, 'updatedAt'> {
+interface AuthFixture extends Omit<Omit<Omit<IAuth, 'refreshToken'>, 'createdAt'>, 'updatedAt'> {
   refresh_token: string | null;
   created_at: Date;
   updated_at: Date;
 }
 
-const adminAuth: AuthFixture = {
+export const adminAuth: AuthFixture = {
+  id: 1,
   email: 'admin@email.com',
   password: "$2b$10$WfM1hoVWH8R/i0fC34Lh2.lzpLYP/i3ki7mLz62lAFchQw0yJC.Ue",
   refresh_token: null,
@@ -17,7 +18,8 @@ const adminAuth: AuthFixture = {
   updated_at: new Date(),
 }
 
-const normalAuth: AuthFixture = {
+export const normalAuth: AuthFixture = {
+  id: 2,
   email: 'normal@email.com',
   password: "$2b$10$85FoRWGIr7Z1Zyo5HHHA5O1a0RzC/oDvG3t/kjQSAblO3ZGGAJ1Nu",
   refresh_token: null,
@@ -27,7 +29,8 @@ const normalAuth: AuthFixture = {
   updated_at: new Date(),
 }
 
-const nonAuth: AuthFixture = {
+export const nonAuth: AuthFixture = {
+  id: 3,
   email: 'nonuser@email.com',
   password: "$2b$10$85FoRWGIr7Z1Zyo5HHHA5O1a0RzC/oDvG3t/kjQSAblO3ZGGAJ1Nu",
   refresh_token: null,

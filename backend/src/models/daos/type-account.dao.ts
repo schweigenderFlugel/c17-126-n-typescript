@@ -20,12 +20,6 @@ export default class typeAccountDao {
    * @param {ITypeAccount} typeAccountPayload - The payload for creating the type account.
    * @return {Promise<TypeAccountModel>} The created type account.
    */
-  /**
-   * Creates a new type account with the given payload.
-   *
-   * @param {ITypeAccount} typeAccountPayload - The payload for creating the type account.
-   * @return {Promise<TypeAccountModel>} The created type account.
-   */
   async createTypeAccount(
     typeAccountPayload: ITypeAccount
   ): Promise<TypeAccountModel> {

@@ -1,9 +1,9 @@
 import { Auth } from './auth.entity'
 import { BankAccount } from './bank-account.entity'
 import { Preferences } from './preference.entity'
-import { Transaction } from './transaction'
+import { Transaction } from './transaction.entity'
 import { TypeAccount } from './type-account.entity'
-import { TypeTransfert } from './type-transfer.entity'
+import { TypeTransfers } from './type-transfer.entity'
 import { User } from './user.entity'
 
 // RELATIONS FOR AUTH
@@ -28,18 +28,6 @@ BankAccount.belongsTo(User, {
   foreignKey: 'user_id',
 })
 
-User.hasMany(BankAccount, {
-  foreignKey: 'user_id',
-})
-
-BankAccount.belongsTo(TypeAccount, {
-  foreignKey: 'type_account_id',
-})
-
-TypeAccount.hasMany(BankAccount, {
-  foreignKey: 'type_account_id',
-})
-
 // RELATIONS FOR TRANSACTION
 BankAccount.hasMany(Transaction, {
   foreignKey: 'source_account',
@@ -58,10 +46,10 @@ Transaction.belongsTo(BankAccount, {
 })
 
 // RELATIONS FOR TYPE TRANSFER
-TypeTransfert.hasMany(Transaction, {
+TypeTransfers.hasMany(Transaction, {
   foreignKey: 'type_transfer_id',
 })
 
-Transaction.belongsTo(TypeTransfert, {
+Transaction.belongsTo(TypeTransfers, {
   foreignKey: 'type_transfer_id',
 })
