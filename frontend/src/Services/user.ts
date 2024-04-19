@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios'
-import { ILoginPayload, ISignUpPayload, IUserPayload } from '../Interfaces/interfaces'
+import { ILoginPayload, ISignUpPayload, ICreateUserPayload } from '../Interfaces/interfaces'
 import { Axios, AxiosAuth } from './axios'
 
 const controller = new AbortController()
@@ -43,7 +43,14 @@ export const refreshSession = async (): Promise<{ accessToken: string | null}> =
   return res.data; 
 }
 
-export const createUser = async (payload: IUserPayload): Promise<void> => {
+export const getUser = async (): Promise<void> => {
+  await Axios({
+    method: 'GET',
+    url: '/user'
+  })
+}
+
+export const createUser = async (payload: ICreateUserPayload): Promise<void> => {
   await Axios({
     method: 'POST',
     url: '/user',

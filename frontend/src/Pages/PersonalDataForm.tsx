@@ -4,28 +4,30 @@ import { AxiosError } from 'axios';
 import { AuthFormContainer } from '../Components/AuthFormContainer';
 import { AuthFormRow } from '../Components/AuthFormRow';
 import { ButtonAuthForm } from '../Components/ButtonAuthForm';
-import { IUserPayload } from '../Interfaces/interfaces';
+import { ICreateUserPayload } from '../Interfaces/interfaces';
 import { createUser } from '../Services/user';
+import { AuthFormSelect } from '../Components/AuthFormSelect';
 
-const initialValue: IUserPayload = {
+const initialValue: ICreateUserPayload = {
   name: '',
   lastname: '',
+  accountType: '',
+  alias: '',
   address: '',
   phone: '',
-  alias: '',
 };
 
 export const PersonalDataForm = () => {
   const [formValues, setFormValues] =
-    useState<IUserPayload>(initialValue);
+    useState<ICreateUserPayload>(initialValue);
 
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      createUser(formValues)
-      navigate('/dashboard', { replace: true });
+      createUser(formValues);
+      navigate('/', { replace: true })
     } catch (error) {
       if (error instanceof AxiosError) {
         console.log(error);
@@ -35,7 +37,7 @@ export const PersonalDataForm = () => {
 
   const handleChange = ({
     target: { name, value },
-  }: React.ChangeEvent<HTMLInputElement>) => {
+  }: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement> ) => {
     setFormValues({ ...formValues, [name]: value });
   };
 
@@ -52,8 +54,8 @@ export const PersonalDataForm = () => {
               value={formValues.name}
               type="text"
               label="Nombre"
-              key="firstName"
-              name="firstName"
+              key="name"
+              name="name"
               autoComplete="name"
               required
             />
@@ -62,10 +64,21 @@ export const PersonalDataForm = () => {
               value={formValues.lastname}
               type="text"
               label="Apellido"
-              key="lastName"
-              name="lastName"
+              key="lastname"
+              name="lastname"
               autoComplete="name"
               required
+            />
+            <AuthFormSelect
+              key="accountType"
+              name='accountType'
+              label='Tipo de cuenta'
+              onChange={handleChange}
+              value={formValues.accountType}
+              options={[
+                { value: 'enterpise', label: 'Empresa' }, 
+                { value: 'personal', label: 'Personal' }
+              ]}
             />
             <AuthFormRow
               onChange={handleChange}
