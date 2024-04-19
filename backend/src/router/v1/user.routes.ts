@@ -22,7 +22,7 @@ userRouter.get(
 userRouter.get(
   '/all',
   userAuth,
-  checkRoles([Roles.ADMIN]),
+  checkRoles(Roles.ADMIN),
   userController.getAllUser,
   errorHandler,
 )

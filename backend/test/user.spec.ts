@@ -58,7 +58,7 @@ describe('Testing the user route', () => {
       expect(statusCode).toBe(401);
     })
 
-    it('Should not access to the list of users because your role', async () => {
+    it('Should not access to the list of users because your role is wrong', async () => {
       const { statusCode } = await api.get('/api/v1/user/all').auth(normalUserToken, { type: 'bearer' });
       expect(statusCode).toBe(401);
     })
