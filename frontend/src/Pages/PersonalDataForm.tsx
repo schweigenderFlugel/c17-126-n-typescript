@@ -1,6 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AxiosError } from 'axios';
+import { toast } from 'react-hot-toast';
+
+import { useAuth } from '../Hooks/useAuth';
 import { AuthFormContainer } from '../Components/AuthFormContainer';
 import { AuthFormRow } from '../Components/AuthFormRow';
 import { ButtonAuthForm } from '../Components/ButtonAuthForm';
@@ -21,10 +24,6 @@ const initialValue: FormPersonalDataType = {
   alias: '',
 };
 
-const sendPersonalData = (formValues: FormPersonalDataType) => {
-  console.log(formValues);
-};
-
 export const PersonalDataForm = () => {
   const [formValues, setFormValues] =
     useState<FormPersonalDataType>(initialValue);
@@ -34,12 +33,16 @@ export const PersonalDataForm = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      sendPersonalData(formValues);
+      console.log(formValues); // 👈 Reemplazar por función para hacer petición
       navigate('/dashboard', { replace: true });
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        console.log(error);
+    } catch (serverError) {
+      let errorMessage: string;
+      if (serverError instanceof AxiosError && serverError.message) {
+        errorMessage = serverError.message;
+      } else {
+        errorMessage = 'Error desconocido';
       }
+      toast.error(errorMessage);
     }
   };
 
@@ -51,6 +54,12 @@ export const PersonalDataForm = () => {
 
   //🔴[TODO]:Reemplazar por el del hook
   const isLoading = false;
+
+  const { accessToken } = useAuth();
+
+  useEffect(() => {
+    if (accessToken) navigate('/dashboard');
+  }, [accessToken, navigate]);
 
   return (
     <>

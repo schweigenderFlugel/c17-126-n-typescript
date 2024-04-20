@@ -17,6 +17,7 @@ import { TransfersList } from './Components/TransfersList';
 import { Settings } from './Components/Settings';
 import { Statistics } from './Components/Statistics';
 import { Investments } from './Components/Investments';
+import { ToastNotification } from './Components/ToastNotification';
 
 function App() {
   return (
@@ -54,6 +55,7 @@ function App() {
             </Route>
           </Route>
         </Routes>
+        <ToastNotification />
       </AuthProvider>
     </BrowserRouter>
   );

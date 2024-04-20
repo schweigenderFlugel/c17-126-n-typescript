@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AxiosError } from 'axios';
+import { toast } from 'react-hot-toast';
 
 import { useAuth } from '../Hooks/useAuth';
 import { AuthFormContainer } from '../Components/AuthFormContainer';
@@ -15,26 +16,25 @@ const initialValue: ForgotPasswordFormType = {
   email: '',
 };
 
-const sendForgotPasswordData = (formValues: ForgotPasswordFormType) => {
-  console.log(formValues);
-};
-
 export const ForgotPasswordForm = () => {
   const [formValues, setFormValues] =
     useState<ForgotPasswordFormType>(initialValue);
-  const navigate = useNavigate();
 
-  const { accessToken } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      sendForgotPasswordData(formValues);
+      console.log(formValues);
       navigate('/', { replace: true });
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        console.log(error);
+    } catch (serverError) {
+      let errorMessage: string;
+      if (serverError instanceof AxiosError && serverError.message) {
+        errorMessage = serverError.message;
+      } else {
+        errorMessage = 'Error desconocido';
       }
+      toast.error(errorMessage);
     }
   };
 
@@ -46,6 +46,8 @@ export const ForgotPasswordForm = () => {
 
   //🔴[TODO]:Reemplazar por el del hook
   const isLoading = false;
+
+  const { accessToken } = useAuth();
 
   useEffect(() => {
     if (accessToken) navigate('/dashboard', { replace: true });

@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AxiosError } from 'axios';
+import { toast } from 'react-hot-toast';
 
 import { signup } from '../Services/user';
 import { useAuth } from '../Hooks/useAuth';
-import { Modal } from '../Components/Modal';
-import { ErrorMessage } from '../Components/ErrorMessage';
 import { AuthFormContainer } from '../Components/AuthFormContainer';
 import { AuthFormRow } from '../Components/AuthFormRow';
 import { ButtonAuthForm } from '../Components/ButtonAuthForm';
@@ -17,22 +16,25 @@ export const SignUp = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showConfirmPassword, setShowConfirmPassword] =
     useState<boolean>(false);
-  const [openModal, setOpenModal] = useState<boolean>(false);
-  const [error, setError] = useState<string>('');
-  const navigate = useNavigate();
 
-  const { accessToken } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async e => {
     e.preventDefault();
+    if (password !== confirmPassword) {
+      return toast.error('Las contraseñas no coinciden');
+    }
     try {
       await signup({ email, password });
       navigate('/datos-personales', { replace: true });
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        setError(error.message);
-        setOpenModal(true);
+    } catch (serverError) {
+      let errorMessage: string;
+      if (serverError instanceof AxiosError && serverError.message) {
+        errorMessage = serverError.message;
+      } else {
+        errorMessage = 'Error desconocido';
       }
+      toast.error(errorMessage);
     }
   };
 
@@ -42,15 +44,14 @@ export const SignUp = () => {
   const passwordInputType = showPassword ? 'text' : 'password';
   const confirmPasswordInputType = showConfirmPassword ? 'text' : 'password';
 
+  const { accessToken } = useAuth();
+
   useEffect(() => {
     if (accessToken) navigate('/dashboard');
   }, [accessToken, navigate]);
 
   return (
     <>
-      <Modal isOpen={openModal} onCloseModal={() => setOpenModal(false)}>
-        <ErrorMessage>{error}</ErrorMessage>
-      </Modal>
       <AuthFormContainer subtitle="¡Nos alegra tenerte por acá!">
         <form onSubmit={handleSubmit} className="w-full">
           <div className="flex flex-col gap-2">
