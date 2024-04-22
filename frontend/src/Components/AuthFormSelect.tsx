@@ -1,6 +1,7 @@
 type Option = {
   value: string;
   label: string;
+  disable: boolean;
 }
 
 type AuthFormSelectProps = {
@@ -28,13 +29,13 @@ export const AuthFormSelect = ({
         <select 
           name={name}
           id={name}
-          defaultValue="Seleccionar" 
           value={value}
-          className="border-indigo-300 focus:border-indigo-600 focus:dark:border-indigo-500 focus:outline-none dark:border-white bg-transparent px-2 py-4 border rounded-md w-full h-8 text-black text-sm dark:text-white"
+          defaultValue="Seleccionar"
+          className="bg-transparent focus:outline-none text-black text-sm border-indigo-300 focus:border-indigo-600 focus:dark:border-indigo-500 dark:text-white border rounded-md dark:border-white w-full h-9 px-1"
           onChange={onChange}
         >
         {options.map(option => (
-          <option key={option.value} value={option.value}>{option.label}</option>
+          <option key={option.value} value={option.value} disabled={option.disable}>{option.label}</option>
         ))}
         </select>
       </div>

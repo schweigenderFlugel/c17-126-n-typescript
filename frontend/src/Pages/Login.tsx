@@ -1,8 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AxiosError } from 'axios';
-
-import { useAuth } from '../Hooks/useAuth';
 import { useLogin } from '../Hooks/useLogin';
 import { Modal } from '../Components/Modal';
 import { AuthFormContainer } from '../Components/AuthFormContainer';
@@ -16,8 +14,7 @@ export const Login = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
-
-  const { accessToken } = useAuth();
+  const navigate = useNavigate();
 
   const onLoginError = (error: AxiosError) => {
     if (error.response?.status === 401) {
@@ -31,9 +28,9 @@ export const Login = () => {
       setOpenModal(true);
     }
   };
-
+  
   const { setLogin, loading } = useLogin({
-    onSuccess: () => navigate('/datos-personales', { replace: true }),
+    onSuccess: () => navigate('/dashboard', { replace: true }),
     onReject: error => onLoginError(error),
   });
 
@@ -43,12 +40,6 @@ export const Login = () => {
   };
 
   const passwordInputType = showPassword ? 'text' : 'password';
-
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (accessToken) navigate('/dashboard', { replace: true });
-  }, [accessToken, navigate]);
 
   return (
     <>

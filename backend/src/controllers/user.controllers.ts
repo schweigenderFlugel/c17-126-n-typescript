@@ -124,7 +124,7 @@ export default class userController {
         throw new HttpError(
           'User not found',
           'The user does not exist',
-          HTTP_STATUS.UNAUTHORIZED
+          HTTP_STATUS.NOT_FOUND
         )
       }
       res.status(200).json(userFound)

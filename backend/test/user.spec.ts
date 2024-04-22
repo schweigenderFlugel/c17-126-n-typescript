@@ -28,7 +28,7 @@ describe('Testing the user route', () => {
 
     it('Should not get unexisting user', async () => {
       const { statusCode } = await api.get('/api/v1/user').auth(anonUserToken, { type: 'bearer' });
-      expect(statusCode).toBe(401);
+      expect(statusCode).toBe(404);
     })
 
     it('Should get the admin user', async () => {

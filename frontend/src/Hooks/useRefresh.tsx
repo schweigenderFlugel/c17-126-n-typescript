@@ -21,5 +21,5 @@ export const useRefresh = ({ onSuccess, onReject, setToken }: options) => {
         onReject?.();
       });
         // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, []);
+  }, []);
 }

@@ -5,8 +5,8 @@ import { AuthFormContainer } from '../Components/AuthFormContainer';
 import { AuthFormRow } from '../Components/AuthFormRow';
 import { ButtonAuthForm } from '../Components/ButtonAuthForm';
 import { ICreateUserPayload } from '../Interfaces/interfaces';
-import { createUser } from '../Services/user';
 import { AuthFormSelect } from '../Components/AuthFormSelect';
+import { createUser } from '../Services/user';
 
 const initialValue: ICreateUserPayload = {
   name: '',
@@ -27,7 +27,7 @@ export const PersonalDataForm = () => {
     e.preventDefault();
     try {
       createUser(formValues);
-      navigate('/', { replace: true })
+      navigate('/dashboard', { replace: true })
     } catch (error) {
       if (error instanceof AxiosError) {
         console.log(error);
@@ -45,7 +45,7 @@ export const PersonalDataForm = () => {
   const isLoading = false;
 
   return (
-    <>
+    
       <AuthFormContainer subtitle="¡Un último paso!">
         <form onSubmit={handleSubmit} className="w-full">
           <div className="flex flex-col gap-2">
@@ -66,18 +66,19 @@ export const PersonalDataForm = () => {
               label="Apellido"
               key="lastname"
               name="lastname"
-              autoComplete="name"
+              autoComplete="lastname"
               required
             />
             <AuthFormSelect
               key="accountType"
-              name='accountType'
+              name="accountType"
               label='Tipo de cuenta'
               onChange={handleChange}
               value={formValues.accountType}
               options={[
-                { value: 'enterpise', label: 'Empresa' }, 
-                { value: 'personal', label: 'Personal' }
+                { value: initialValue.accountType, label: 'Seleccionar', disable: true },
+                { value: 'enterprise', label: 'Empresa', disable: false }, 
+                { value: 'personal', label: 'Personal', disable: false }
               ]}
             />
             <AuthFormRow
@@ -116,8 +117,8 @@ export const PersonalDataForm = () => {
               disabled={
                 formValues.name.length < 1 ||
                 formValues.lastname.length < 1 ||
-                formValues.address.length < 1 ||
-                formValues.phone.length < 1
+                formValues.accountType == initialValue.accountType ||
+                formValues.alias.length < 1
               }
               isLoading={isLoading}
               label="Terminar Registro"
@@ -125,6 +126,5 @@ export const PersonalDataForm = () => {
           </div>
         </form>
       </AuthFormContainer>
-    </>
-  );
+    )
 };

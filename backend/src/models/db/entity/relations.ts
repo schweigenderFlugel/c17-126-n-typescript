@@ -2,7 +2,6 @@ import { Auth } from './auth.entity'
 import { BankAccount } from './bank-account.entity'
 import { Preferences } from './preference.entity'
 import { Transaction } from './transaction.entity'
-import { TypeAccount } from './type-account.entity'
 import { TypeTransfers } from './type-transfer.entity'
 import { User } from './user.entity'
 

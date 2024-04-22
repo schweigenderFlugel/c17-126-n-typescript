@@ -8,6 +8,7 @@ import {
 import { setSession } from '../Services/user';
 import { useLocalStorage } from './useLocalStorage';
 import { useRefresh } from '../Hooks/useRefresh';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 interface AuthContextInterface {
   accessToken: string | null;
@@ -37,10 +38,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const { darkMode, toggleDarkMode } = useLocalStorage();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const from = location.state?.from.pathname;
 
   setSession(accessToken);
 
   useRefresh({
+    onSuccess: () => navigate(from, { replace: true }),
     setToken: (token: string | null) => setAccessToken(token),
   });
 

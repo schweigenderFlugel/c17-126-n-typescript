@@ -8,7 +8,11 @@ import createExpressApp from '../src/config/createApp';
 import { sequelize } from '../src/models/db/database.manager';
 import { Roles } from '../src/models/db/entity/auth.entity';
 import { upSeed } from './utils/umzug';
-import { adminUserRefreshToken, expiredRefreshToken, normalUserRefreshToken } from '../src/models/db/seeders/1-auth';
+import { 
+  adminUserRefreshToken, 
+  expiredRefreshToken, 
+  normalUserRefreshToken,
+} from '../src/models/db/seeders/1-auth';
 import { ISign } from '../src/interfaces/auth.interface';
 
 describe('Testing the auth route', () => {
@@ -76,12 +80,17 @@ describe('Testing the auth route', () => {
     })
 
     it('Should not login with the session open', async () => {
+      const inputData: ISign = {
+        email: 'normal@email.com',
+        password: 'newuser12345'
+      }
       const { statusCode } = await api.post('/api/v1/auth/login')
-        .set('Cookie', `bankme=${normalUserRefreshToken}`);
+        .set('Cookie', `bankme=${normalUserRefreshToken}`)
+        .send(inputData);
       expect(statusCode).toBe(400);
     })
 
-    it('Should login and get an access and a refresh token from the admin user', async () => {
+    it('Should login and get an access and a refresh token from the normal user', async () => {
       const inputData: ISign = {
         email: 'normal@email.com',
         password: 'normal12345'
@@ -93,7 +102,7 @@ describe('Testing the auth route', () => {
       expect(header['set-cookie']).toBeDefined();
     })
 
-    it('Should login and get an access and a refresh token from the normal user', async () => {
+    it('Should login and get an access and a refresh token from the admin user', async () => {
       const inputData: ISign = {
         email: 'admin@email.com',
         password: 'admin12345'
@@ -134,13 +143,16 @@ describe('Testing the auth route', () => {
 
   describe('GET /logout', () => {
     it('Should not logout because there is not any cookie', async () => {
-      const { statusCode } = await api.get('/api/v1/auth/refresh')
+      const { statusCode } = await api.get('/api/v1/auth/logout')
       expect(statusCode).toBe(404);
     })
 
     it('Should logout', async () => {
-      const { statusCode, header } = await api.get('/api/v1/auth/refresh').set('Cookie', `bankme=${adminUserRefreshToken}`);
-      expect(statusCode).toBe(200);
+      const logoutResponse = await api.get('/api/v1/auth/logout').set('Cookie', `bankme=${normalUserRefreshToken}`);
+      expect(logoutResponse.statusCode).toBe(200)
+
+      const { statusCode, header } = await api.get('/api/v1/auth/refresh');
+      expect(statusCode).toBe(404);
       expect(header['set-cookie']).toBeUndefined();
     })
   })

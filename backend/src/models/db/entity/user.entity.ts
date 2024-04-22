@@ -43,10 +43,6 @@ const User = sequelize.define<UserModel>('users', {
     field: 'auth_id',
     allowNull: false,
     unique: true,
-    references: {
-      model: Auth.getTableName(),
-      key: 'id'
-    }
   },
   createdAt: {
     type: DataTypes.DATE,
