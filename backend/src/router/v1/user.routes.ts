@@ -21,6 +21,8 @@ userRouter.get(
 
 userRouter.get(
   '/all',
+  userAuth,
+  checkRoles(Roles.ADMIN),
   userController.getAllUser,
   errorHandler,
 )
@@ -28,7 +30,6 @@ userRouter.get(
 userRouter.post(
   '/',
   userAuth,
-  checkRoles(Roles.ADMIN),
   schemaValidator(userCreate, null),
   userController.createUser,
   errorHandler,

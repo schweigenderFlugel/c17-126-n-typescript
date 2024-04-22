@@ -26,3 +26,22 @@ export interface IUser {
   address: string;
   phone: string;
 }
+
+export interface ITypeTransfer {
+  name: string;
+  description: string | null;
+}
+
+export interface ITransactions {
+  id: number;
+  source_account: number;
+  destination_account: number;
+  type_transfer_id: number;
+  amount: number;
+  date_transaction: Date;
+  status: string;
+}
+
+export interface ICreateTransaction {
+  
+}

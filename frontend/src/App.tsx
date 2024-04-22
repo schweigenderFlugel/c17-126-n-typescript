@@ -35,22 +35,21 @@ function App() {
               path="/restablecer-contrasena/:token"
               element={<ResetPasswordForm />}
             />
-            <Route path="/datos-personales" element={<PersonalDataForm />} />
-            <Route
-              element={
-                <RequireLogin>
-                  <Dashboard />
-                </RequireLogin>
-              }
-            >
-              <Route path="/dashboard" element={<DashboardStart />} />
-              <Route
-                path="/dashboard/transferencias"
-                element={<TransfersList />}
-              />
-              <Route path="/dashboard/inversiones" element={<Investments />} />
-              <Route path="/dashboard/estadisticas" element={<Statistics />} />
-              <Route path="/dashboard/configuracion" element={<Settings />} />
+            <Route element={
+              <RequireLogin>
+                <Layout/>
+              </RequireLogin>}>
+              <Route path='/datos-personales' element={<PersonalDataForm />} />
+              <Route element={<Dashboard />}>
+                <Route path="/dashboard" element={<DashboardStart />} />
+                <Route
+                  path="/dashboard/transferencias"
+                  element={<TransfersList />}
+                />
+                <Route path="/dashboard/inversiones" element={<Investments />} />
+                <Route path="/dashboard/estadisticas" element={<Statistics />} />
+                <Route path="/dashboard/configuracion" element={<Settings />} />
+              </Route>
             </Route>
           </Route>
         </Routes>

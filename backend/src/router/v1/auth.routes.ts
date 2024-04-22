@@ -2,6 +2,7 @@ import { Router } from 'express'
 import schemaValidator from '../../middlewares/schemasValidator.middlewares'
 import {
   loginSchema,
+  recoverySchema,
   signUpSchema,
 } from '../../middlewares/validators/auth.validator'
 import authsController from '../../controllers/auths.controllers'
@@ -20,6 +21,13 @@ authRouter.post(
   '/login',
   schemaValidator(loginSchema, null),
   authsController.login,
+  errorHandler
+)
+
+authRouter.post(
+  '/forgot-password',
+  schemaValidator(recoverySchema, null),
+  authsController.forgotPassword,
   errorHandler
 )
 

@@ -133,6 +133,24 @@ export default class authsController {
     }
   }
 
+  static async forgotPassword(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const payload: ISign = req.body;
+      const authFound = await authService.getAuthByEmail(payload.email);
+      const payloadToken: Omit<ITokenPayload, 'role'> = {
+        id: authFound.id,
+      }
+      const recoveryToken = await SessionUtils.generateRecoveryToken(payloadToken);
+      res.status(HTTP_STATUS.OK).json({ recoveryToken: recoveryToken })
+    } catch (error) {
+      next(error);
+    }
+  }
+
   /**
    * Logout the session.
    *

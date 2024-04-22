@@ -6,6 +6,8 @@ import createExpressApp from '../src/config/createApp';
 import { sequelize } from '../src/models/db/database.manager';
 import { upSeed } from './utils/umzug';
 import { adminUserToken, normalUserToken } from '../src/models/db/seeders/1-auth';
+import { ITypeTransfers } from '../src/interfaces/typeTransfers.interface';
+import { TYPETRANSFERS } from '../src/config/constants';
 
 describe('Testing the auth route', () => {
   let app;
@@ -28,18 +30,34 @@ describe('Testing the auth route', () => {
 
   describe('POST /types-transfers', () => {
     it('Should not be allowed to create a transfer type', async () => {
-      const { statusCode } = await api.post('/api/v1/types-transfers');
-      expect(statusCode).toBe(200);
+      const data: Omit<ITypeTransfers, 'id'> = {
+        name: TYPETRANSFERS.CREDIT,
+        description: 'credit'
+      }
+      const { statusCode } = await api.post('/api/v1/types-transfers').send(data);
+      expect(statusCode).toBe(401);
     })
 
     it('Should not be allowed to create a transfer type because your role is wrong', async () => {
-      const { statusCode } = await api.post('/api/v1/types-transfers').auth(normalUserToken, { type: 'bearer'});
-      expect(statusCode).toBe(200);
+      const data: Omit<ITypeTransfers, 'id'> = {
+        name: TYPETRANSFERS.CREDIT,
+        description: 'credit'
+      }
+      const { statusCode } = await api.post('/api/v1/types-transfers')
+        .auth(normalUserToken, { type: 'bearer'})
+        .send(data);
+      expect(statusCode).toBe(401);
     })
 
     it('Should be allowed to create a transfer type', async () => {
-      const { statusCode } = await api.post('/api/v1/types-transfers').auth(adminUserToken, { type: 'bearer'});
-      expect(statusCode).toBe(200);
+      const data: Omit<ITypeTransfers, 'id'> = {
+        name: TYPETRANSFERS.CREDIT,
+        description: 'credit'
+      }
+      const { statusCode } = await api.post('/api/v1/types-transfers')
+        .auth(adminUserToken, { type: 'bearer'})
+        .send(data);
+      expect(statusCode).toBe(201);
     })
   })
 

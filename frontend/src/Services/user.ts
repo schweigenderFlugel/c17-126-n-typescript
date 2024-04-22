@@ -23,6 +23,16 @@ export const signup = async (payload: ISignUpPayload): Promise<void> => {
   })
 }
 
+export const forgotPassword = async (payload: Omit<ISignUpPayload, 'id'>): Promise<{ recoveryToken : string}> => {
+  const res: AxiosResponse<{ recoveryToken: string }> = await Axios({
+    method: 'POST',
+    url: '/auth/forgot-password',
+    data: payload,
+    signal: controller.signal,
+  })
+  return res.data;
+}
+
 export const logout = async (accessToken: string | null): Promise<void> => {
   await AxiosAuth({
     method: 'GET',
@@ -57,6 +67,15 @@ export const getUser = async (): Promise<{ user: IUser }> => {
 export const createUser = async (payload: ICreateUserPayload): Promise<void> => {
   await Axios({
     method: 'POST',
+    url: '/user',
+    data: payload,
+    signal: controller.signal,
+  })
+}
+
+export const updateUser = async (payload: ICreateUserPayload): Promise<void> => {
+  await Axios({
+    method: 'PUT',
     url: '/user',
     data: payload,
     signal: controller.signal,

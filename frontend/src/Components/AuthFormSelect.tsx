@@ -35,7 +35,7 @@ export const AuthFormSelect = ({
           onChange={onChange}
         >
         {options.map(option => (
-          <option key={option.value} value={option.value} disabled={option.disable}>{option.label}</option>
+          <option key={option.value} value={option.value} disabled={option.disable} className="dark:bg-black">{option.label}</option>
         ))}
         </select>
       </div>

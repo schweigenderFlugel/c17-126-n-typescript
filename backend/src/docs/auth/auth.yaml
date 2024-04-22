@@ -45,7 +45,7 @@ paths:
           description: Unexpected error when trying to authenticate a user
 
   /api/v1/auth/refresh:
-    post:
+    get:
       summary: Refresh the session with the refresh token provided.
       tags:
         - auth
@@ -72,7 +72,7 @@ paths:
           description: Unexpected error when trying to refresh the session
   
   /api/v1/auth/logout:
-    post:
+    get:
       summary: Logout and erase the refresh token.
       tags:
         - auth
