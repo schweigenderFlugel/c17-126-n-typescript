@@ -39,7 +39,7 @@ export const Settings = () => {
   const isLoading = false;
 
   return (
-    <main className="gap-y-10 grid grid-cols-12 grid-rows-12 bg-transparent w-full h-full">
+    <main className="bg-transparent w-full h-full">
       <DashboardNavbar>Configuración</DashboardNavbar>
       <div className="max-lg:col-span-12 col-start-2 col-end-12 row-start-3 max-lg:row-start-2">
         <h4 className="mt-2 text-2xl max-sm:text-xl dark:text-white">
