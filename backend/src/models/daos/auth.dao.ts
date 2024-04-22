@@ -1,4 +1,4 @@
-import { IAuth } from '../../interfaces/auth.interface'
+import { IAuth, ISign } from '../../interfaces/auth.interface'
 import { Auth, AuthModel } from '../db'
 
 export default class authDao {
@@ -19,8 +19,8 @@ export default class authDao {
    * @param {IAuth} authPayload - the authentication payload to create
    * @return {Promise<any>} the created authentication record
    */
-  async createAuth(authPayload: IAuth): Promise<AuthModel> {
-    const authCreated: AuthModel = await Auth.create(authPayload)
+  async createAuth(authPayload: ISign): Promise<AuthModel> {
+    const authCreated: AuthModel = await Auth.create(authPayload as IAuth)
     return authCreated;
   }
 

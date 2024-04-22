@@ -33,7 +33,7 @@ export const Login = () => {
   };
 
   const { setLogin, loading } = useLogin({
-    onSuccess: () => navigate('/', { replace: true }),
+    onSuccess: () => navigate('/datos-personales', { replace: true }),
     onReject: error => onLoginError(error),
   });
 

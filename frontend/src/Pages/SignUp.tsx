@@ -27,7 +27,7 @@ export const SignUp = () => {
     e.preventDefault();
     try {
       await signup({ email, password });
-      navigate('/datos-personales', { replace: true });
+      navigate('/login', { replace: true });
     } catch (error) {
       if (error instanceof AxiosError) {
         setError(error.message);

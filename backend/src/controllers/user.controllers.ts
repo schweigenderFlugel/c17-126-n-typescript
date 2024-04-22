@@ -3,12 +3,11 @@ import { HTTP_STATUS } from '../config/constants'
 import HttpError from '../utils/HttpError.utils'
 import { ITokenPayload } from '../interfaces/token.interface'
 import apiSuccessResponse from '../utils/apiResponse.utils'
-import typeAccountService from '../services/typeAccount.services'
-import { IUser } from '../interfaces/user.interface'
 import userService from '../services/user.services'
 import bankAccountService from '../services/bankAccount.services'
-import { IBankAccount } from '../interfaces/bankAccount.interface'
+import { IGenerateBankAccount } from '../interfaces/bankAccount.interface'
 import bankAccountHelper from '../utils/bankAccountHelper'
+import { ICreateUser } from '../interfaces/user.interface'
 
 export default class userController {
   /**
@@ -32,17 +31,18 @@ export default class userController {
           HTTP_STATUS.UNAUTHORIZED
         )
       }
-      const tokenPayload: ITokenPayload = req.user as ITokenPayload
+      
+      const tokenPayload: ITokenPayload = req.user as ITokenPayload;
 
       if (!tokenPayload || !tokenPayload.id) {
         throw new HttpError(
           'Token payload error',
           'Token payload error',
-          HTTP_STATUS.BAD_REQUEST
+          HTTP_STATUS.FORBIDDEN
         )
       }
 
-      const userFound = await userService.getUserByAuthId(tokenPayload.id)
+      const userFound = await userService.getUserByAuthId(tokenPayload.id);
 
       if (userFound) {
         throw new HttpError(
@@ -52,26 +52,12 @@ export default class userController {
         )
       }
 
-      const { name, lastname, alias, address, phone, accountType } = req.body
+      const { name, lastname, alias, address, phone, accountType } = req.body;
 
-      const accountTypeFound =
-        await typeAccountService.getTypeAccountById(accountType)
-
-      if (
-        !accountTypeFound ||
-        !accountTypeFound.dataValues ||
-        !accountTypeFound.dataValues.id
-      ) {
-        throw new HttpError(
-          'Account type not found',
-          'Must provide valid account type',
-          HTTP_STATUS.NOT_FOUND
-        )
-      }
-
-      const userPayload: IUser = {
+      const userPayload: ICreateUser = {
         name,
         lastname,
+        accountType,
         alias,
         address,
         phone,
@@ -92,13 +78,12 @@ export default class userController {
         )
       }
 
-      const numerAccount =
-        await bankAccountHelper.generateAccountNumber(accountTypeFound)
+      const numberAccount =
+        await bankAccountHelper.generateAccountNumber(accountType)
 
-      const bankAccountPayload: IBankAccount = {
-        type_account_id: accountTypeFound.dataValues.id,
+      const bankAccountPayload: IGenerateBankAccount = {
         user_id: userCreated.dataValues.id,
-        number_account: numerAccount,
+        number_account: numberAccount,
         balance: 0,
       }
 
@@ -117,6 +102,54 @@ export default class userController {
       res.status(200).json(response)
     } catch (err: any) {
       next(err)
+    }
+  }
+
+  static async getUser(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      if (!req.user) {
+        throw new HttpError(
+          'User not found',
+          'Must be logged in',
+          HTTP_STATUS.UNAUTHORIZED
+        )
+      }
+      const tokenPayload = req.user as ITokenPayload;
+      const userFound = await userService.getUserByAuthId(tokenPayload.id);
+      if (!userFound) {
+        throw new HttpError(
+          'User not found',
+          'The user does not exist',
+          HTTP_STATUS.UNAUTHORIZED
+        )
+      }
+      res.status(200).json(userFound)
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async getAllUser(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      if (!req.user) {
+        throw new HttpError(
+          'User not found',
+          'Must be logged in',
+          HTTP_STATUS.UNAUTHORIZED
+        )
+      }
+      const users = await userService.getAllUsers();
+      res.status(200).json(users)
+    } catch (error) {
+      next(error);
     }
   }
 }

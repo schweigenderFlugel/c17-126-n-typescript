@@ -4,7 +4,7 @@ import { sequelize } from '../database.manager'
 
 export interface TypeAccountModel extends Model<ITypeAccount>, ITypeAccount {}
 
-const TypeAccount = sequelize.define<TypeAccountModel>('TypeAccount', {
+const TypeAccount = sequelize.define<TypeAccountModel>('type_account', {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -14,6 +14,8 @@ const TypeAccount = sequelize.define<TypeAccountModel>('TypeAccount', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+}, {
+  timestamps: false
 })
 
 export { TypeAccount }

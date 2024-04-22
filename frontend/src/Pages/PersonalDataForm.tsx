@@ -4,38 +4,30 @@ import { AxiosError } from 'axios';
 import { AuthFormContainer } from '../Components/AuthFormContainer';
 import { AuthFormRow } from '../Components/AuthFormRow';
 import { ButtonAuthForm } from '../Components/ButtonAuthForm';
+import { ICreateUserPayload } from '../Interfaces/interfaces';
+import { createUser } from '../Services/user';
+import { AuthFormSelect } from '../Components/AuthFormSelect';
 
-type FormPersonalDataType = {
-  firstName: string;
-  lastName: string;
-  address: string;
-  phone: string;
-  alias: string;
-};
-
-const initialValue: FormPersonalDataType = {
-  firstName: '',
-  lastName: '',
+const initialValue: ICreateUserPayload = {
+  name: '',
+  lastname: '',
+  accountType: '',
+  alias: '',
   address: '',
   phone: '',
-  alias: '',
-};
-
-const sendPersonalData = (formValues: FormPersonalDataType) => {
-  console.log(formValues);
 };
 
 export const PersonalDataForm = () => {
   const [formValues, setFormValues] =
-    useState<FormPersonalDataType>(initialValue);
+    useState<ICreateUserPayload>(initialValue);
 
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      sendPersonalData(formValues);
-      navigate('/dashboard', { replace: true });
+      createUser(formValues);
+      navigate('/', { replace: true })
     } catch (error) {
       if (error instanceof AxiosError) {
         console.log(error);
@@ -45,7 +37,7 @@ export const PersonalDataForm = () => {
 
   const handleChange = ({
     target: { name, value },
-  }: React.ChangeEvent<HTMLInputElement>) => {
+  }: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement> ) => {
     setFormValues({ ...formValues, [name]: value });
   };
 
@@ -59,23 +51,34 @@ export const PersonalDataForm = () => {
           <div className="flex flex-col gap-2">
             <AuthFormRow
               onChange={handleChange}
-              value={formValues.firstName}
+              value={formValues.name}
               type="text"
               label="Nombre"
-              key="firstName"
-              name="firstName"
+              key="name"
+              name="name"
               autoComplete="name"
               required
             />
             <AuthFormRow
               onChange={handleChange}
-              value={formValues.lastName}
+              value={formValues.lastname}
               type="text"
               label="Apellido"
-              key="lastName"
-              name="lastName"
+              key="lastname"
+              name="lastname"
               autoComplete="name"
               required
+            />
+            <AuthFormSelect
+              key="accountType"
+              name='accountType'
+              label='Tipo de cuenta'
+              onChange={handleChange}
+              value={formValues.accountType}
+              options={[
+                { value: 'enterpise', label: 'Empresa' }, 
+                { value: 'personal', label: 'Personal' }
+              ]}
             />
             <AuthFormRow
               onChange={handleChange}
@@ -111,9 +114,9 @@ export const PersonalDataForm = () => {
           <div className="my-4">
             <ButtonAuthForm
               disabled={
+                formValues.name.length < 1 ||
+                formValues.lastname.length < 1 ||
                 formValues.address.length < 1 ||
-                formValues.firstName.length < 1 ||
-                formValues.lastName.length < 1 ||
                 formValues.phone.length < 1
               }
               isLoading={isLoading}

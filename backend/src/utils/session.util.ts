@@ -35,7 +35,7 @@ export default class SessionUtils {
   ): Promise<void> {
     verify(token, accessSecret, (err, user) => {
       if (err) {
-        console.log(err) // FIXME: Replace with a Morgan
+        // console.log(err) // FIXME: Replace with a Morgan
         const response: HttpError = new HttpError(err.message, err.message)
         return res.status(HTTP_STATUS.UNAUTHORIZED).json(response)
       }

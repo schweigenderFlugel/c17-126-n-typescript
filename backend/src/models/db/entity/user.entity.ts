@@ -1,6 +1,7 @@
-import { DataTypes, Model } from 'sequelize'
+import { DataTypes, Model, NOW } from 'sequelize'
 import { IUser } from '../../../interfaces/user.interface'
 import { sequelize } from '../database.manager'
+import { Auth } from './auth.entity';
 
 const { STRING, INTEGER } = DataTypes;
 
@@ -20,6 +21,11 @@ const User = sequelize.define<UserModel>('users', {
     type: STRING,
     allowNull: false,
   },
+  accountType: {
+    field: 'account_type',
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
   alias: {
     type: STRING,
     allowNull: false,
@@ -34,8 +40,26 @@ const User = sequelize.define<UserModel>('users', {
   },
   authId: {
     type: INTEGER,
+    field: 'auth_id',
+    allowNull: false,
+    unique: true,
+    references: {
+      model: Auth.getTableName(),
+      key: 'id'
+    }
+  },
+  createdAt: {
+    type: DataTypes.DATE,
+    field: 'created_at',
+    defaultValue: NOW,
     allowNull: false,
   },
+  updatedAt: {
+    type: DataTypes.DATE,
+    field: 'updated_at',
+    defaultValue: NOW,
+    allowNull: false,
+  }
 })
 
 export { User }

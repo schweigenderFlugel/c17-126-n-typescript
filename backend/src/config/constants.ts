@@ -24,3 +24,16 @@ export enum HTTP_STATUS {
   CONFLICT = 409,
   SERVER_ERROR = 500,
 }
+
+export enum TYPETRANSFERS {
+  INMEDIATE = 'inmediate',
+  DEFERRED = 'deferred',
+  CREDIT = 'credit',
+  DEBIT = 'debit',
+}
+
+export enum TRANSACTION_STATUS {
+  PENDING = 'pending',
+  SUCCESS = 'success',
+  FAILED = 'failed',
+}

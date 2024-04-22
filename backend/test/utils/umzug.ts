@@ -10,7 +10,7 @@ const umzug = new Umzug({
 
 export const upSeed = async () => {
   try {
-    await sequelize.sync({ force: true });
+    await sequelize.sync({ force: true, alter: true });
     await umzug.up();
   } catch (error) {
     console.error(error);
