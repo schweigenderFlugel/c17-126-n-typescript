@@ -1,4 +1,7 @@
-import { IBankAccount, IGenerateBankAccount } from '../interfaces/bankAccount.interface'
+import {
+  IBankAccount,
+  IGenerateBankAccount,
+} from '../interfaces/bankAccount.interface'
 import bankAccountDao from '../models/daos/bankAccount.dao'
 
 export default class bankAccountService {
@@ -42,6 +45,13 @@ export default class bankAccountService {
     const bankAccountFound = await bankAccountDao
       .getInstance()
       .getBankAccountByAccountNumber(accountNumber)
+    return bankAccountFound
+  }
+
+  static async getBankAccountWithUserPreferences(bankAccountId: number) {
+    const bankAccountFound = await bankAccountDao
+      .getInstance()
+      .getBankAccountWithUserPreferences(bankAccountId)
     return bankAccountFound
   }
 
