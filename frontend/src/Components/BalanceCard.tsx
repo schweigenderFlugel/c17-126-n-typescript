@@ -1,4 +1,4 @@
-import { HistorialGraph } from './HistorialGraph';
+import { HistoryGraph } from './HistoryGraph';
 
 export const BalanceCard = () => {
   return (
@@ -32,9 +32,7 @@ export const BalanceCard = () => {
             Semanal
           </button>
         </div>
-        <div className="row-span-6 bg-indigo-100 dark:bg-black rounded-xl">
-          <HistorialGraph />
-        </div>
+        <HistoryGraph />
       </main>
     </section>
   );

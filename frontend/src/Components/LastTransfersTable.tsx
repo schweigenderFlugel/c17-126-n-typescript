@@ -42,20 +42,6 @@ const transactions = [
     amount: '750',
     dateTransaction: '24 de Abril - 15:45 hs',
   },
-  {
-    destinationAccount: {
-      id: '5555',
-      firstName: 'Carlos',
-      lastName: 'Martinez',
-    },
-    sourceAccount: {
-      id: '1111',
-      firstName: 'Juan Alberto',
-      lastName: 'Perez',
-    },
-    amount: '1200',
-    dateTransaction: '25 de Abril - 09:20 hs',
-  },
 ];
 
 export const LastTransfersTable = () => {
