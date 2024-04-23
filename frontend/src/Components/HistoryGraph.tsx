@@ -71,7 +71,6 @@ export function HistoryGraph() {
     <LineChart
       className="h-60"
       data={chartdata}
-      tra
       index="date"
       categories={['Balance', 'Gastos']}
       colors={['indigo', 'rose']}
