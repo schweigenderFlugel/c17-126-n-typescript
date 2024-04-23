@@ -1,11 +1,11 @@
 import { Outlet, useNavigate } from 'react-router-dom';
-import { AxiosError } from 'axios';
 
 import { useAuth } from '../Hooks/useAuth';
-import { useUser } from '../Hooks/useUser';
 import { SidebarDashboard } from '../Components/SidebarDashboard';
 import { LoadingPage } from '../Components/LoadingPage';
 import { Logo } from '../Components/Logo';
+import { AxiosError } from 'axios';
+import { useUser } from '../Hooks/useUser';
 
 export const Dashboard = () => {
   const { loading, setLoading } = useAuth();
@@ -18,11 +18,14 @@ export const Dashboard = () => {
   const onUserError = (error: AxiosError) => {
     if (error.response?.status === 404) {
       navigate('/datos-personales', { replace: true })
+    } else if (error.response?.status === 401) {
+      navigate('/login', { replace: true })
     }
   }
 
   useUser({
-    onReject: (error) => onUserError(error), 
+    onSuccess: () => navigate('/dashboard', { replace: true }),
+    onReject: (error: AxiosError) => onUserError(error),
   })
 
   return (

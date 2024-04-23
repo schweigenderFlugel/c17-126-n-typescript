@@ -115,6 +115,25 @@ describe('Testing the auth route', () => {
     })
   })
 
+  describe('POST /forgot-password', () => {
+    it('User should not exists', async () => {
+      const inputData ={
+        email: 'anon@email.com',
+      }
+      const { statusCode } = await api.post('/api/v1/auth/forgot-password').send(inputData)
+      expect(statusCode).toBe(404);
+    })
+
+    it('Should get a link to recover password', async () => {
+      const inputData ={
+        email: 'admin@email.com',
+      }
+      const { statusCode, body } = await api.post('/api/v1/auth/forgot-password').send(inputData)
+      expect(statusCode).toBe(200);
+      expect(body.link).toBeDefined();
+    })
+  })
+
   describe('GET /refresh', () => {
     it('Should not refresh the session because there is not any cookie', async () => {
       const { statusCode } = await api.get('/api/v1/auth/refresh')

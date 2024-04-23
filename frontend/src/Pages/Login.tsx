@@ -1,36 +1,38 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AxiosError } from 'axios';
+import toast from 'react-hot-toast';
+
 import { useLogin } from '../Hooks/useLogin';
-import { Modal } from '../Components/Modal';
 import { AuthFormContainer } from '../Components/AuthFormContainer';
 import { AuthFormRow } from '../Components/AuthFormRow';
-import { ErrorMessage } from '../Components/ErrorMessage';
 import { ButtonAuthForm } from '../Components/ButtonAuthForm';
 
 export const Login = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [openModal, setOpenModal] = useState<boolean>(false);
-  const [error, setError] = useState<string>('');
   const navigate = useNavigate();
 
-  const onLoginError = (error: AxiosError) => {
-    if (error.response?.status === 401) {
-      setError('Datos inválidos');
-      setOpenModal(true);
-    } else if (error.response?.status === 404) {
-      setError('Usuario no encontrado');
-      setOpenModal(true);
+  const onLoginError = (serverError: AxiosError) => {
+    let error: string;
+    if (serverError.response?.status === 401) {
+      error = 'Datos inválidos';
+    } else if (serverError.response?.status === 404) {
+      error = 'Usuario no encontrado';
     } else {
-      setError('Error desconocido');
-      setOpenModal(true);
+      error = 'Error desconocido';
     }
+    toast.error(error);
   };
   
   const { setLogin, loading } = useLogin({
-    onSuccess: () => navigate('/dashboard', { replace: true }),
+    onSuccess: () => {
+      navigate('/dashboard', { replace: true });
+      toast('Bienvenido', {
+        icon: '👋',
+      });
+    },
     onReject: error => onLoginError(error),
   });
 
@@ -43,9 +45,6 @@ export const Login = () => {
 
   return (
     <>
-      <Modal onCloseModal={() => setOpenModal(false)} isOpen={openModal}>
-        <ErrorMessage>{error}</ErrorMessage>
-      </Modal>
       <AuthFormContainer subtitle="¡Nos alegra tenerte de vuelta!">
         <form className="w-full" onSubmit={handleSubmit}>
           <div className="flex flex-col gap-2">

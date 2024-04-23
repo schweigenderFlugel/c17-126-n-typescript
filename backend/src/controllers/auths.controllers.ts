@@ -12,7 +12,7 @@ import SessionUtils from '../utils/session.util';
 import CookiesUtils from '../utils/cookies.utils';
 import { ENVIROMENTS } from '../../enviroments';
 
-const { NODE_ENV, HTTPONLY_COOKIE_NAME } = envs
+const { NODE_ENV, HTTPONLY_COOKIE_NAME, DB_URL } = envs
 
 const cookieName =
   NODE_ENV === ENVIROMENTS.PRODUCTION ? HTTPONLY_COOKIE_NAME : 'bankme'
@@ -133,6 +133,14 @@ export default class authsController {
     }
   }
 
+  /**
+   * Restore password process.
+   *
+   * @param {Request} req - the request object containing the email
+   * @param {Response} res - the response object to send a link with the recovery token
+   * @param {NextFunction} next - the next middleware function
+   * @return {Promise<void>} - a promise that resolves when the email is valid
+   */
   static async forgotPassword(
     req: Request,
     res: Response,
@@ -141,12 +149,18 @@ export default class authsController {
     try {
       const payload: ISign = req.body;
       const authFound = await authService.getAuthByEmail(payload.email);
+      if(!authFound) throw new HttpError(
+        'User not found',
+        'User not found',
+        HTTP_STATUS.NOT_FOUND
+      )
       const payloadToken: Omit<ITokenPayload, 'role'> = {
         id: authFound.id,
       }
       const recoveryToken = await SessionUtils.generateRecoveryToken(payloadToken);
-      res.status(HTTP_STATUS.OK).json({ recoveryToken: recoveryToken })
+      res.status(HTTP_STATUS.OK).json({ link: `${DB_URL}/restablecer-contrasena/${recoveryToken}`})
     } catch (error) {
+      console.log(error);
       next(error);
     }
   }

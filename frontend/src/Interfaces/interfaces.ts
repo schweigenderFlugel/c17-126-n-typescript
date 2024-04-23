@@ -25,7 +25,19 @@ export interface IUser {
   alias: string;
   address: string;
   phone: string;
+  auth: {
+    email: string;
+  }
 }
+
+export interface UserSettingsType {
+  email: string;
+  name: string;
+  lastname: string;
+  accountType: string;
+  alias: string;
+  maxAmountTransfer: number;
+};
 
 export interface ITypeTransfer {
   name: string;

@@ -7,10 +7,11 @@ import { User } from './user.entity'
 
 // RELATIONS FOR AUTH
 User.belongsTo(Auth, {
-  foreignKey: 'authId',
+  as: 'auth',
 })
 
 Auth.hasOne(User, {
+  as: 'user',
   foreignKey: 'authId',
 })
 

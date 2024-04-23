@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios'
-import { ILoginPayload, ISignUpPayload, ICreateUserPayload, IUser } from '../Interfaces/interfaces'
+import { ILoginPayload, ISignUpPayload, ICreateUserPayload, IUser, UserSettingsType } from '../Interfaces/interfaces'
 import { Axios, AxiosAuth } from './axios'
 
 const controller = new AbortController()
@@ -48,7 +48,7 @@ export const setSession = (accessToken: string | null) => {
   Axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`
 }
 
-export const refreshSession = async (): Promise<{ accessToken: string | null}> => {
+export const refreshSession = async (): Promise<{ accessToken: string | null }> => {
   const res: AxiosResponse<{ accessToken: string }> = await AxiosAuth({
     method: 'GET',
     url: '/auth/refresh'
@@ -56,8 +56,8 @@ export const refreshSession = async (): Promise<{ accessToken: string | null}> =
   return res.data; 
 }
 
-export const getUser = async (): Promise<{ user: IUser }> => {
-  const response: AxiosResponse<{ user: IUser }> = await Axios({
+export const getUser = async (): Promise<IUser | null > => {
+  const response: AxiosResponse<IUser | null > = await Axios({
     method: 'GET',
     url: '/user'
   })
@@ -73,10 +73,10 @@ export const createUser = async (payload: ICreateUserPayload): Promise<void> => 
   })
 }
 
-export const updateUser = async (payload: ICreateUserPayload): Promise<void> => {
+export const updateUser = async (id: number | undefined, payload: UserSettingsType): Promise<void> => {
   await Axios({
     method: 'PUT',
-    url: '/user',
+    url: `/user/${id}`,
     data: payload,
     signal: controller.signal,
   })
