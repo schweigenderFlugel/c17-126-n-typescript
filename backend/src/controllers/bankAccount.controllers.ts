@@ -22,7 +22,6 @@ export default class bankAccountController {
           HTTP_STATUS.NOT_FOUND
         )
       }
-
       if (!amount || amount <= 0) {
         throw new HttpError(
           'Must provide an amount',
@@ -31,11 +30,11 @@ export default class bankAccountController {
         )
       }
 
-      accountFound.balance = accountFound.balance + amount
+      accountFound.dataValues.balance = accountFound.dataValues.balance + amount
 
       const accountUpdated = await bankAccountService.updateBankAccount(
         accountId,
-        accountFound
+        accountFound.dataValues
       )
 
       if (!accountUpdated) {

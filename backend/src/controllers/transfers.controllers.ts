@@ -42,8 +42,6 @@ export default class transfersController {
         )
       }
 
-      console.log('🚀 ~ sourceAccountData.balance:', sourceAccountData.balance)
-      console.log('🚀 ~ amount:', amount)
       if (sourceAccountData.balance < amount) {
         throw new HttpError(
           'Insufficient funds',

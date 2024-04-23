@@ -95,7 +95,6 @@ export default class bankAccountDao {
       where: { id },
       returning: true,
     })
-
     return bankAccountUpdated[1][0]
   }
 
