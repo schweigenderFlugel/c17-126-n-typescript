@@ -17,7 +17,7 @@ export const bankAccount2: IBankAccount = {
   number_account: `${Math.floor(Math.random() * 1000000000)}${
     normalUser.account_type[0]
   }`,
-  balance: 0,
+  balance: 100,
 }
 
 const bankAccountFixtures = [bankAccount1, bankAccount2];

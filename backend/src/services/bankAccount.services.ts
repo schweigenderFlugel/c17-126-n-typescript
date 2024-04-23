@@ -1,16 +1,20 @@
-import { IBankAccount, IGenerateBankAccount } from '../interfaces/bankAccount.interface'
+import {
+  IBankAccount,
+  IGenerateBankAccount,
+} from '../interfaces/bankAccount.interface'
 import bankAccountDao from '../models/daos/bankAccount.dao'
+import { BankAccountModel } from '../models/db/entity/bank-account.entity'
 
 export default class bankAccountService {
   /**
    * Creates a new bank account with the given bank account payload.
    *
    * @param {IBankAccount} bankAccountPayload - The payload for creating the bank account.
-   * @return {Promise<IBankAccount>} The created bank account.
+   * @return {Promise<BankAccountModel>} The created bank account.
    */
   static async createBankAccount(
     bankAccountPayload: IGenerateBankAccount
-  ): Promise<IBankAccount> {
+  ): Promise<BankAccountModel> {
     const bankAccountCreated = await bankAccountDao
       .getInstance()
       .createBankAccount(bankAccountPayload)
@@ -21,9 +25,11 @@ export default class bankAccountService {
    * Retrieves a bank account by its ID.
    *
    * @param {number} id - The ID of the bank account to retrieve.
-   * @return {Promise<IBankAccount | null>} The bank account found, or null if not found.
+   * @return {Promise<BankAccountModel | null>} The bank account found, or null if not found.
    */
-  static async getBankAccountById(id: number): Promise<IBankAccount | null> {
+  static async getBankAccountById(
+    id: number
+  ): Promise<BankAccountModel | null> {
     const bankAccountFound = await bankAccountDao
       .getInstance()
       .getBankAccountById(id)
@@ -34,14 +40,21 @@ export default class bankAccountService {
    * Retrieves a bank account by its account number.
    *
    * @param {string} accountNumber - The account number to search for
-   * @return {Promise<IBankAccount | null>} The bank account found, or null if not found
+   * @return {Promise<BankAccountModel | null>} The bank account found, or null if not found
    */
   static async getBankAccountByAccountNumber(
     accountNumber: string
-  ): Promise<IBankAccount | null> {
+  ): Promise<BankAccountModel | null> {
     const bankAccountFound = await bankAccountDao
       .getInstance()
       .getBankAccountByAccountNumber(accountNumber)
+    return bankAccountFound
+  }
+
+  static async getBankAccountWithUserPreferences(bankAccountId: number) {
+    const bankAccountFound = await bankAccountDao
+      .getInstance()
+      .getBankAccountWithUserPreferences(bankAccountId)
     return bankAccountFound
   }
 
@@ -50,12 +63,12 @@ export default class bankAccountService {
    *
    * @param {number} id - The ID of the bank account to update.
    * @param {IBankAccount} bankAccountPayload - The payload containing the updated bank account information.
-   * @return {Promise<IBankAccount | null>} The updated bank account model or null if not found.
+   * @return {Promise<BankAccountModel | null>} The updated bank account model or null if not found.
    */
   static async updateBankAccount(
     id: number,
     bankAccountPayload: IBankAccount
-  ): Promise<IBankAccount | null> {
+  ): Promise<BankAccountModel | null> {
     const bankAccountUpdated = await bankAccountDao
       .getInstance()
       .updateBankAccount(id, bankAccountPayload)

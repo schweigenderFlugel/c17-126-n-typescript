@@ -1,6 +1,10 @@
 import { TRANSACTION_STATUS } from '../../config/constants'
+import { ISourceAccountData } from '../../interfaces/bankAccount.interface'
 import { ITransaction } from '../../interfaces/transaction.interface'
+import { sequelize } from '../db/database.manager'
+import { BankAccount } from '../db/entity/bank-account.entity'
 import { Transaction, TransactionModel } from '../db/entity/transaction.entity'
+import { Transaction as SequelizeTransaction } from 'sequelize/types'
 
 export default class TransactionDao {
   private static intance: TransactionDao | null = null
@@ -124,5 +128,33 @@ export default class TransactionDao {
   async deleteTransactionById(id: number): Promise<number> {
     const transactionDeleted = await Transaction.destroy({ where: { id } })
     return transactionDeleted
+  }
+
+  async transferTransaction(
+    transactionPayload: ITransaction,
+    sourceAccountPayload: ISourceAccountData,
+    amount: number
+  ): Promise<Boolean> {
+    const transaction = await sequelize.transaction()
+    try {
+      await Transaction.create(transactionPayload, {
+        transaction: transaction,
+      })
+
+      await BankAccount.update(
+        {
+          balance: sourceAccountPayload.balance - amount,
+        },
+        {
+          where: { id: sourceAccountPayload.id },
+          transaction: transaction,
+        }
+      )
+      await transaction.commit()
+      return true
+    } catch (error) {
+      await transaction.rollback()
+      throw error
+    }
   }
 }

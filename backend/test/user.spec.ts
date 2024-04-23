@@ -42,7 +42,7 @@ describe('Testing the user route', () => {
       expect(body.auth.email).toMatch(adminAuth.email);
     })
 
-    it.only('Should get the normal user', async () => {
+    it('Should get the normal user', async () => {
       const { statusCode, body } = await api.get('/api/v1/user').auth(normalUserToken, { type: 'bearer' });
       expect(statusCode).toBe(200);
       expect(body.name).toMatch(normalUser.name);

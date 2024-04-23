@@ -49,10 +49,21 @@ describe('Testing the auth route', () => {
       expect(statusCode).toBe(401);
     })
 
-    it('Should be allowed to create a transfer type', async () => {
+    it('Should not create a existing transfer type', async () => {
       const data: Omit<ITypeTransfers, 'id'> = {
         name: TYPETRANSFERS.CREDIT,
         description: 'credit'
+      }
+      const { statusCode } = await api.post('/api/v1/types-transfers')
+        .auth(adminUserToken, { type: 'bearer'})
+        .send(data);
+      expect(statusCode).toBe(409);
+    })
+
+    it('Should be allowed to create a transfer type', async () => {
+      const data: Omit<ITypeTransfers, 'id'> = {
+        name: TYPETRANSFERS.INMEDIATE,
+        description: 'inmediate'
       }
       const { statusCode } = await api.post('/api/v1/types-transfers')
         .auth(adminUserToken, { type: 'bearer'})

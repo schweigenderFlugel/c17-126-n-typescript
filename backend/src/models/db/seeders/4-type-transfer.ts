@@ -20,13 +20,7 @@ export const typeTransfer3: ITypeTransfers = {
   description: 'deferred',
 }
 
-export const typeTransfer4: ITypeTransfers = {
-  id: 4,
-  name: TYPETRANSFERS.INMEDIATE,
-  description: 'inmmediate',
-}
-
-const typeTransferFixtures = [typeTransfer1, typeTransfer2, typeTransfer3, typeTransfer4];
+const typeTransferFixtures = [typeTransfer1, typeTransfer2, typeTransfer3];
 
 export function up({context}: any) {
   return context.bulkInsert(TypeTransfers.getTableName(), typeTransferFixtures);

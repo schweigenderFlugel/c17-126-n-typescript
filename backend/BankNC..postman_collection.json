@@ -43,7 +43,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"saul@gmail.com\",\n    \"password\": \"Qwerty123!\"\n}",
+							"raw": "{\n    \"email\": \"sbelbey@icloud.com\",\n    \"password\": \"Qwerty123!\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -51,12 +51,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/auths/login",
+							"raw": "{{base_url}}/auth/login",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
-								"auths",
+								"auth",
 								"login"
 							]
 						}
@@ -98,7 +98,16 @@
 					"name": "Get All Types Account",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/types-account",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"types-account"
+							]
+						}
 					},
 					"response": []
 				}
@@ -124,7 +133,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "",
+							"raw": "{\n    \"name\": \"Saúl Iván\",\n    \"lastname\": \"Belbey\",\n    \"accountType\": \"personal\",\n    \"alias\":\"sbelbey\",\n    \"address\": {{$randomStreetAddress}},\n    \"phone\": {{$randomPhoneNumber}} \n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -142,6 +151,110 @@
 								"user"
 							]
 						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Types Transfer",
+			"item": [
+				{
+					"name": "All Types Transfer",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/types-transfers/all",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"types-transfers",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Transfer Type",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"inmediate\",\n    \"description\":\"Transferencias menores de 2M con acreditación diferida\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/types-transfers/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"types-transfers",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Transfers",
+			"item": [
+				{
+					"name": "Create a transfer",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwicm9sZSI6Im5vcm1hbCIsImlhdCI6MTcxMzgyMjY4MCwiZXhwIjoxNzEzODIzNTgwfQ.vLU4pydOuvVU-3G7DwYikxK-np7zRNvs2dF6i6-G0x0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"source_account\": \"2\",\n    \"destination_account\": \"1\",\n    \"amount\": 15,\n    \"type\": \"inmediate\"\n\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/transfer",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"transfer"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Bank Account",
+			"item": [
+				{
+					"name": "Deposit Money",
+					"request": {
+						"method": "GET",
+						"header": []
 					},
 					"response": []
 				}

@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
-import { UniqueConstraintError } from 'sequelize';
-import { TokenExpiredError } from 'jsonwebtoken';
+import { UniqueConstraintError } from 'sequelize'
+import { TokenExpiredError } from 'jsonwebtoken'
 import { ISign } from '../interfaces/auth.interface'
 import { ITokenPayload } from '../interfaces/token.interface'
 import { createHash, isValidPassword } from '../utils/bcrypt.utils'
@@ -32,11 +32,11 @@ export default class authsController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const payload: ISign = req.body;
-      payload.password = createHash(payload.password);
-      const newAuth = await authService.createAuth(payload);
-      const response = apiSuccessResponse(newAuth);
-      res.status(HTTP_STATUS.CREATED).json(response);
+      const payload: ISign = req.body
+      payload.password = createHash(payload.password)
+      const newAuth = await authService.createAuth(payload)
+      const response = apiSuccessResponse(newAuth)
+      res.status(HTTP_STATUS.CREATED).json(response)
     } catch (err: any) {
       if (err instanceof UniqueConstraintError) {
         next(
@@ -66,25 +66,28 @@ export default class authsController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const jwtCookie = req.cookies[cookieName];
-      if (jwtCookie) throw new HttpError('Session open', 'Cookie is still existing', 400);
-      const payload: ISign = req.body;
-      const authFound = await authService.getAuthByEmail(payload.email);
-      if(!authFound) throw new HttpError(
-        'Invalid Credentials',
-        'Must provide valid credentials',
-        HTTP_STATUS.NOT_FOUND
-      )
+      const jwtCookie = req.cookies[cookieName]
+      if (jwtCookie)
+        throw new HttpError('Session open', 'Cookie is still existing', 400)
+      const payload: ISign = req.body
+      const authFound = await authService.getAuthByEmail(payload.email)
+      if (!authFound)
+        throw new HttpError(
+          'Invalid Credentials',
+          'Must provide valid credentials',
+          HTTP_STATUS.NOT_FOUND
+        )
       const validPassword = isValidPassword(
         authFound.password,
         payload.password
-      );
-      if(!validPassword) throw new HttpError(
-        'Invalid Credentials',
-        'Must provide valid credentials',
-        HTTP_STATUS.UNAUTHORIZED
       )
-      const tokenPayload: ITokenPayload = { 
+      if (!validPassword)
+        throw new HttpError(
+          'Invalid Credentials',
+          'Must provide valid credentials',
+          HTTP_STATUS.UNAUTHORIZED
+        )
+      const tokenPayload: ITokenPayload = {
         id: authFound.id,
         role: authFound.role,
       };

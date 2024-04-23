@@ -21,7 +21,7 @@ export default class authDao {
    */
   async createAuth(authPayload: ISign): Promise<AuthModel> {
     const authCreated: AuthModel = await Auth.create(authPayload as IAuth)
-    return authCreated;
+    return authCreated
   }
 
   /**

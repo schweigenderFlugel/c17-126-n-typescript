@@ -21,7 +21,7 @@ export const getAllTransactions = async (): Promise<{ transactions: ITransaction
 export const createTransaction = async (data: ICreateTransaction): Promise<void> => {
   await Axios({
     method: 'POST',
-    url: '/transactions',
+    url: '/transfer',
     data: data,
   })
 }

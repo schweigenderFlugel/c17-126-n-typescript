@@ -7,24 +7,28 @@ export interface TypeTransfersModel
   extends Model<ITypeTransfers>,
     ITypeTransfers {}
 
-const TypeTransfers = sequelize.define<TypeTransfersModel>('TypeTransfert', {
-  id: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    primaryKey: true,
+const TypeTransfers = sequelize.define<TypeTransfersModel>(
+  'TypeTransfert',
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+    },
+    name: {
+      type: ENUM,
+      values: Object.values(TYPETRANSFERS),
+      defaultValue: 'deferred',
+      allowNull: false,
+    },
+    description: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
   },
-  name: {
-    type: ENUM,
-    values: Object.values(TYPETRANSFERS),
-    defaultValue: 'deferred',
-    allowNull: false,
-  },
-  description: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-}, {
-  timestamps: false,
-})
+  {
+    timestamps: false,
+  }
+)
 
 export { TypeTransfers }

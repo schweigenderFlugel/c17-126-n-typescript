@@ -1,6 +1,8 @@
-import { TRANSACTION_STATUS } from '../config/constants'
+import { HTTP_STATUS, TRANSACTION_STATUS } from '../config/constants'
+import { ISourceAccountData } from '../interfaces/bankAccount.interface'
 import { ITransaction } from '../interfaces/transaction.interface'
 import transactionDao from '../models/daos/transaction.dao'
+import HttpError from '../utils/HttpError.utils'
 export default class transactionService {
   /**
    * Creates a transaction based on the provided payload.
@@ -114,5 +116,25 @@ export default class transactionService {
    */
   static async deleteTransactionById(id: number): Promise<void> {
     await transactionDao.getInstance().deleteTransactionById(id)
+  }
+
+  static async transferTransaction(
+    transactionPayload: ITransaction,
+    sourceAccountData: ISourceAccountData,
+    amount: number
+  ): Promise<Boolean> {
+    const sourceAccountUpdated = await transactionDao
+      .getInstance()
+      .transferTransaction(transactionPayload, sourceAccountData, amount)
+
+    if (!sourceAccountUpdated) {
+      throw new HttpError(
+        'Source Account not updated',
+        'Source Account not updated',
+        HTTP_STATUS.SERVER_ERROR
+      )
+    }
+
+    return true
   }
 }
