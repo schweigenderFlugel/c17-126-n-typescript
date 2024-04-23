@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AxiosError } from 'axios';
+import { toast } from 'react-hot-toast';
+
 import { AuthFormContainer } from '../Components/AuthFormContainer';
 import { AuthFormRow } from '../Components/AuthFormRow';
 import { ButtonAuthForm } from '../Components/ButtonAuthForm';
 import { ICreateUserPayload } from '../Interfaces/interfaces';
-import { createUser } from '../Services/user';
 import { AuthFormSelect } from '../Components/AuthFormSelect';
+import { createUser } from '../Services/user';
 
 const initialValue: ICreateUserPayload = {
   name: '',
@@ -27,11 +29,15 @@ export const PersonalDataForm = () => {
     e.preventDefault();
     try {
       createUser(formValues);
-      navigate('/', { replace: true })
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        console.log(error);
+      navigate('/dashboard', { replace: true })
+    } catch (serverError) {
+      let errorMessage: string;
+      if (serverError instanceof AxiosError && serverError.message) {
+        errorMessage = serverError.message;
+      } else {
+        errorMessage = 'Error desconocido';
       }
+      toast.error(errorMessage);
     }
   };
 
@@ -45,86 +51,85 @@ export const PersonalDataForm = () => {
   const isLoading = false;
 
   return (
-    <>
-      <AuthFormContainer subtitle="¡Un último paso!">
-        <form onSubmit={handleSubmit} className="w-full">
-          <div className="flex flex-col gap-2">
-            <AuthFormRow
-              onChange={handleChange}
-              value={formValues.name}
-              type="text"
-              label="Nombre"
-              key="name"
-              name="name"
-              autoComplete="name"
-              required
-            />
-            <AuthFormRow
-              onChange={handleChange}
-              value={formValues.lastname}
-              type="text"
-              label="Apellido"
-              key="lastname"
-              name="lastname"
-              autoComplete="name"
-              required
-            />
-            <AuthFormSelect
-              key="accountType"
-              name='accountType'
-              label='Tipo de cuenta'
-              onChange={handleChange}
-              value={formValues.accountType}
-              options={[
-                { value: 'enterpise', label: 'Empresa' }, 
-                { value: 'personal', label: 'Personal' }
-              ]}
-            />
-            <AuthFormRow
-              onChange={handleChange}
-              value={formValues.alias}
-              type="text"
-              label="Alias"
-              key="alias"
-              name="alias"
-              autoComplete="username"
-              required
-            />
-            <AuthFormRow
-              onChange={handleChange}
-              value={formValues.address}
-              type="text"
-              label="Dirección"
-              key="address"
-              name="address"
-              autoComplete="street-address"
-              required
-            />
-            <AuthFormRow
-              onChange={handleChange}
-              value={formValues.phone}
-              type="tel"
-              label="Teléfono"
-              key="phone"
-              name="phone"
-              autoComplete="tel"
-              required
-            />
-          </div>
-          <div className="my-4">
-            <ButtonAuthForm
-              disabled={
-                formValues.name.length < 1 ||
-                formValues.lastname.length < 1 ||
-                formValues.address.length < 1 ||
-                formValues.phone.length < 1
-              }
-              isLoading={isLoading}
-              label="Terminar Registro"
-            />
-          </div>
-        </form>
-      </AuthFormContainer>
-    </>
-  );
+    <AuthFormContainer subtitle="¡Un último paso!">
+      <form onSubmit={handleSubmit} className="w-full">
+        <div className="flex flex-col gap-2">
+          <AuthFormRow
+            onChange={handleChange}
+            value={formValues.name}
+            type="text"
+            label="Nombre"
+            key="name"
+            name="name"
+            autoComplete="name"
+            required
+          />
+          <AuthFormRow
+            onChange={handleChange}
+            value={formValues.lastname}
+            type="text"
+            label="Apellido"
+            key="lastname"
+            name="lastname"
+            autoComplete="lastname"
+            required
+          />
+          <AuthFormSelect
+            key="accountType"
+            name="accountType"
+            label='Tipo de cuenta'
+            onChange={handleChange}
+            value={formValues.accountType}
+            options={[
+              { value: initialValue.accountType, label: 'Seleccionar', disable: true },
+              { value: 'enterprise', label: 'Empresa', disable: false }, 
+              { value: 'personal', label: 'Personal', disable: false }
+            ]}
+          />
+          <AuthFormRow
+            onChange={handleChange}
+            value={formValues.alias}
+            type="text"
+            label="Alias"
+            key="alias"
+            name="alias"
+            autoComplete="username"
+            required
+          />
+          <AuthFormRow
+            onChange={handleChange}
+            value={formValues.address}
+            type="text"
+            label="Dirección"
+            key="address"
+            name="address"
+            autoComplete="street-address"
+            required
+          />
+          <AuthFormRow
+            onChange={handleChange}
+            value={formValues.phone}
+            type="tel"
+            label="Teléfono"
+            key="phone"
+            name="phone"
+            autoComplete="tel"
+            required
+          />
+        </div>
+        <div className="my-4">
+          <ButtonAuthForm
+            disabled={
+              formValues.name.length < 1 ||
+              formValues.lastname.length < 1 ||
+              formValues.accountType == initialValue.accountType ||
+              formValues.alias.length < 1
+            }
+            isLoading={isLoading}
+            label="Terminar Registro"
+          />
+        </div>
+      </form>
+    </AuthFormContainer>
+  )
 };

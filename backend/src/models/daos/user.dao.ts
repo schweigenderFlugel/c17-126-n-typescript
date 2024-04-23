@@ -1,6 +1,6 @@
 import { Model } from 'sequelize'
 import { User } from '../db'
-import { ICreateUser, IUser } from '../../interfaces/user.interface'
+import { ICreateUser, IUpdateUser, IUser } from '../../interfaces/user.interface'
 import { UserModel } from '../db/entity/user.entity'
 
 export default class userDao {
@@ -33,8 +33,8 @@ export default class userDao {
    * @param {number} id - The ID of the user to retrieve.
    * @return {Promise<Model<IUser> | null>} The user model if found, otherwise null.
    */
-  async getUserById(id: number): Promise<Model<IUser> | null> {
-    const userFound: Model<IUser> | null = await User.findByPk(id)
+  async getUserById(id: number): Promise<UserModel | null> {
+    const userFound: UserModel | null = await User.findByPk(id)
     return userFound
   }
 
@@ -74,6 +74,7 @@ export default class userDao {
       where: {
         authId: authId,
       },
+      include: ['auth']
     })
     return userFound;
   }
@@ -87,8 +88,8 @@ export default class userDao {
    */
   async updateUser(
     id: number,
-    userPayload: IUser
-  ): Promise<Model<IUser> | null> {
+    userPayload: IUpdateUser
+  ): Promise<UserModel| null> {
     const userUpdated = await User.update(userPayload, {
       where: { id },
       returning: true,

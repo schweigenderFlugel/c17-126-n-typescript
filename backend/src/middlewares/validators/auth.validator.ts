@@ -25,3 +25,11 @@ export const loginSchema = z.object({
     .min(8, 'Password to short')
     .trim(),
 })
+
+export const recoverySchema = z.object({
+  email: z
+    .string()
+    .trim()
+    .email('it should be a valid email')
+    .min(1, 'Email is required'),
+})

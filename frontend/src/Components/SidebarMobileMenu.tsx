@@ -10,7 +10,11 @@ import { useOutsideClick } from '../Hooks/useClickOutside';
 import { SidebarButton } from './SidebarButton';
 import { SidebarLink } from './SidebarLink';
 
-export const SidebarMobileMenu = () => {
+export const SidebarMobileMenu = ({
+  onClickButton = () => {},
+}: {
+  onClickButton?: () => void;
+}) => {
   const [isOpenMenu, setIsOpenMenu] = useState(false);
 
   const toggleMenu = () => {
@@ -40,6 +44,7 @@ export const SidebarMobileMenu = () => {
             icon={<HiOutlineArrowDownTray className="m-auto text-2xl" />}
             label="Reporte"
             className="max-md:hover:bg-transparent max-md:bg-transparent max-md:hover:text-indigo-600"
+            onClick={onClickButton}
           />
         </li>
         <li>

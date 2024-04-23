@@ -7,7 +7,7 @@ import userService from '../services/user.services'
 import bankAccountService from '../services/bankAccount.services'
 import { IGenerateBankAccount } from '../interfaces/bankAccount.interface'
 import bankAccountHelper from '../utils/bankAccountHelper'
-import { ICreateUser } from '../interfaces/user.interface'
+import { ICreateUser, IUpdateUser } from '../interfaces/user.interface'
 
 export default class userController {
   /**
@@ -105,6 +105,14 @@ export default class userController {
     }
   }
 
+  /**
+   * Get an user with the provided auth id on the request.
+   *
+   * @param {Request} req - the request object containing the auth id
+   * @param {Response} res - the response object to send the user
+   * @param {NextFunction} next - the next middleware function
+   * @return {Promise<void>} - a promise that resolves when the user is found
+   */
   static async getUser(
     req: Request,
     res: Response,
@@ -124,7 +132,7 @@ export default class userController {
         throw new HttpError(
           'User not found',
           'The user does not exist',
-          HTTP_STATUS.UNAUTHORIZED
+          HTTP_STATUS.NOT_FOUND
         )
       }
       res.status(200).json(userFound)
@@ -133,6 +141,14 @@ export default class userController {
     }
   }
 
+  /**
+   * Get all user with the provided access token with admin role.
+   *
+   * @param {Request} req - the request object containing the admin role
+   * @param {Response} res - the response object to send all the users
+   * @param {NextFunction} next - the next middleware function
+   * @return {Promise<void>} - a promise that resolves when all users are retrieved
+   */
   static async getAllUser(
     req: Request,
     res: Response,
@@ -150,6 +166,72 @@ export default class userController {
       res.status(200).json(users)
     } catch (error) {
       next(error);
+    }
+  }
+
+  static async updateUser(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      if (!req.user) {
+        throw new HttpError(
+          'User not found',
+          'Must be logged in',
+          HTTP_STATUS.UNAUTHORIZED
+        )
+      }
+
+      const userId = req.params.id as unknown as number; 
+
+      const userFound = await userService.getUserById(userId);
+
+      if (!userFound) {
+        throw new HttpError(
+          'User does not exist',
+          'User does not exist',
+          HTTP_STATUS.NOT_FOUND
+        )
+      }
+
+      const tokenPayload: ITokenPayload = req.user as ITokenPayload;
+
+      if (!tokenPayload || !tokenPayload.id) {
+        throw new HttpError(
+          'Token payload error',
+          'Token payload error',
+          HTTP_STATUS.FORBIDDEN
+        )
+      }
+
+      if (tokenPayload.id !== userFound.authId) {
+        throw new HttpError(
+          'Ids Conflict',
+          'The user found auth id does not match with auth id from the access token',
+          HTTP_STATUS.CONFLICT
+        )
+      }
+
+      const { name, lastname, alias, address, phone, accountType } = req.body;
+
+      const userPayload: IUpdateUser = {
+        id: userFound.id,
+        name,
+        lastname,
+        accountType,
+        alias,
+        address,
+        phone,
+        updatedAt: new Date(),
+      }
+
+      const userUpdated = await userService.updateUser(userPayload.id, userPayload);
+
+      const response = apiSuccessResponse({ userUpdated })
+      res.status(201).json(response)
+    } catch (err: any) {
+      next(err)
     }
   }
 }

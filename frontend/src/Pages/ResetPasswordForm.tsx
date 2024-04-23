@@ -1,6 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AxiosError } from 'axios';
+import { toast } from 'react-hot-toast';
+
+import { useAuth } from '../Hooks/useAuth';
 import { AuthFormContainer } from '../Components/AuthFormContainer';
 import { AuthFormRow } from '../Components/AuthFormRow';
 import { ButtonAuthForm } from '../Components/ButtonAuthForm';
@@ -15,13 +18,6 @@ const initialValue: ResetPasswordFormType = {
   confirmPassword: '',
 };
 
-const sendResetPasswordData = (
-  formValues: ResetPasswordFormType,
-  token: string | undefined
-) => {
-  console.log({ formValues, token });
-};
-
 export const ResetPasswordForm = () => {
   const [formValues, setFormValues] =
     useState<ResetPasswordFormType>(initialValue);
@@ -29,17 +25,22 @@ export const ResetPasswordForm = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const navigate = useNavigate();
+
   const { token } = useParams();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      sendResetPasswordData(formValues, token);
+      console.log({ formValues, token });
       navigate('/dashboard', { replace: true });
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        console.log(error);
+    } catch (serverError) {
+      let errorMessage: string;
+      if (serverError instanceof AxiosError && serverError.message) {
+        errorMessage = serverError.message;
+      } else {
+        errorMessage = 'Error desconocido';
       }
+      toast.error(errorMessage);
     }
   };
 
@@ -54,6 +55,12 @@ export const ResetPasswordForm = () => {
 
   const passwordInputType = showPassword ? 'text' : 'password';
   const confirmPasswordInputType = showConfirmPassword ? 'text' : 'password';
+
+  const { accessToken } = useAuth();
+
+  useEffect(() => {
+    if (accessToken) navigate('/dashboard');
+  }, [accessToken, navigate]);
 
   return (
     <>

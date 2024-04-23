@@ -10,6 +10,7 @@ export const envs = {
   CLUSTER: env.get('IS_CLUSTER').asBool(),
   ACCESS_TOKEN_SECRET: env.get('ACCESS_TOKEN_SECRET').required().asString(),
   REFRESH_TOKEN_SECRET: env.get('REFRESH_TOKEN_SECRET').required().asString(),
+  RECOVERY_TOKEN_SECRET: env.get('RECOVERY_TOKEN_SECRET').required().asString(),
   HTTPONLY_COOKIE_NAME: env.get('HTTPONLY_COOKIE_NAME').required().asString(),
 }
 

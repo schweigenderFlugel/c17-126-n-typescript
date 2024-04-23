@@ -1,4 +1,4 @@
-import { DataTypes, Model, NOW } from 'sequelize'
+import { AssociationOptions, DataTypes, Model, NOW } from 'sequelize'
 import { IUser } from '../../../interfaces/user.interface'
 import { sequelize } from '../database.manager'
 import { Auth } from './auth.entity';
@@ -45,8 +45,10 @@ const User = sequelize.define<UserModel>('users', {
     unique: true,
     references: {
       model: Auth.getTableName(),
-      key: 'id'
-    }
+      key: 'id',
+    },
+    onUpdate: 'CASCADE',
+    onDelete: 'SET NULL'
   },
   createdAt: {
     type: DataTypes.DATE,
@@ -59,7 +61,7 @@ const User = sequelize.define<UserModel>('users', {
     field: 'updated_at',
     defaultValue: NOW,
     allowNull: false,
-  }
+  },
 })
 
 export { User }
