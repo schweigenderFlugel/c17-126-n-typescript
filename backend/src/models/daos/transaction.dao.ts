@@ -1,8 +1,11 @@
 import { TRANSACTION_STATUS } from '../../config/constants'
-import { ISourceAccountData } from '../../interfaces/bankAccount.interface'
+import {
+  IBankAccount,
+  ISourceAccountData,
+} from '../../interfaces/bankAccount.interface'
 import { ITransaction } from '../../interfaces/transaction.interface'
 import { sequelize } from '../db/database.manager'
-import { BankAccount } from '../db/entity/bank-account.entity'
+import { BankAccount, BankAccountModel } from '../db/entity/bank-account.entity'
 import { Transaction, TransactionModel } from '../db/entity/transaction.entity'
 import { Transaction as SequelizeTransaction } from 'sequelize/types'
 
@@ -119,6 +122,46 @@ export default class TransactionDao {
     return transactionUpdated[1][0]
   }
 
+  async updateManyTransactions(
+    transactions: ITransaction[],
+    bankAccount: IBankAccount
+  ): Promise<{
+    transactionUpdated: TransactionModel[]
+    bankAccountUpdated: BankAccountModel
+  }> {
+    const transaction = await sequelize.transaction()
+
+    try {
+      const updatePromises = transactions.map(async transactionData => {
+        transactionData.status = TRANSACTION_STATUS.SUCCESS
+        const [count, updatedRows] = await Transaction.update(transactionData, {
+          where: { id: transactionData.id },
+          returning: true,
+          transaction,
+        })
+        return updatedRows[0]
+      })
+
+      const updatedTransactions = await Promise.all(updatePromises)
+      const [count, bankAccountUpdated] = await BankAccount.update(
+        bankAccount,
+        { where: { id: bankAccount.id }, returning: true, transaction }
+      )
+
+      // Confirmar la transacción
+      await transaction.commit()
+
+      return {
+        transactionUpdated: updatedTransactions,
+        bankAccountUpdated: bankAccountUpdated[0],
+      }
+    } catch (error) {
+      // Revertir la transacción en caso de error
+      await transaction.rollback()
+      throw error
+    }
+  }
+
   /**
    * Deletes a transaction by its ID.
    *
@@ -134,10 +177,10 @@ export default class TransactionDao {
     transactionPayload: ITransaction,
     sourceAccountPayload: ISourceAccountData,
     amount: number
-  ): Promise<Boolean> {
+  ): Promise<TransactionModel | null> {
     const transaction = await sequelize.transaction()
     try {
-      await Transaction.create(transactionPayload, {
+      const transactionCreated = await Transaction.create(transactionPayload, {
         transaction: transaction,
       })
 
@@ -151,7 +194,7 @@ export default class TransactionDao {
         }
       )
       await transaction.commit()
-      return true
+      return transactionCreated
     } catch (error) {
       await transaction.rollback()
       throw error

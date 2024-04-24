@@ -58,6 +58,13 @@ export default class bankAccountService {
     return bankAccountFound
   }
 
+  static async getBankAccountByUserId(userId: number) {
+    const bankAccountFound = await bankAccountDao
+      .getInstance()
+      .getBankAccountByUserId(userId)
+    return bankAccountFound
+  }
+
   /**
    * Updates a bank account by its ID with the provided bank account payload.
    *

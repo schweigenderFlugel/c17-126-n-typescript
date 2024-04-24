@@ -1,18 +1,23 @@
 import { HTTP_STATUS, TRANSACTION_STATUS } from '../config/constants'
-import { ISourceAccountData } from '../interfaces/bankAccount.interface'
+import {
+  IBankAccount,
+  ISourceAccountData,
+} from '../interfaces/bankAccount.interface'
 import { ITransaction } from '../interfaces/transaction.interface'
 import transactionDao from '../models/daos/transaction.dao'
+import { BankAccountModel } from '../models/db/entity/bank-account.entity'
+import { TransactionModel } from '../models/db/entity/transaction.entity'
 import HttpError from '../utils/HttpError.utils'
 export default class transactionService {
   /**
    * Creates a transaction based on the provided payload.
    *
    * @param {ITransaction} transactionPayload - The payload containing the transaction information.
-   * @return {Promise<ITransaction>} A promise that resolves to the created transaction.
+   * @return {Promise<TransactionModel>} A promise that resolves to the created transaction.
    */
   static async createTransaction(
     transactionPayload: ITransaction
-  ): Promise<ITransaction> {
+  ): Promise<TransactionModel> {
     const transactionCreated = await transactionDao
       .getInstance()
       .createTransaction(transactionPayload)
@@ -23,9 +28,11 @@ export default class transactionService {
    * Retrieves a transaction by its ID.
    *
    * @param {number} id - The ID of the transaction to retrieve
-   * @return {Promise<ITransaction | null>} The transaction model if found, otherwise null
+   * @return {Promise<TransactionModel | null>} The transaction model if found, otherwise null
    */
-  static async getTransactionById(id: number): Promise<ITransaction | null> {
+  static async getTransactionById(
+    id: number
+  ): Promise<TransactionModel | null> {
     const transactionFound = await transactionDao
       .getInstance()
       .getTransactionById(id)
@@ -35,9 +42,9 @@ export default class transactionService {
   /**
    * Retrieves all transactions from the database.
    *
-   * @return {Promise<ITransaction[]>} An array of transaction models.
+   * @return {Promise<TransactionModel[]>} An array of transaction models.
    */
-  static async getAllTransactions(): Promise<ITransaction[]> {
+  static async getAllTransactions(): Promise<TransactionModel[]> {
     const transactionsFound = await transactionDao
       .getInstance()
       .getAllTransactions()
@@ -48,11 +55,11 @@ export default class transactionService {
    * Retrieves all transactions by the source account ID.
    *
    * @param {number} accountId - The ID of the source account.
-   * @return {Promise<ITransaction[]>} An array of transaction models.
+   * @return {Promise<TransactionModel[]>} An array of transaction models.
    */
   static async getAllTransactionsBySourceAccount(
     accountId: number
-  ): Promise<ITransaction[]> {
+  ): Promise<TransactionModel[]> {
     const transactionsFound = await transactionDao
       .getInstance()
       .getAllTransactionsBySourceAccount(accountId)
@@ -63,11 +70,11 @@ export default class transactionService {
    * Retrieves all transactions by the destination account ID.
    *
    * @param {number} accountId - The ID of the destination account.
-   * @return {Promise<ITransaction[]>} An array of transaction models.
+   * @return {Promise<TransactionModel[]>} An array of transaction models.
    */
   static async getAllTransactionsByDestinationAccount(
     accountId: number
-  ): Promise<ITransaction[]> {
+  ): Promise<TransactionModel[]> {
     const transactionsFound = await transactionDao
       .getInstance()
       .getAllTransactionsByDestinationAccount(accountId)
@@ -79,12 +86,12 @@ export default class transactionService {
    *
    * @param {number} accountId - The ID of the destination account.
    * @param {TRANSACTION_STATUS} status - The status of the transactions.
-   * @return {Promise<ITransaction[]>} An array of transaction models.
+   * @return {Promise<TransactionModel[]>} An array of transaction models.
    */
   static async getAllTransactionsByDestinationAccountAndStatus(
     accountId: number,
     status: TRANSACTION_STATUS
-  ): Promise<ITransaction[]> {
+  ): Promise<TransactionModel[]> {
     const transactionsFound = await transactionDao
       .getInstance()
       .getAllTransactionsByDestinationAccountAndStatus(accountId, status)
@@ -96,15 +103,28 @@ export default class transactionService {
    *
    * @param {number} id - The ID of the transaction to update.
    * @param {ITransaction} transactionPayload - The payload containing the updated transaction information.
-   * @return {Promise<ITransaction>} A Promise that resolves to the updated transaction.
+   * @return {Promise<TransactionModel>} A Promise that resolves to the updated transaction.
    */
   static async updateTransactionById(
     id: number,
     transactionPayload: ITransaction
-  ): Promise<ITransaction> {
+  ): Promise<TransactionModel> {
     const transactionUpdated = await transactionDao
       .getInstance()
       .updateTransactionById(id, transactionPayload)
+    return transactionUpdated
+  }
+
+  static async updateManyTransactions(
+    transactions: ITransaction[],
+    bankAccount: IBankAccount
+  ): Promise<{
+    transactionUpdated: TransactionModel[]
+    bankAccountUpdated: BankAccountModel
+  }> {
+    const transactionUpdated = await transactionDao
+      .getInstance()
+      .updateManyTransactions(transactions, bankAccount)
     return transactionUpdated
   }
 
@@ -122,19 +142,11 @@ export default class transactionService {
     transactionPayload: ITransaction,
     sourceAccountData: ISourceAccountData,
     amount: number
-  ): Promise<Boolean> {
+  ): Promise<TransactionModel | null> {
     const sourceAccountUpdated = await transactionDao
       .getInstance()
       .transferTransaction(transactionPayload, sourceAccountData, amount)
 
-    if (!sourceAccountUpdated) {
-      throw new HttpError(
-        'Source Account not updated',
-        'Source Account not updated',
-        HTTP_STATUS.SERVER_ERROR
-      )
-    }
-
-    return true
+    return sourceAccountUpdated
   }
 }

@@ -81,6 +81,13 @@ export default class bankAccountDao {
     return bankAccountFound
   }
 
+  async getBankAccountByUserId(userId: number) {
+    const bankAccountFound = await BankAccount.findOne({
+      where: { user_id: userId },
+    })
+    return bankAccountFound
+  }
+
   /**
    * Asynchronously updates a bank account by its ID.
    *

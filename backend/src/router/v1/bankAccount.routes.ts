@@ -13,4 +13,6 @@ bankAccountRouter.post(
   bankAccountController.depositMoney
 )
 
+bankAccountRouter.get('/getBalance', userAuth, bankAccountController.getBalance)
+
 export default bankAccountRouter
