@@ -1,4 +1,4 @@
-import { Router } from 'express'
+import { Request, Response, NextFunction, Router } from 'express'
 import { errorHandler } from '../../middlewares/errorHandler.middleware'
 import typeTransfersController from '../../controllers/typeTransfers.controllers'
 import schemaValidator from '../../middlewares/schemasValidator.middlewares'

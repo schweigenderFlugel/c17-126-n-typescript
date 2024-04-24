@@ -21,8 +21,7 @@ export default class typeTransfersController {
     try {
       const { name, description } = req.body
       const typeTransferFound =
-        await typeTransfersService.getTypeTransfersById(name)
-
+        await typeTransfersService.getTypeTransfersByName(name)
       if (typeTransferFound) {
         throw new HttpError(
           'Type Transfer already exists',
@@ -36,7 +35,6 @@ export default class typeTransfersController {
           name,
           description,
         })
-
       if (!typeTransferCreated) {
         throw new HttpError(
           'Type Transfer not created',

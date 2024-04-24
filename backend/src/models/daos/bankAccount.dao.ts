@@ -1,5 +1,10 @@
-import { IBankAccount, IGenerateBankAccount } from '../../interfaces/bankAccount.interface'
+import {
+  IBankAccount,
+  IGenerateBankAccount,
+} from '../../interfaces/bankAccount.interface'
 import { BankAccount, BankAccountModel } from '../db/entity/bank-account.entity'
+import { Preferences } from '../db/entity/preference.entity'
+import { User } from '../db/entity/user.entity'
 
 export default class bankAccountDao {
   private static intance: bankAccountDao | null = null
@@ -23,8 +28,9 @@ export default class bankAccountDao {
   async createBankAccount(
     bankAccountPayload: IGenerateBankAccount
   ): Promise<BankAccountModel> {
-    const bankAccountCreated: BankAccountModel =
-      await BankAccount.create(bankAccountPayload as IBankAccount)
+    const bankAccountCreated: BankAccountModel = await BankAccount.create(
+      bankAccountPayload as IBankAccount
+    )
 
     return bankAccountCreated
   }
@@ -56,6 +62,51 @@ export default class bankAccountDao {
     return bankAccountFound
   }
 
+  async getBankAccountWithUserPreferences(bankAccountId: number) {
+    const bankAccountFound = await BankAccount.findOne({
+      where: { id: bankAccountId },
+      include: [
+        {
+          model: User,
+          attributes: ['alias', 'id'],
+          include: [
+            {
+              model: Preferences,
+              attributes: ['max_ammount_transfers'],
+            },
+          ],
+        },
+      ],
+    })
+    return bankAccountFound
+  }
+
+  async getBankAccountByUserId(userId: number) {
+    const bankAccountFound = await BankAccount.findOne({
+      where: { user_id: userId },
+    })
+    return bankAccountFound
+  }
+
+  async getBankAccountByUserAlias(userAlias: string) {
+    const bankAccountFound = await BankAccount.findOne({
+      include: [
+        {
+          model: User,
+          where: { alias: userAlias },
+          attributes: ['alias', 'id'],
+          include: [
+            {
+              model: Preferences,
+              attributes: ['max_ammount_transfers'],
+            },
+          ],
+        },
+      ],
+    })
+    return bankAccountFound
+  }
+
   /**
    * Asynchronously updates a bank account by its ID.
    *
@@ -70,7 +121,6 @@ export default class bankAccountDao {
       where: { id },
       returning: true,
     })
-
     return bankAccountUpdated[1][0]
   }
 

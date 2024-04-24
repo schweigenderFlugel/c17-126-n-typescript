@@ -1,9 +1,9 @@
 // HERE WILL BE THE DATABASE CONNECTION
-import { Sequelize } from 'sequelize';
-import { envs } from '../../config/constants';
-import { ENVIROMENTS } from '../../../enviroments';
+import { Sequelize } from 'sequelize'
+import { envs } from '../../config/constants'
+import { ENVIROMENTS } from '../../../enviroments'
 
-let sequelize: Sequelize;
+let sequelize: Sequelize
 
 if (envs.NODE_ENV === ENVIROMENTS.PRODUCTION) {
   sequelize = new Sequelize(envs.DB_URL, {
@@ -22,6 +22,5 @@ if (envs.NODE_ENV === ENVIROMENTS.PRODUCTION) {
     logging: false,
   })
 }
-  
-export { sequelize };
 
+export { sequelize }

@@ -7,7 +7,9 @@ import userService from '../services/user.services'
 import bankAccountService from '../services/bankAccount.services'
 import { IGenerateBankAccount } from '../interfaces/bankAccount.interface'
 import bankAccountHelper from '../utils/bankAccountHelper'
+import preferenceService from '../services/preferences.services'
 import { ICreateUser, IUpdateUser } from '../interfaces/user.interface'
+
 
 export default class userController {
   /**
@@ -31,8 +33,8 @@ export default class userController {
           HTTP_STATUS.UNAUTHORIZED
         )
       }
-      
-      const tokenPayload: ITokenPayload = req.user as ITokenPayload;
+
+      const tokenPayload: ITokenPayload = req.user as ITokenPayload
 
       if (!tokenPayload || !tokenPayload.id) {
         throw new HttpError(
@@ -42,7 +44,7 @@ export default class userController {
         )
       }
 
-      const userFound = await userService.getUserByAuthId(tokenPayload.id);
+      const userFound = await userService.getUserByAuthId(tokenPayload.id)
 
       if (userFound) {
         throw new HttpError(
@@ -52,7 +54,7 @@ export default class userController {
         )
       }
 
-      const { name, lastname, alias, address, phone, accountType } = req.body;
+      const { name, lastname, alias, address, phone, accountType } = req.body
 
       const userPayload: ICreateUser = {
         name,
@@ -98,7 +100,27 @@ export default class userController {
         )
       }
 
-      const response = apiSuccessResponse({ userCreated, bankAccountCreated })
+      const preferencesPayload = {
+        user_id: userCreated.dataValues.id,
+        max_ammount_transfers: 999999,
+      }
+
+      const preferencesCreated =
+        await preferenceService.createPrefernce(preferencesPayload)
+
+      if (!preferencesCreated) {
+        throw new HttpError(
+          'Preferences not created',
+          'Preferences not created',
+          HTTP_STATUS.SERVER_ERROR
+        )
+      }
+
+      const response = apiSuccessResponse({
+        userCreated,
+        bankAccountCreated,
+        preferencesCreated,
+      })
       res.status(200).json(response)
     } catch (err: any) {
       next(err)
@@ -126,8 +148,8 @@ export default class userController {
           HTTP_STATUS.UNAUTHORIZED
         )
       }
-      const tokenPayload = req.user as ITokenPayload;
-      const userFound = await userService.getUserByAuthId(tokenPayload.id);
+      const tokenPayload = req.user as ITokenPayload
+      const userFound = await userService.getUserByAuthId(tokenPayload.id)
       if (!userFound) {
         throw new HttpError(
           'User not found',
@@ -137,7 +159,7 @@ export default class userController {
       }
       res.status(200).json(userFound)
     } catch (error) {
-      next(error);
+      next(error)
     }
   }
 
@@ -162,10 +184,10 @@ export default class userController {
           HTTP_STATUS.UNAUTHORIZED
         )
       }
-      const users = await userService.getAllUsers();
+      const users = await userService.getAllUsers()
       res.status(200).json(users)
     } catch (error) {
-      next(error);
+      next(error)
     }
   }
 
