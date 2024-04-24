@@ -44,7 +44,7 @@ export default class transfersController {
         sourceAccountFound.dataValues as ISourceAccountData
 
       const destinationAccountFound =
-        await bankAccountService.getBankAccountById(destination_account)
+        await bankAccountService.getBankAccountByUserAlias(destination_account)
 
       if (!destinationAccountFound) {
         throw new HttpError(

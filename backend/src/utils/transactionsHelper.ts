@@ -1,7 +1,6 @@
 import { HTTP_STATUS, TRANSACTION_STATUS } from '../config/constants'
 import { IBankAccount } from '../interfaces/bankAccount.interface'
 import { ITransaction } from '../interfaces/transaction.interface'
-import { BankAccountModel } from '../models/db/entity/bank-account.entity'
 import { TransactionModel } from '../models/db/entity/transaction.entity'
 import transactionService from '../services/transaction.services'
 import HttpError from './HttpError.utils'
@@ -43,7 +42,7 @@ export default class transactionHelper {
 
     let resultBankAccount = bankAccount
 
-    if (allTransactions.length > 0) {
+    if (transactionsToUpdate.length > 0) {
       const { transactionUpdated, bankAccountUpdated } =
         await transactionService.updateManyTransactions(
           transactionsToUpdate,

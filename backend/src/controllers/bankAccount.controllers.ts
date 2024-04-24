@@ -84,22 +84,32 @@ export default class bankAccountController {
         )
       }
 
-      const transactionsFound =
+      const transactionsReceivedFound =
         await transactionService.getAllTransactionsByDestinationAccount(
           accountFound.id
         )
 
-      let response = apiSuccessResponse({ accountFound, transactionsFound })
+      const transactionsMadeFound =
+        await transactionService.getAllTransactionsBySourceAccount(
+          accountFound.id
+        )
 
-      if (transactionsFound) {
-        const amountToImprove = await transactionHelper.transactionsImprover(
-          transactionsFound,
+      let response = apiSuccessResponse({
+        accountFound,
+        transactionsMade: transactionsMadeFound,
+        transactionsReceived: transactionsReceivedFound,
+      })
+
+      if (transactionsReceivedFound) {
+        const amountImproved = await transactionHelper.transactionsImprover(
+          transactionsReceivedFound,
           accountFound.dataValues
         )
 
         response = apiSuccessResponse({
-          accountFound: amountToImprove.resultBankAccount,
-          transactionsFound: amountToImprove.allTransactions,
+          accountFound: amountImproved.resultBankAccount,
+          transactionsReceivedFound: amountImproved.allTransactions,
+          transactionsMade: transactionsMadeFound,
         })
       }
 

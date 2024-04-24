@@ -88,6 +88,25 @@ export default class bankAccountDao {
     return bankAccountFound
   }
 
+  async getBankAccountByUserAlias(userAlias: string) {
+    const bankAccountFound = await BankAccount.findOne({
+      include: [
+        {
+          model: User,
+          where: { alias: userAlias },
+          attributes: ['alias', 'id'],
+          include: [
+            {
+              model: Preferences,
+              attributes: ['max_ammount_transfers'],
+            },
+          ],
+        },
+      ],
+    })
+    return bankAccountFound
+  }
+
   /**
    * Asynchronously updates a bank account by its ID.
    *
