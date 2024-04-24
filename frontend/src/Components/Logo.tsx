@@ -2,14 +2,16 @@ export const Logo = ({
   className = '',
   classNameIcon = '',
   small = false,
+  extraSmall = false,
 }: {
   className?: string;
   classNameIcon?: string;
   small?: boolean;
+  extraSmall?: boolean;
 }) => {
   return (
     <h2
-      className={`flex items-center max-sm:gap-2 text-gray-900 dark:text-white ${small ? 'gap-2' : 'gap-4'} ${className}`}
+      className={`flex items-center max-sm:gap-2 text-gray-900 dark:text-white ${small || extraSmall ? 'gap-2' : 'gap-4'} ${className}`}
     >
       <div>
         <svg
@@ -17,7 +19,7 @@ export const Logo = ({
           height="47"
           viewBox="0 0 41 47"
           fill="none"
-          className={`max-sm:h-9 max-sm:w-9 ${small ? 'h-9 w-9' : ''} ${classNameIcon}`}
+          className={`max-sm:h-9 max-sm:w-9 ${small ? 'h-9 w-9' : extraSmall ? 'h-8 w-8' : ''} ${classNameIcon}`}
         >
           <path
             d="M20.45 4.57L28.26 9.08L32.22 6.8L20.45 0L0.790039 11.36L4.73004 13.64L20.45 4.57Z"
@@ -46,7 +48,7 @@ export const Logo = ({
         </svg>
       </div>
       <span
-        className={`font-extrabold align-middle max-sm:text-4xl ${small ? 'text-4xl' : 'text-5xl'}`}
+        className={`font-extrabold align-middle max-sm:text-4xl ${small ? 'text-4xl' : extraSmall ? 'text-3xl' : 'text-5xl'}`}
       >
         Bank<span className="text-indigo-500">me.</span>
       </span>

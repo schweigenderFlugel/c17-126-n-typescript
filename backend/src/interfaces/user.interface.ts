@@ -24,4 +24,6 @@ export interface IUserToken {
 export interface ICreateUser
   extends Omit<Omit<Omit<IUser, 'id'>, 'createdAt'>, 'updatedAt'> {}
 
-export interface IUpdateUser extends Omit<Omit<IUser, 'id'>, 'updatedAt'> {}
+
+export interface IUpdateUser extends Omit<Omit<IUser, 'authId'>, 'createdAt'> {}
+

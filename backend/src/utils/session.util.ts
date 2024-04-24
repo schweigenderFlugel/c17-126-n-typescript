@@ -15,6 +15,10 @@ const refreshSecret = NODE_ENV === ENVIROMENTS.PRODUCTION
   ? REFRESH_TOKEN_SECRET
   : 'bankme';
 
+const recoverySecret = NODE_ENV === ENVIROMENTS.PRODUCTION
+  ? REFRESH_TOKEN_SECRET
+  : 'bankme';
+
 
 export default class SessionUtils {
   static async generateToken(payload: ITokenPayload): Promise<string> {
@@ -25,6 +29,11 @@ export default class SessionUtils {
   static async generateRefreshToken(payload: ITokenPayload): Promise<string> {
     const refreshToken: string = sign(payload, refreshSecret, { expiresIn: '2h' })
     return refreshToken;
+  }
+
+  static async generateRecoveryToken(payload: Omit<ITokenPayload, 'role'>): Promise<string> {
+    const recoveryToken: string = sign(payload, refreshSecret, { expiresIn: '15m' })
+    return recoveryToken;
   }
 
   static async verifyToken(

@@ -1,11 +1,13 @@
 import {
   HiArrowTrendingUp,
+  HiMiniArrowDownTray,
   HiMiniHome,
   HiOutlineArrowDownTray,
   HiOutlineArrowsRightLeft,
   HiOutlineChartPie,
   HiOutlineCog6Tooth,
 } from 'react-icons/hi2';
+import { toast } from 'react-hot-toast';
 
 import { SidebarLink } from './SidebarLink';
 import { SidebarButton } from './SidebarButton';
@@ -16,6 +18,37 @@ import { TransferForm } from './TransferForm';
 
 export const SidebarDashboard = () => {
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
+
+  // Cambiar la función por la que descargaría el pdf
+  // Podria descargar la información del dashboard
+  function downloadReport(): Promise<void> {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve();
+      }, 1000);
+    });
+  }
+
+  const handleClickReport = () => {
+    toast.promise(
+      downloadReport(),
+      {
+        loading: 'Cargando',
+        success: () => `Descargando`,
+        error: () => `Error al descargar Reporte`,
+      },
+      {
+        style: {
+          minWidth: '250px',
+        },
+        success: {
+          icon: (
+            <HiMiniArrowDownTray className="opacity-70 text-[28px] dark:text-white" />
+          ),
+        },
+      }
+    );
+  };
 
   return (
     <>
@@ -68,10 +101,11 @@ export const SidebarDashboard = () => {
             label="Reporte"
             icon={<HiOutlineArrowDownTray className="text-2xl" />}
             className="max-md:hover:bg-transparent max-md:bg-transparent max-md:hover:text-indigo-600"
+            onClick={handleClickReport}
           />
         </li>
         <li className="max-sm:inline-block relative max-sm:flex-1 max-md:order-5 hidden">
-          <SidebarMobileMenu />
+          <SidebarMobileMenu onClickButton={handleClickReport} />
         </li>
       </ul>
       <Modal

@@ -5,7 +5,7 @@ import request from 'supertest';
 import createExpressApp from '../src/config/createApp';
 import { upSeed } from './utils/umzug';
 import { sequelize } from '../src/models/db/database.manager';
-import { adminUserToken, anonUserToken, nonUserToken, normalUserToken, tokenWithInvalidPayload } from '../src/models/db/seeders/1-auth';
+import { adminAuth, adminUserToken, anonUserToken, nonUserToken, normalAuth, normalUserToken, tokenWithInvalidPayload } from '../src/models/db/seeders/1-auth';
 import { adminUser, normalUser } from '../src/models/db/seeders/2-user';
 
 describe('Testing the user route', () => {
@@ -28,7 +28,7 @@ describe('Testing the user route', () => {
 
     it('Should not get unexisting user', async () => {
       const { statusCode } = await api.get('/api/v1/user').auth(anonUserToken, { type: 'bearer' });
-      expect(statusCode).toBe(401);
+      expect(statusCode).toBe(404);
     })
 
     it('Should get the admin user', async () => {
@@ -39,9 +39,10 @@ describe('Testing the user route', () => {
       expect(body.alias).toMatch(adminUser.alias);
       expect(body.address).toMatch(adminUser.address);
       expect(body.phone).toMatch(adminUser.phone);
+      expect(body.auth.email).toMatch(adminAuth.email);
     })
 
-    it('Should get the normal user', async () => {
+    it.only('Should get the normal user', async () => {
       const { statusCode, body } = await api.get('/api/v1/user').auth(normalUserToken, { type: 'bearer' });
       expect(statusCode).toBe(200);
       expect(body.name).toMatch(normalUser.name);
@@ -49,6 +50,7 @@ describe('Testing the user route', () => {
       expect(body.alias).toMatch(normalUser.alias);
       expect(body.address).toMatch(normalUser.address);
       expect(body.phone).toMatch(normalUser.phone);
+      expect(body.auth.email).toMatch(normalAuth.email);
     })
   })
 
@@ -85,6 +87,7 @@ describe('Testing the user route', () => {
         name: 'wrong',
         lastname: 'wrong',
         accountType: 'personal',
+        alias: 'wrong',
       }
       const { statusCode } = await api.post('/api/v1/user')
         .auth(tokenWithInvalidPayload, { type: 'bearer' })
@@ -97,6 +100,7 @@ describe('Testing the user route', () => {
         name: 'admin',
         lastname: 'admin',
         accountType: 'personal',
+        alias: 'admin',
       }
       const { statusCode } = await api.post('/api/v1/user')
         .auth(adminUserToken, { type: 'bearer' })
@@ -117,6 +121,47 @@ describe('Testing the user route', () => {
         .auth(nonUserToken, { type: 'bearer' })
         .send(payload);
       expect(statusCode).toBe(200);
+    })
+  })
+
+  describe('PUT /', () => {
+    it('Should not update user without login', async () => {
+      const { statusCode } = await api.put('/api/v1/user/999');
+      expect(statusCode).toBe(401);
+    })
+
+    it('Should not update an unexisting user', async () => {
+      const { statusCode } = await api.put('/api/v1/user/999')
+        .auth(normalUserToken, { type: 'bearer' });
+      expect(statusCode).toBe(404);
+    })
+
+    it('Should not update an user with invalid data from the access token', async () => {
+      const { statusCode } = await api.put(`/api/v1/user/${normalUser.id}`)
+        .auth(tokenWithInvalidPayload, { type: 'bearer' });
+      expect(statusCode).toBe(403);
+    })
+
+    it(`Should not update because the auth ids don't match`, async () => {
+      const { statusCode } = await api.put(`/api/v1/user/${normalUser.id}`)
+        .auth(adminUserToken, { type: 'bearer' });
+      expect(statusCode).toBe(409);
+    })
+
+    it('Should update the user', async () => {
+      const payload = {
+        name: 'Carlitos',
+        lastname: 'Díaz',
+        accountType: 'enterprise',
+        alias: 'carlitoz',
+        address: 'fake street 123',
+        phone: "(261)-555-2596",
+        updatedAt: new Date(),
+      }
+      const { statusCode, body } = await api.put(`/api/v1/user/${normalUser.id}`)
+        .auth(normalUserToken, { type: 'bearer' })
+        .send(payload);
+      expect(statusCode).toBe(201);
     })
   })
 

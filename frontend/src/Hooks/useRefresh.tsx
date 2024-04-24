@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { refreshSession } from "../Services/user";
+import { useAuth } from "./useAuth";
 
 type options = {
     onSuccess?: () => void;
@@ -9,6 +10,8 @@ type options = {
   };
 
 export const useRefresh = ({ onSuccess, onReject, setToken }: options) => {
+  const { setLoading } = useAuth();
+
   useEffect(() => {
     refreshSession()
       .then(({ accessToken }) => {
@@ -19,7 +22,9 @@ export const useRefresh = ({ onSuccess, onReject, setToken }: options) => {
       })
       .catch(() => {
         onReject?.();
-      });
+      }).finally(() => {
+        setLoading(false);
+      })
         // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, []);
+  }, []);
 }

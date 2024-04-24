@@ -10,7 +10,7 @@ type options = {
 }
 
 export const useLogin = ({ onSuccess, onReject }: options) => {
-  const { setAccessToken, loading } = useContext(AuthContext)
+  const { setAccessToken, loading } = useContext(AuthContext);
 
   const setLogin = async (payload: ILoginPayload) => {
     await login(payload)

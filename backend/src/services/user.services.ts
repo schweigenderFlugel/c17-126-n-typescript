@@ -1,6 +1,7 @@
 import { Model } from 'sequelize'
 import userDao from '../models/daos/user.dao'
-import { ICreateUser, IUser } from '../interfaces/user.interface'
+import { ICreateUser, IUpdateUser, IUser } from '../interfaces/user.interface'
+import { UserModel } from '../models/db/entity/user.entity'
 
 export default class userService {
   /**
@@ -20,9 +21,9 @@ export default class userService {
    * @param {number} id - The ID of the user to retrieve
    * @return {Promise<Model<IUser> | null>} The user found, or null if not found
    */
-  static async getUserById(id: number): Promise<Model<IUser> | null> {
+  static async getUserById(id: number): Promise<IUser> {
     const userFound = await userDao.getInstance().getUserById(id)
-    return userFound
+    return userFound as IUser
   }
 
   /**
@@ -66,8 +67,8 @@ export default class userService {
    */
   static async updateUser(
     id: number,
-    userPayload: IUser
-  ): Promise<Model<IUser> | null> {
+    userPayload: IUpdateUser
+  ): Promise<UserModel | null> {
     const userUpdated = await userDao.getInstance().updateUser(id, userPayload)
     return userUpdated
   }

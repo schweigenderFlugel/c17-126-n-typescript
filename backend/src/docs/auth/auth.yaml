@@ -1,5 +1,5 @@
 paths:
-  /api/auth/signup:
+  /api/v1/auth/signup:
     post:
       summary: Register a new user
       tags:
@@ -15,7 +15,7 @@ paths:
         '500':
           description: Unexpected error when trying to register a user
 
-  /api/auth/login:
+  /api/v1/auth/login:
     post:
       summary: Authenticate a user with the email and password provided.
       tags:
@@ -35,10 +35,66 @@ paths:
                 properties:
                   accessToken:
                     type: string
+        '400':
+          description: The session is already open
         '404':
+          description: Invalid credentials
+        '401':
           description: Invalid credentials
         '500':
           description: Unexpected error when trying to authenticate a user
+
+  /api/v1/auth/refresh:
+    get:
+      summary: Refresh the session with the refresh token provided.
+      tags:
+        - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#components/schemas/AuthPayload'
+      responses:
+        '200':
+          description: Session refresh successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+        '404':
+          description: Refresh token not found
+        '403':
+          description: Refresh token is expired or contains wrong payload
+        '500':
+          description: Unexpected error when trying to refresh the session
+  
+  /api/v1/auth/logout:
+    get:
+      summary: Logout and erase the refresh token.
+      tags:
+        - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#components/schemas/AuthPayload'
+      responses:
+        '200':
+          description: Logout successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '404':
+          description: Refresh token not found
+        '500':
+          description: Unexpected error when trying to refresh the session
 
 components:
   schemas:
