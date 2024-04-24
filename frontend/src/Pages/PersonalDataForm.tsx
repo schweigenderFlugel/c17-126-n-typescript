@@ -28,7 +28,7 @@ export const PersonalDataForm = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      createUser(formValues);
+      await createUser(formValues);
       navigate('/dashboard', { replace: true })
     } catch (serverError) {
       let errorMessage: string;

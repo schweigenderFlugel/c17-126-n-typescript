@@ -14,7 +14,7 @@ export const DashboardNavbar = ({ children }) => {
   const { setLogout } = useLogout({
     onSuccess: () => navigate('/login', { replace: true }),
   });
-  const { darkMode, toggleDarkMode } = useAuth();
+  const { darkMode, toggleDarkMode, userData } = useAuth();
 
   return (
     <nav className="items-center grid grid-cols-3 max-sm:grid-cols-2 col-span-12 row-span-1 py-2 w-full">
@@ -39,7 +39,7 @@ export const DashboardNavbar = ({ children }) => {
         </button>
         <HiOutlineBell className="text-[24px] dark:text-white" />
         <div className="inline-flex items-center gap-4">
-          <p className="max-sm:hidden dark:text-white">Usuario</p>
+          <p className="max-sm:hidden dark:text-white">{userData?.name ?? 'Usuario'}</p>
           <button onClick={setLogout}>
             <HiArrowRightOnRectangle className="text-[24px] dark:text-white" />
           </button>
