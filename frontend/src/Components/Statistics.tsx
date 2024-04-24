@@ -1,9 +1,26 @@
-import { DashboardNavbar } from "./DashboardNavbar";
+import { BalanceBarChart } from './BalanceBarChart';
+import { DashboardNavbar } from './DashboardNavbar';
+import { HistoryGraph } from './HistoryGraph';
+import { InvestmentDonutChart } from './InvestmentDonutChart';
 
 export const Statistics = () => {
   return (
-    <main className="gap-y-10 grid grid-cols-12 grid-rows-12 bg-transparent w-full h-full">
+    <main className="bg-transparent w-full h-full">
       <DashboardNavbar>Estadisticas</DashboardNavbar>
+      <div className="gap-x-6 grid grid-cols-2 dark:text-white">
+        <div className="col-start-1 col-end-2">
+          <h4 className="mt-8 font-medium text-2xl">Historial de cuenta</h4>
+          <HistoryGraph />
+        </div>
+        <div className="flex flex-col">
+          <h4 className="mt-8 font-medium text-2xl">Tus inversiones</h4>
+          <InvestmentDonutChart />
+        </div>
+        <div className="col-span-2">
+          <h4 className="mt-8 font-medium text-2xl">Inversiones</h4>
+          <BalanceBarChart />
+        </div>
+      </div>
     </main>
   );
 };
