@@ -1,6 +1,7 @@
 export interface IPreferences {
   id?: number
-  user_id: number
+  userId: number
+  min_ammount_transfers: number
   max_ammount_transfers: number
 }
 

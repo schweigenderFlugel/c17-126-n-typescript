@@ -1,15 +1,15 @@
-import { TRANSACTION_STATUS } from "../../../config/constants";
+import { TRANSACTION_STATUS, TYPETRANSFERS } from "../../../config/constants";
 import { ITransaction } from "../../../interfaces/transaction.interface";
 import { Transaction } from "../entity/transaction.entity";
 import { bankAccount1, bankAccount2 } from "./3-bank-account";
-import { typeTransfer1, typeTransfer2, typeTransfer3 } from "./4-type-transfer";
+import { typeTransfer1, typeTransfer2, typeTransfer3 } from "./5-type-transfer";
 
 interface TransactionFixture extends Omit<ITransaction, 'id'> {}
 
 const transaction1: TransactionFixture = {
   source_account: bankAccount1.id,
   destination_account: bankAccount2.id,
-  type_transfer_id: typeTransfer1.id,
+  type_transfer: TYPETRANSFERS.DEFERRED,
   amount: 0,
   date_transaction: new Date(),
   status: TRANSACTION_STATUS.PENDING,
@@ -18,7 +18,7 @@ const transaction1: TransactionFixture = {
 const transaction2: TransactionFixture = {
   source_account: bankAccount2.id,
   destination_account: bankAccount1.id,
-  type_transfer_id: typeTransfer2.id,
+  type_transfer: TYPETRANSFERS.CREDIT,
   amount: 0,
   date_transaction: new Date(),
   status: TRANSACTION_STATUS.FAILED,
@@ -27,7 +27,7 @@ const transaction2: TransactionFixture = {
 const transaction3: TransactionFixture = {
   source_account: bankAccount1.id,
   destination_account: bankAccount2.id,
-  type_transfer_id: typeTransfer3.id,
+  type_transfer: TYPETRANSFERS.DEBIT,
   amount: 0,
   date_transaction: new Date(),
   status: TRANSACTION_STATUS.SUCCESS,

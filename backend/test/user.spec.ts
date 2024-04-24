@@ -7,6 +7,8 @@ import { upSeed } from './utils/umzug';
 import { sequelize } from '../src/models/db/database.manager';
 import { adminAuth, adminUserToken, anonUserToken, nonUserToken, normalAuth, normalUserToken, tokenWithInvalidPayload } from '../src/models/db/seeders/1-auth';
 import { adminUser, normalUser } from '../src/models/db/seeders/2-user';
+import { preference1, preference2 } from '../src/models/db/seeders/4-preferences';
+import { bankAccount1, bankAccount2 } from '../src/models/db/seeders/3-bank-account';
 
 describe('Testing the user route', () => {
   let app;
@@ -40,6 +42,10 @@ describe('Testing the user route', () => {
       expect(body.address).toMatch(adminUser.address);
       expect(body.phone).toMatch(adminUser.phone);
       expect(body.auth.email).toMatch(adminAuth.email);
+      expect(body.preferences.min_ammount_transfers).toEqual(preference1.min_ammount_transfers);
+      expect(body.preferences.max_ammount_transfers).toEqual(preference1.max_ammount_transfers);
+      expect(body.bank_account.number_account).toMatch(bankAccount1.number_account);
+      expect(body.bank_account.balance).toEqual(bankAccount1.balance);
     })
 
     it('Should get the normal user', async () => {
@@ -51,6 +57,10 @@ describe('Testing the user route', () => {
       expect(body.address).toMatch(normalUser.address);
       expect(body.phone).toMatch(normalUser.phone);
       expect(body.auth.email).toMatch(normalAuth.email);
+      expect(body.preferences.min_ammount_transfers).toEqual(preference2.min_ammount_transfers);
+      expect(body.preferences.max_ammount_transfers).toEqual(preference2.max_ammount_transfers);
+      expect(body.bank_account.number_account).toMatch(bankAccount2.number_account);
+      expect(body.bank_account.balance).toEqual(bankAccount2.balance);
     })
   })
 
@@ -148,17 +158,33 @@ describe('Testing the user route', () => {
       expect(statusCode).toBe(409);
     })
 
+    it('Should not update the user with invalid data', async () => {
+      const payload = {
+        name: '',
+        lastname: '',
+        alias: '',
+        address: 'fake street 123',
+        phone: "555-2596",
+        min_ammount_transfers: 9,
+        max_ammount_transfers: 100000000
+      }
+      const { statusCode } = await api.put(`/api/v1/user/${normalUser.id}`)
+        .auth(normalUserToken, { type: 'bearer' })
+        .send(payload);
+      expect(statusCode).toBe(400);
+    })
+
     it('Should update the user', async () => {
       const payload = {
         name: 'Carlitos',
         lastname: 'Díaz',
-        accountType: 'enterprise',
-        alias: 'carlitoz',
+        alias: 'carlito.diaz',
         address: 'fake street 123',
         phone: "(261)-555-2596",
-        updatedAt: new Date(),
+        min_ammount_transfers: 12,
+        max_ammount_transfers: 1000
       }
-      const { statusCode, body } = await api.put(`/api/v1/user/${normalUser.id}`)
+      const { statusCode } = await api.put(`/api/v1/user/${normalUser.id}`)
         .auth(normalUserToken, { type: 'bearer' })
         .send(payload);
       expect(statusCode).toBe(201);

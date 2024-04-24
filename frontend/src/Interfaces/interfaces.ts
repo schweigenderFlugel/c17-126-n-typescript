@@ -27,16 +27,26 @@ export interface IUser {
   phone: string;
   auth: {
     email: string;
+  },
+  preferences: {
+    min_ammount_transfers: number;
+    max_ammount_transfers: number;
   }
+  bank_account: {
+    id: number;
+    number_account: string;
+    balance: number;
+  } 
 }
 
 export interface UserSettingsType {
-  email: string;
   name: string;
   lastname: string;
-  accountType: string;
   alias: string;
-  maxAmountTransfer: number;
+  address: string;
+  phone: string;
+  min_ammount_transfers: number;
+  max_ammount_transfers: number;
 };
 
 export interface ITypeTransfer {
@@ -55,5 +65,8 @@ export interface ITransactions {
 }
 
 export interface ICreateTransaction {
-  
+  source_account: string,
+  destination_account: string;
+  amount: number;
+  type: string;
 }

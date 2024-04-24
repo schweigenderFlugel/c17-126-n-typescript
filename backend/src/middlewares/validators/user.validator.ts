@@ -16,8 +16,9 @@ export const userCreate = z.object({
 export const userUpdate = z.object({
   name: z.string().trim().min(1, 'Name is required').optional(),
   lastname: z.string().trim().min(1, 'Lastname is required').optional(),
-  accountType: z.enum(['personal', 'enterprise']).optional(),
   alias: z.string().trim().optional(),
   address: z.string().trim().optional(),
   phone: z.string().trim().regex(phoneRegex, 'Invalid Number!').optional(),
+  min_ammount_transfers: z.number().min(10, 'Minimum is required').optional(),
+  max_ammount_transfers: z.number().max(999999, 'Maximum exceeded').optional(),
 })

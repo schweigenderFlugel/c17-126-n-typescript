@@ -7,7 +7,7 @@ import { sequelize } from '../src/models/db/database.manager';
 import { upSeed } from './utils/umzug';
 import { adminUserToken, normalUserToken } from '../src/models/db/seeders/1-auth';
 import { bankAccount1, bankAccount2 } from '../src/models/db/seeders/3-bank-account';
-import { typeTransfer1 } from '../src/models/db/seeders/4-type-transfer';
+import { typeTransfer1 } from '../src/models/db/seeders/5-type-transfer';
 
 describe('Testing the auth route', () => {
   let app;

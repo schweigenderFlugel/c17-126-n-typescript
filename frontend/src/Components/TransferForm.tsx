@@ -1,19 +1,33 @@
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
+import { useAuth } from '../Hooks/useAuth';
+import { TransferTypeSelect } from './TransferTypeSelect';
+
+export enum TYPETRANSFERS {
+  INMEDIATE = 'inmediate',
+  DEFERRED = 'deferred',
+  CREDIT = 'credit',
+  DEBIT = 'debit',
+}
 
 type FormPersonalDataType = {
+  account: number;
   alias: string;
   quantity: string;
-};
-
-const initialValue: FormPersonalDataType = {
-  alias: '',
-  quantity: '',
+  type: TYPETRANSFERS
 };
 
 export const TransferForm = () => {
-  const [formValues, setFormValues] =
-    useState<FormPersonalDataType>(initialValue);
+  const { userData } = useAuth();
+
+  const initialValue: FormPersonalDataType = {
+    account: userData?.bank_account.id ?? 0,
+    alias: '',
+    quantity: '',
+    type: TYPETRANSFERS.DEFERRED,
+  };
+
+  const [formValues, setFormValues] = useState<FormPersonalDataType>(initialValue);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -43,7 +57,7 @@ export const TransferForm = () => {
 
   const handleChange = ({
     target: { name, value },
-  }: React.ChangeEvent<HTMLInputElement>) => {
+  }: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => {
     setFormValues({ ...formValues, [name]: value });
   };
 
@@ -68,6 +82,19 @@ export const TransferForm = () => {
             className="border-indigo-400 focus:border-indigo-600 focus:dark:border-indigo-500 focus:outline-none dark:border-white bg-transparent px-2 py-4 border rounded-md w-full h-8 text-black text-sm dark:text-white"
           />
         </div>
+        <TransferTypeSelect
+          label='Tipo de Transferencia'
+          name='type'
+          value={formValues.type}
+          onChange={handleChange}
+          options={[
+            { value: 'select', label: 'Seleccionar', disable: true },
+            { value: TYPETRANSFERS.DEFERRED, label: 'Diferido', disable: false },
+            { value: TYPETRANSFERS.CREDIT, label: 'Crédito', disable: false },
+            { value: TYPETRANSFERS.DEBIT, label: 'Débito', disable: false },
+            { value: TYPETRANSFERS.INMEDIATE, label: 'Inmediato', disable: false },
+          ]}
+        />
         <label
           htmlFor="quantity"
           className="w-full text-gray-900 text-sm dark:text-white"

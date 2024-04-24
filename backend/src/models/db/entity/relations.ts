@@ -16,24 +16,32 @@ Auth.hasOne(User, {
 })
 
 Preferences.belongsTo(User, {
-  foreignKey: 'user_id',
+  as: 'user',
 })
 
 User.hasOne(Preferences, {
-  foreignKey: 'user_id',
+  as: 'preferences',
+  foreignKey: 'userId',
 })
 
 // RELATIONS FOR BANK ACCOUNT
 BankAccount.belongsTo(User, {
-  foreignKey: 'user_id',
+  as: 'user',
+})
+
+User.hasOne(BankAccount, {
+  as: 'bank_account',
+  foreignKey: 'userId',
 })
 
 // RELATIONS FOR TRANSACTION
 BankAccount.hasMany(Transaction, {
+  as: 'transactions_sent',
   foreignKey: 'source_account',
 })
 
 BankAccount.hasMany(Transaction, {
+  as: 'transactions_received',
   foreignKey: 'destination_account',
 })
 

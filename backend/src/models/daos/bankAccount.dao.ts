@@ -1,3 +1,4 @@
+import { Model } from 'sequelize'
 import {
   IBankAccount,
   IGenerateBankAccount,
@@ -68,6 +69,32 @@ export default class bankAccountDao {
       include: [
         {
           model: User,
+          attributes: ['alias', 'id'],
+          include: [
+            {
+              model: Preferences,
+              attributes: ['max_ammount_transfers'],
+            },
+          ],
+        },
+      ],
+    })
+    return bankAccountFound as Model<Omit<IBankAccount, 'expenses'>>
+  }
+
+  async getBankAccountByUserId(userId: number) {
+    const bankAccountFound = await BankAccount.findOne({
+      where: { userId: userId },
+    })
+    return bankAccountFound
+  }
+
+  async getBankAccountByUserAlias(userAlias: string) {
+    const bankAccountFound = await BankAccount.findOne({
+      include: [
+        {
+          model: User,
+          where: { alias: userAlias },
           attributes: ['alias', 'id'],
           include: [
             {

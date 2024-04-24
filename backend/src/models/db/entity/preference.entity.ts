@@ -1,6 +1,7 @@
 import { DataTypes, Model } from 'sequelize'
 import { sequelize } from '../database.manager'
 import { IPreferences } from '../../../interfaces/preference.interface'
+import { User } from './user.entity'
 
 export interface PreferencesModel extends Model<IPreferences>, IPreferences {}
 
@@ -10,9 +11,22 @@ const Preferences = sequelize.define<PreferencesModel>('preferences', {
     autoIncrement: true,
     primaryKey: true,
   },
-  user_id: {
+  userId: {
+    type: DataTypes.INTEGER,
+    field: 'user_id',
+    allowNull: false,
+    unique: true,
+    references: {
+      model: User.getTableName(),
+      key: 'id',
+    },
+    onUpdate: 'CASCADE',
+    onDelete: 'SET NULL'
+  },
+  min_ammount_transfers: {
     type: DataTypes.INTEGER,
     allowNull: false,
+    defaultValue: 999999,
   },
   max_ammount_transfers: {
     type: DataTypes.INTEGER,

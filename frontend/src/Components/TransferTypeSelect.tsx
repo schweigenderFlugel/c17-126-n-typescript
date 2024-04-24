@@ -4,7 +4,7 @@ type Option = {
   disable: boolean;
 }
   
-type AuthFormSelectProps = {
+type TypeTransferSelectProps = {
   onChange: React.ChangeEventHandler<HTMLSelectElement>;
   value: string;
   options: Option[];
@@ -13,13 +13,13 @@ type AuthFormSelectProps = {
   required?: boolean;
 };
 
-export const FormSelect = ({
+export const TransferTypeSelect = ({
   onChange,
   value,
   name = '',
   label = '',
   options = [],
-}: AuthFormSelectProps) => {
+}: TypeTransferSelectProps) => {
   return (
     <div className="max-lg:flex flex-col max-lg:gap-1 grid grid-cols-3 max-2xl:grid-cols-2">
       <label htmlFor={name} className="col-span-1 dark:text-white">
@@ -31,7 +31,7 @@ export const FormSelect = ({
           id={name}
           value={value}
           defaultValue="Seleccionar"
-          className="border-indigo-500 focus:dark:border-indigo-400 dark:border-white/70 bg-transparent p-2 border rounded-lg w-full disabled:text-gray-400 dark:disabled:text-gray-400 disabled:cursor-not-allowed focus:outline-none dark:text-white"
+          className="border-indigo-500 focus:dark:border-indigo-400 dark:border-white bg-transparent border rounded-lg w-full h-9 disabled:text-gray-400 dark:disabled:text-gray-400 disabled:cursor-not-allowed focus:outline-none dark:text-white text-sm"
           onChange={onChange}
         >
           {options.map(option => (

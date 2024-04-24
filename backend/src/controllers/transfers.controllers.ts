@@ -6,6 +6,8 @@ import { ISourceAccountData } from '../interfaces/bankAccount.interface'
 import transactionService from '../services/transaction.services'
 import typeTrnasfersService from '../services/typeTransfers.services'
 import { ITransaction } from '../interfaces/transaction.interface'
+import { IUserToken } from '../interfaces/user.interface'
+import apiSuccessResponse from '../utils/apiResponse.utils'
 
 export default class transfersController {
   static async createTransfer(
@@ -14,7 +16,17 @@ export default class transfersController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const { source_account, destination_account, amount, type } = req.body
+      const { source_account, destination_alias, amount, type } = req.body
+
+      const requestingUser = req.user as IUserToken
+
+      if (requestingUser.id !== source_account) {
+        throw new HttpError(
+          'You are not allowed to perform this action',
+          'You are not allowed to perform this action',
+          HTTP_STATUS.UNAUTHORIZED
+        )
+      }
 
       const sourceAccountFound =
         await bankAccountService.getBankAccountWithUserPreferences(
@@ -32,7 +44,7 @@ export default class transfersController {
         sourceAccountFound.dataValues as ISourceAccountData
 
       const destinationAccountFound =
-        await bankAccountService.getBankAccountById(destination_account)
+        await bankAccountService.getBankAccountByUserAlias(destination_alias)
 
       if (!destinationAccountFound) {
         throw new HttpError(
@@ -65,7 +77,7 @@ export default class transfersController {
         source_account: sourceAccountData.id,
         destination_account: destinationAccountFound.id,
         amount,
-        type_transfer_id: typeTrnasferFound.id,
+        type_transfer: type,
         date_transaction: new Date(),
         status: TRANSACTION_STATUS.PENDING,
       }
@@ -84,7 +96,9 @@ export default class transfersController {
         )
       }
 
-      res.status(HTTP_STATUS.CREATED).json({})
+      const response = apiSuccessResponse(transactionCreated)
+
+      res.status(HTTP_STATUS.CREATED).json(response)
     } catch (err) {
       next(err)
     }

@@ -24,12 +24,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/auths/signup",
+							"raw": "{{base_url}}/auth/signup",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
-								"auths",
+								"auth",
 								"signup"
 							]
 						}
@@ -43,7 +43,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"sbelbey@icloud.com\",\n    \"password\": \"Qwerty123!\"\n}",
+							"raw": "{\n    \"email\": \"juan@gmail.com\",\n    \"password\": \"Qwerty123!\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -124,7 +124,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6Im5vcm1hbCIsImlhdCI6MTcxMzIxOTc2NCwiZXhwIjoxNzEzMzA2MTY0fQ.XKjWMHM82_lFOktt8Vm-DyXoJAZiRw2v9vAXBIKtV4c",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6Im5vcm1hbCIsImlhdCI6MTcxMzg3ODUyOSwiZXhwIjoxNzEzODc5NDI5fQ.cRc_uJJ9Y6g5PKHY8BcccJwjw4tl-_Ams02RwM1LNik",
 									"type": "string"
 								}
 							]
@@ -133,7 +133,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Saúl Iván\",\n    \"lastname\": \"Belbey\",\n    \"accountType\": \"personal\",\n    \"alias\":\"sbelbey\",\n    \"address\": {{$randomStreetAddress}},\n    \"phone\": {{$randomPhoneNumber}} \n}",
+							"raw": "{\n    \"name\": \"Saúl Iván\",\n    \"lastname\": \"Belbey\",\n    \"accountType\": \"personal\",\n    \"alias\":\"sbelbey\",\n    \"address\": \"{{$randomStreetAddress}}\",\n    \"phone\": \"{{$randomPhoneNumber}}\" \n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -141,13 +141,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/api/v1/user",
+							"raw": "{{base_url}}/user",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
-								"api",
-								"v1",
 								"user"
 							]
 						}
@@ -217,7 +215,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwicm9sZSI6Im5vcm1hbCIsImlhdCI6MTcxMzgyMjY4MCwiZXhwIjoxNzEzODIzNTgwfQ.vLU4pydOuvVU-3G7DwYikxK-np7zRNvs2dF6i6-G0x0",
+									"value": "{{token}}",
 									"type": "string"
 								}
 							]
@@ -226,7 +224,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"source_account\": \"2\",\n    \"destination_account\": \"1\",\n    \"amount\": 15,\n    \"type\": \"inmediate\"\n\n}",
+							"raw": "{\n    \"source_account\": 2,\n    \"destination_account\": \"saul\",\n    \"amount\": 16,\n    \"type\": \"inmediate\"\n\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -253,8 +251,65 @@
 				{
 					"name": "Deposit Money",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"accountId\": 1,\n    \"amount\": 10000\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/bank-account/deposit",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"bank-account",
+								"deposit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Balance",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/bank-account/getBalance",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"bank-account",
+								"getBalance"
+							]
+						}
 					},
 					"response": []
 				}

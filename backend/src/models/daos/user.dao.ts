@@ -74,7 +74,7 @@ export default class userDao {
       where: {
         authId: authId,
       },
-      include: ['auth']
+      include: ['auth', 'preferences', 'bank_account']
     })
     return userFound;
   }

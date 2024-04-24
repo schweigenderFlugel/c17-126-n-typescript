@@ -17,6 +17,11 @@ export interface IUserData {
   dataValues: { id: number; alias: string; preference: IUserPreferenceData }
 }
 
-export interface IUpdateUser extends Omit<Omit<IUser, 'authId'>, 'createdAt'> {}
+export interface IUpdateUser extends Omit<Omit<Omit<IUser, 'authId'>, 'createdAt'>, 'accountType'> {}
 
 export interface ICreateUser extends Omit<Omit<Omit<IUser, 'id'>, 'createdAt'>, 'updatedAt'> {}
+
+export interface IUserToken {
+  id: number
+  role: string
+}

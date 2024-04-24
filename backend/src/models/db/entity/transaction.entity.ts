@@ -1,6 +1,6 @@
 import { DataTypes, Model } from 'sequelize'
 import { sequelize } from '../database.manager'
-import { TRANSACTION_STATUS } from '../../../config/constants'
+import { TRANSACTION_STATUS, TYPETRANSFERS } from '../../../config/constants'
 import { ITransaction } from '../../../interfaces/transaction.interface'
 
 const { INTEGER, ENUM } = DataTypes
@@ -21,8 +21,10 @@ const Transaction = sequelize.define<TransactionModel>('Transaction', {
     type: INTEGER,
     allowNull: false,
   },
-  type_transfer_id: {
-    type: INTEGER,
+  type_transfer: {
+    type: ENUM,
+    values: Object.values(TYPETRANSFERS),
+    defaultValue: 'deferred',
     allowNull: false,
   },
   amount: {

@@ -9,6 +9,7 @@ import { ButtonAuthForm } from '../Components/ButtonAuthForm';
 import { ICreateUserPayload } from '../Interfaces/interfaces';
 import { AuthFormSelect } from '../Components/AuthFormSelect';
 import { createUser } from '../Services/user';
+import { useAuth } from '../Hooks/useAuth';
 
 const initialValue: ICreateUserPayload = {
   name: '',
@@ -20,6 +21,7 @@ const initialValue: ICreateUserPayload = {
 };
 
 export const PersonalDataForm = () => {
+  const { setLoading } = useAuth();
   const [formValues, setFormValues] =
     useState<ICreateUserPayload>(initialValue);
 
@@ -29,6 +31,7 @@ export const PersonalDataForm = () => {
     e.preventDefault();
     try {
       createUser(formValues);
+      setLoading(true);
       navigate('/dashboard', { replace: true })
     } catch (serverError) {
       let errorMessage: string;

@@ -38,7 +38,7 @@ export default class preferenceDao {
     userId: number
   ): Promise<PreferencesModel | null> {
     const preferencesFound = await Preferences.findOne({
-      where: { user_id: userId },
+      where: { userId: userId },
     })
     return preferencesFound
   }
@@ -52,10 +52,10 @@ export default class preferenceDao {
    */
   async updatePreferenceByUserId(
     userId: number,
-    preferencePayload: IPreferences
+    preferencePayload: Omit<IPreferences, 'userId'>
   ): Promise<PreferencesModel> {
     const preferenceUpdated = await Preferences.update(preferencePayload, {
-      where: { user_id: userId },
+      where: { userId: userId },
       returning: true,
     })
     return preferenceUpdated[1][0]
@@ -68,6 +68,6 @@ export default class preferenceDao {
    * @return {Promise<void>} A promise that resolves when the preference is deleted.
    */
   async deletePreferenceByUserId(userId: number): Promise<void> {
-    await Preferences.destroy({ where: { user_id: userId } })
+    await Preferences.destroy({ where: { userId: userId } })
   }
 }

@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { DashboardNavbar } from './DashboardNavbar';
 import { FormRow } from './FormRow';
-import { FormSelect } from './FormSelect';
 import { useAuth } from '../Hooks/useAuth';
 import { updateUser } from '../Services/user';
 import { UserSettingsType } from '../Interfaces/interfaces';
@@ -12,19 +11,20 @@ export const Settings = () => {
   const { userData } = useAuth()
 
   const user: UserSettingsType = {
-    email: userData?.auth.email ?? 'Juan Alberto',
     name: userData?.name ?? 'Perez',
     lastname: userData?.lastname ?? 'Personal',
-    accountType: userData?.accountType ?? 'juan.perez',
-    alias: userData?.alias ?? 'calle falsa 123',
-    maxAmountTransfer: 1000,
+    alias: userData?.alias ?? 'juan.perez',
+    phone: userData?.phone ?? '(000)-000-0000',
+    address: userData?.address ?? 'Nowhere',
+    min_ammount_transfers: userData?.preferences.min_ammount_transfers ?? 10,
+    max_ammount_transfers: userData?.preferences.max_ammount_transfers ?? 1000,
   };
 
   const [formValues, setFormValues] = useState<UserSettingsType>(user);
 
   const handleChange = ({
     target: { name, value },
-  }: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => {
+  }: React.ChangeEvent<HTMLInputElement>) => {
     setFormValues({ ...formValues, [name]: value });
   };
 
@@ -35,6 +35,8 @@ export const Settings = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
+      formValues.min_ammount_transfers = parseInt(formValues.min_ammount_transfers as unknown as string);
+      formValues.max_ammount_transfers = parseInt(formValues.max_ammount_transfers as unknown as string);
       updateUser(userData?.id, formValues);
       toast('Actualizado', {
         icon: '👋',
@@ -67,7 +69,22 @@ export const Settings = () => {
           <FormRow
             label="E-mail"
             name="email"
-            value={formValues.email}
+            value={userData?.auth.email}
+            onChange={handleChange}
+            disabled={true}
+          />
+          <FormRow
+            key="accountType"
+            name="accountType"
+            label='Tipo de cuenta'
+            onChange={handleChange}
+            value={userData?.accountType}
+            disabled={true}
+          />
+          <FormRow
+            label="Número de cuenta"
+            name="account_number"
+            value={userData?.bank_account.number_account}
             onChange={handleChange}
             disabled={true}
           />
@@ -85,17 +102,6 @@ export const Settings = () => {
             onChange={handleChange}
             disabled={isLoading}
           />
-          <FormSelect
-            key="accountType"
-            name="accountType"
-            label='Tipo de cuenta'
-            onChange={handleChange}
-            value={formValues.accountType}
-            options={[
-              { value: 'enterprise', label: 'Empresa', disable: false }, 
-              { value: 'personal', label: 'Personal', disable: false }
-            ]}
-          />
           <FormRow
             label="Alias"
             name="alias"
@@ -104,9 +110,31 @@ export const Settings = () => {
             disabled={isLoading}
           />
           <FormRow
+            label="Teléfono"
+            name="phone"
+            value={formValues.phone}
+            onChange={handleChange}
+            disabled={isLoading}
+          />
+          <FormRow
+            label="Dirección"
+            name="address"
+            value={formValues.address}
+            onChange={handleChange}
+            disabled={isLoading}
+          />
+          <FormRow
+            label="Cantidad mínima de transferencia"
+            name="min_ammount_transfers"
+            value={formValues.min_ammount_transfers}
+            onChange={handleChange}
+            disabled={isLoading}
+            type="number"
+          />
+          <FormRow
             label="Cantidad máxima de transferencia"
-            name="maxAmountTransfer"
-            value={formValues.maxAmountTransfer}
+            name="max_ammount_transfers"
+            value={formValues.max_ammount_transfers}
             onChange={handleChange}
             disabled={isLoading}
             type="number"

@@ -41,7 +41,7 @@ export default class preferenceService {
    */
   static async updatePreferenceByUserId(
     userId: number,
-    preferencePayload: IPreferences
+    preferencePayload: Omit<IPreferences, 'userId'>
   ): Promise<IPreferences> {
     const preferenceUpdated = await preferenceDao
       .getInstance()

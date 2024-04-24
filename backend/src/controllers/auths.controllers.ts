@@ -8,11 +8,13 @@ import authService from '../services/auth.services'
 import apiSuccessResponse from '../utils/apiResponse.utils'
 import { HTTP_STATUS, envs } from '../config/constants'
 import HttpError from '../utils/HttpError.utils'
+
 import SessionUtils from '../utils/session.util';
 import CookiesUtils from '../utils/cookies.utils';
 import { ENVIROMENTS } from '../../enviroments';
 
 const { NODE_ENV, HTTPONLY_COOKIE_NAME, DB_URL } = envs
+
 
 const cookieName =
   NODE_ENV === ENVIROMENTS.PRODUCTION ? HTTPONLY_COOKIE_NAME : 'bankme'
@@ -90,7 +92,9 @@ export default class authsController {
       const tokenPayload: ITokenPayload = {
         id: authFound.id,
         role: authFound.role,
-      };
+
+      }
+
       const accessToken = await SessionUtils.generateToken(tokenPayload);
       const refreshToken = await SessionUtils.generateRefreshToken(tokenPayload);
       await CookiesUtils.setJwtCookie(cookieName, res, refreshToken)
@@ -114,6 +118,7 @@ export default class authsController {
     next: NextFunction
   ): Promise<void> {
     try {
+
       const jwtCookie = req.cookies[cookieName];
       if (!jwtCookie) throw new HttpError(
         'Refresh token not found', 
@@ -183,6 +188,7 @@ export default class authsController {
   ): Promise<void> {
     try {
       const jwtCookie = req.cookies[cookieName]
+
       if (!jwtCookie) throw new HttpError(
         'Cookie not found',
         'Cookie should exist to logout',

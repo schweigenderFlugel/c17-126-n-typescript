@@ -13,9 +13,17 @@ const BankAccount = sequelize.define<BankAccountModel>(
       autoIncrement: true,
       primaryKey: true,
     },
-    user_id: {
+    userId: {
       type: DataTypes.INTEGER,
+      field: 'user_id',
       allowNull: false,
+      unique: true,
+      references: {
+        model: User.getTableName(),
+        key: 'id',
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'SET NULL'
     },
     number_account: {
       type: DataTypes.STRING,
@@ -26,6 +34,11 @@ const BankAccount = sequelize.define<BankAccountModel>(
       allowNull: false,
       defaultValue: 0,
     },
+    expenses: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+    }
   },
   { timestamps: false }
 )

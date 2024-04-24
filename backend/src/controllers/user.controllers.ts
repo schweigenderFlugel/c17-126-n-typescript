@@ -7,8 +7,10 @@ import userService from '../services/user.services'
 import bankAccountService from '../services/bankAccount.services'
 import { IGenerateBankAccount } from '../interfaces/bankAccount.interface'
 import bankAccountHelper from '../utils/bankAccountHelper'
-import { ICreateUser, IUpdateUser } from '../interfaces/user.interface'
 import preferenceService from '../services/preferences.services'
+import { ICreateUser, IUpdateUser } from '../interfaces/user.interface'
+import { IPreferences } from '../interfaces/preference.interface'
+
 
 export default class userController {
   /**
@@ -83,9 +85,10 @@ export default class userController {
         await bankAccountHelper.generateAccountNumber(accountType)
 
       const bankAccountPayload: IGenerateBankAccount = {
-        user_id: userCreated.dataValues.id,
+        userId: userCreated.dataValues.id,
         number_account: numberAccount,
-        balance: 0,
+        balance: 5000,
+        expenses: 3750,
       }
 
       const bankAccountCreated =
@@ -100,7 +103,8 @@ export default class userController {
       }
 
       const preferencesPayload = {
-        user_id: userCreated.dataValues.id,
+        userId: userCreated.dataValues.id,
+        min_ammount_transfers: 10,
         max_ammount_transfers: 999999,
       }
 
@@ -234,13 +238,12 @@ export default class userController {
         )
       }
 
-      const { name, lastname, alias, address, phone, accountType } = req.body;
+      const { name, lastname, alias, address, phone, min_ammount_transfers, max_ammount_transfers } = req.body;
 
       const userPayload: IUpdateUser = {
         id: userFound.id,
         name,
         lastname,
-        accountType,
         alias,
         address,
         phone,
@@ -249,7 +252,14 @@ export default class userController {
 
       const userUpdated = await userService.updateUser(userPayload.id, userPayload);
 
-      const response = apiSuccessResponse({ userUpdated })
+      const preferencePayload: Omit<IPreferences, 'userId'> = {
+        min_ammount_transfers: min_ammount_transfers,
+        max_ammount_transfers: max_ammount_transfers,
+      }
+
+      const preferenceUpdated = await preferenceService.updatePreferenceByUserId(userFound.id, preferencePayload)
+
+      const response = apiSuccessResponse({ userUpdated, preferenceUpdated })
       res.status(201).json(response)
     } catch (err: any) {
       next(err)

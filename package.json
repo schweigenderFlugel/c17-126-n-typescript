@@ -6,9 +6,9 @@
     "scripts": {
         "back:init": "cd backend && pnpm i",
         "front:init": "cd frontend && pnpm i",
-        "back:dev": "cd backend && pnpm run dev",
-        "front:dev": "cd frontend && pnpm run dev",
-        "back:test": "cd backend && pnpm run test",
+        "back:dev": "cd backend && npm run dev",
+        "front:dev": "cd frontend && npm run dev",
+        "back:test": "cd backend && npm run test",
         "prepare": "husky"
     },
     "keywords": [],
