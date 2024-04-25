@@ -39,6 +39,11 @@ export interface IUserBalance {
   };
 }
 
+export interface IDeposit {
+  accountId: number;
+  amount: number;
+}
+
 export interface UserSettingsType {
   email: string;
   name: string;

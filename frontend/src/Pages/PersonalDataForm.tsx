@@ -14,7 +14,7 @@ import { useAuth } from '../Hooks/useAuth';
 const initialValue: ICreateUserPayload = {
   name: '',
   lastname: '',
-  accountType: '',
+  accountType: 'personal',
   alias: '',
   address: '',
   phone: '',
@@ -98,11 +98,6 @@ export const PersonalDataForm = () => {
             onChange={handleChange}
             value={formValues.accountType}
             options={[
-              {
-                value: initialValue.accountType,
-                label: 'Seleccionar',
-                disable: true,
-              },
               { value: 'enterprise', label: 'Empresa', disable: false },
               { value: 'personal', label: 'Personal', disable: false },
             ]}
@@ -143,7 +138,7 @@ export const PersonalDataForm = () => {
             disabled={
               formValues.name.length < 1 ||
               formValues.lastname.length < 1 ||
-              formValues.accountType == initialValue.accountType ||
+              formValues.accountType! == '' ||
               formValues.alias.length < 1
             }
             isLoading={isLoading}

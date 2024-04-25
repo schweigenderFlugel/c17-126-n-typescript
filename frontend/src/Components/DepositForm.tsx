@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { HiOutlineCreditCard, HiOutlineCurrencyDollar } from 'react-icons/hi2';
+import { useAuth } from '../Hooks/useAuth';
+import { makeDeposit } from '../Services/apiDeposit';
+import { useBalance } from '../Hooks/useBalance';
 
 type DepositFormType = {
   cardName: string;
@@ -11,16 +14,20 @@ type DepositFormType = {
 };
 
 const initialValue: DepositFormType = {
-  cardName: '',
-  cardNumber: '',
-  expirationDate: '',
-  CVV: '',
+  cardName: 'Juan Perez',
+  cardNumber: '1234 1234 1234 1234',
+  expirationDate: '12 / 24',
+  CVV: '123',
   quantity: '',
 };
 
-export const DepositForm = () => {
+export const DepositForm = ({ onClose }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [formValues, setFormValues] = useState<DepositFormType>(initialValue);
+
+  const { userData } = useAuth();
+
+  const { startLoadingUserBalance } = useBalance();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -37,22 +44,29 @@ export const DepositForm = () => {
       return toast('Por favor, ingresa la cantidad a depositar');
     }
 
-    function deposit(): Promise<void> {
+    async function deposit(): Promise<void> {
       setIsLoading(true);
-      return new Promise(resolve => {
-        setTimeout(() => {
-          setIsLoading(false);
-          resolve();
-        }, 1000);
-      });
+      if (userData?.id)
+        return await makeDeposit({
+          accountId: userData?.id,
+          amount: +formValues.quantity,
+        });
     }
 
     toast.promise(
       deposit(),
       {
         loading: 'Cargando',
-        success: () => `Deposito exitoso`,
-        error: () => `Error al Transferir`,
+        success: () => {
+          onClose();
+          startLoadingUserBalance();
+          return `Deposito exitoso`;
+        },
+        error: () => {
+          onClose();
+          startLoadingUserBalance();
+          return `Error al depositar`;
+        },
       },
       {
         style: {

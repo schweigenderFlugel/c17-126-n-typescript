@@ -18,6 +18,11 @@ export const WalletCard = ({
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
   const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
 
+  const closeDepositModal = () => {
+    setIsDepositModalOpen(false);
+    
+  };
+
   const { userData } = useAuth();
 
   return (
@@ -174,7 +179,7 @@ export const WalletCard = ({
         onCloseModal={() => setIsDepositModalOpen(false)}
         isOpen={isDepositModalOpen}
       >
-        <DepositForm />
+        <DepositForm onClose={closeDepositModal} />
       </Modal>
     </section>
   );
