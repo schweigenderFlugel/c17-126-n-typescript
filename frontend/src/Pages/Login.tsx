@@ -13,6 +13,7 @@ export const Login = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
+
   const navigate = useNavigate();
 
   const { accessToken } = useAuth();
@@ -64,6 +65,7 @@ export const Login = () => {
               name="email"
               autoComplete="email"
               required
+              disable={loading}
             />
             <AuthFormRow
               onChange={e => setPassword(e.target.value)}
@@ -78,6 +80,7 @@ export const Login = () => {
               }
               required
               showPassword={showPassword}
+              disable={loading}
             />
           </div>
           <div className="flex justify-end mt-2 mb-4 w-full">

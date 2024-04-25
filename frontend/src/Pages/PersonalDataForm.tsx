@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AxiosError } from 'axios';
 import { toast } from 'react-hot-toast';
@@ -9,6 +9,7 @@ import { ButtonAuthForm } from '../Components/ButtonAuthForm';
 import { ICreateUserPayload } from '../Interfaces/interfaces';
 import { AuthFormSelect } from '../Components/AuthFormSelect';
 import { createUser } from '../Services/user';
+import { useAuth } from '../Hooks/useAuth';
 
 const initialValue: ICreateUserPayload = {
   name: '',
@@ -22,13 +23,18 @@ const initialValue: ICreateUserPayload = {
 export const PersonalDataForm = () => {
   const [formValues, setFormValues] =
     useState<ICreateUserPayload>(initialValue);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { accessToken } = useAuth();
 
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
+      setIsLoading(true);
       await createUser(formValues);
+
       navigate('/dashboard', { replace: true });
     } catch (serverError) {
       console.log(serverError);
@@ -44,6 +50,8 @@ export const PersonalDataForm = () => {
       } else {
         toast.error('Error desconocido');
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -55,8 +63,9 @@ export const PersonalDataForm = () => {
     setFormValues({ ...formValues, [name]: value });
   };
 
-  //🔴[TODO]:Reemplazar por el del hook
-  const isLoading = false;
+  useEffect(() => {
+    if (!accessToken) navigate('/login', { replace: true });
+  }, [accessToken, navigate]);
 
   return (
     <AuthFormContainer subtitle="¡Un último paso!">

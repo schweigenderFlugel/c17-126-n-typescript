@@ -1,8 +1,8 @@
-import { useEffect } from "react";
-import { getUser } from "../Services/user";
-import { useAuth } from "./useAuth";
-import { AxiosError } from "axios";
-import { IUser } from "../Interfaces/interfaces";
+import { useEffect } from 'react';
+import { getUser } from '../Services/user';
+import { useAuth } from './useAuth';
+import { AxiosError } from 'axios';
+import { IUser } from '../Interfaces/interfaces';
 
 type options = {
   onSuccess?: () => void;
@@ -10,21 +10,25 @@ type options = {
 };
 
 export const useUser = ({ onSuccess, onReject }: options) => {
-  const { accessToken, setUserData } = useAuth();
+  const { accessToken, setUserData, setLoading } = useAuth();
 
   useEffect(() => {
     if (accessToken) {
+      setLoading(true);
       getUser()
-        .then(( user: IUser | null ) => {
+        .then((user: IUser | null) => {
           setUserData(user);
         })
         .then(() => {
           onSuccess?.();
-         })
+        })
         .catch(error => {
           onReject?.(error);
-         });
-       // eslint-disable-next-line react-hooks/exhaustive-deps
-      }
-    }, [accessToken]);  
-}
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }
+  }, [accessToken]);
+};
