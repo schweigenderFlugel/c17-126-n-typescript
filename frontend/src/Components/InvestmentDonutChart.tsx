@@ -1,25 +1,25 @@
 import { DonutChart, Legend } from '@tremor/react';
 
-const sales = [
+const inversions = [
   {
     name: 'Bankme',
-    sales: 980,
+    quantity: 980,
   },
   {
-    name: 'Apple Inc.',
-    sales: 456,
+    name: 'BTC',
+    quantity: 456,
   },
   {
     name: 'NVIDIA Corporation',
-    sales: 390,
+    quantity: 390,
   },
   {
     name: 'Tesla Inc.',
-    sales: 240,
+    quantity: 240,
   },
   {
-    name: 'Ford Motor Company',
-    sales: 190,
+    name: 'ETH',
+    quantity: 190,
   },
 ];
 
@@ -31,8 +31,8 @@ export function InvestmentDonutChart() {
     <>
       <div className="flex justify-center items-center space-x-6 h-60">
         <DonutChart
-          data={sales}
-          category="sales"
+          data={inversions}
+          category="quantity"
           index="name"
           valueFormatter={valueFormatter}
           colors={['indigo', 'gray', 'green', 'red', 'blue']}
@@ -42,12 +42,12 @@ export function InvestmentDonutChart() {
         <Legend
           categories={[
             'Bankme.',
-            'Apple Inc.',
+            'BTC Bitcoin',
             'NVIDIA Corporation',
             'Tesla Inc.',
-            'Ford Motor Company',
+            'Ethereum',
           ]}
-          colors={['blue', 'cyan', 'indigo', 'violet', 'fuchsia']}
+          colors={['indigo', 'gray', 'green', 'red', 'blue']}
           className="max-w-xs"
         />
       </div>

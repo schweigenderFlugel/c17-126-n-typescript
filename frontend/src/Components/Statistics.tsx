@@ -1,7 +1,7 @@
-import { BalanceBarChart } from './BalanceBarChart';
 import { DashboardNavbar } from './DashboardNavbar';
 import { HistoryGraph } from './HistoryGraph';
 import { InvestmentDonutChart } from './InvestmentDonutChart';
+import { TransferStatistics } from './TransferStatistics';
 
 export const Statistics = () => {
   return (
@@ -17,8 +17,8 @@ export const Statistics = () => {
           <InvestmentDonutChart />
         </div>
         <div className="col-span-2">
-          <h4 className="mt-8 font-medium text-2xl">Inversiones</h4>
-          <BalanceBarChart />
+          <h4 className="mt-8 font-medium text-2xl">Transferencias</h4>
+          <TransferStatistics />
         </div>
       </div>
     </main>
