@@ -61,7 +61,7 @@ Realizamos un diseño de una fintech enfocada en una billetera virtual, basado e
 
 - <img width="20" height="20" src="https://img.icons8.com/external-flaticons-flat-flat-icons/20/external-kanban-agile-flaticons-flat-flat-icons.png" alt="external-kanban-agile-flaticons-flat-flat-icons"/> [Trello](https://trello.com/b/gpLcQ0Tu/c17-126-n-typescript)
 
-- <img width="20" height="20" src="https://img.icons8.com/color/20/figma--v1.png" alt="figma--v1"/>[Figma](https://www.figma.com/file/HOyFQvD8d68nAtCb49ehPr/c17-126-n-typescript---Banca-Digital?type=design&node-id=0-1&mode=design)
+- <img width="20" height="20" src="https://img.icons8.com/color/20/figma--v1.png" alt="figma--v1"/>[Figma](https://www.figma.com/file/HOyFQvD8d68nAtCb49ehPr/c17-126-n-typescript---Banca-Digital?type=design&node-id=227-6845&mode=design)
 
 ---
 
