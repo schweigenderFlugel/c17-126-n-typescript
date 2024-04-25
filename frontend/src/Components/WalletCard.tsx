@@ -4,18 +4,21 @@ import { HiOutlineEye, HiOutlineEyeSlash } from 'react-icons/hi2';
 import { Modal } from './Modal';
 import { TransferForm } from './TransferForm';
 import { DepositForm } from './DepositForm';
+import { useAuth } from '../Hooks/useAuth';
+import { LoadingDots } from './LoadingDots';
 
-export const WalletCard = () => {
+export const WalletCard = ({
+  balance,
+  isLoadingBalance,
+}: {
+  balance: string | number | undefined;
+  isLoadingBalance: boolean;
+}) => {
   const [showBalance, setShowBalance] = useState(true);
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
   const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
 
-  //👇 Obtenerlo del hook useAuth
-  const currentUser = {
-    firstName: 'Juan Alberto',
-    lastName: 'Perez',
-    balance: '3500.00',
-  };
+  const { userData } = useAuth();
 
   return (
     <section className="col-span-4">
@@ -49,11 +52,21 @@ export const WalletCard = () => {
             <Logo extraSmall className="ml-auto text-white" />
           </div>
 
-          <p className="mt-12 mb-3 text-lg text-white uppercase tracking-[4px]">{`${currentUser.firstName} ${currentUser.lastName}`}</p>
+          <div className="mt-12 mb-3 text-lg text-white uppercase tracking-[4px]">
+            {userData ? (
+              `${userData?.name} ${userData?.lastname}`
+            ) : (
+              <LoadingDots />
+            )}
+          </div>
           <div className="flex text-white">
-            <p className="min-w-44 font-semibold text-3xl tracking-wider">
-              $ {showBalance ? currentUser.balance : `●●●●.●●`}
-            </p>
+            <span className="min-w-44 font-semibold text-3xl tracking-wider">
+              {isLoadingBalance ? (
+                <LoadingDots />
+              ) : (
+                `$ ${showBalance ? balance : `●●●●.●●`}`
+              )}
+            </span>
             <button onClick={() => setShowBalance(show => !show)}>
               {showBalance ? (
                 <HiOutlineEye className="w-6 h-6" />

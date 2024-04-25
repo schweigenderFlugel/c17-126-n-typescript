@@ -9,7 +9,7 @@ import { setSession } from '../Services/user';
 import { useLocalStorage } from './useLocalStorage';
 import { useRefresh } from '../Hooks/useRefresh';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { IUser } from '../Interfaces/interfaces';
+import { IUser, IUserBalance } from '../Interfaces/interfaces';
 
 interface AuthContextInterface {
   accessToken: string | null;
@@ -20,6 +20,8 @@ interface AuthContextInterface {
   setLoading: Dispatch<SetStateAction<boolean>>;
   darkMode: boolean;
   toggleDarkMode: Dispatch<SetStateAction<void>>;
+  userBalance: IUserBalance | null;
+  setUserBalance: Dispatch<SetStateAction<IUserBalance | null>>;
 }
 
 interface AuthProviderProps {
@@ -35,14 +37,17 @@ const defaultValues = {
   setLoading: () => {},
   darkMode: false,
   toggleDarkMode: () => {},
+  userBalance: null,
+  setUserBalance: () => {},
 } as AuthContextInterface;
 
 export const AuthContext = createContext<AuthContextInterface>(defaultValues);
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [ accessToken, setAccessToken ] = useState<string | null>(null);
-  const [ userData, setUserData ] = useState<IUser | null>(null);
-  const [ loading, setLoading ] = useState<boolean>(false);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [userData, setUserData] = useState<IUser | null>(null);
+  const [userBalance, setUserBalance] = useState<IUserBalance | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
   const { darkMode, toggleDarkMode } = useLocalStorage();
   const navigate = useNavigate();
   const location = useLocation();
@@ -52,7 +57,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   setSession(accessToken);
 
   useRefresh({
-    onSuccess: () => navigate(from,  { replace: true }),
+    onSuccess: () => navigate(from, { replace: true }),
     setToken: (token: string | null) => setAccessToken(token),
   });
 
@@ -62,6 +67,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         accessToken,
         setAccessToken,
         userData,
+        userBalance,
+        setUserBalance,
         setUserData,
         loading,
         setLoading,

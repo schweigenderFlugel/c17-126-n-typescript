@@ -1,11 +1,11 @@
 export interface ILoginPayload {
-  email: string
-  password: string
+  email: string;
+  password: string;
 }
 
 export interface ISignUpPayload {
-  email: string
-  password: string
+  email: string;
+  password: string;
 }
 
 export interface ICreateUserPayload {
@@ -27,7 +27,16 @@ export interface IUser {
   phone: string;
   auth: {
     email: string;
-  }
+  };
+}
+
+export interface IUserBalance {
+  accountFound: {
+    id: number;
+    user_id: number;
+    number_account: string;
+    balance: number;
+  };
 }
 
 export interface UserSettingsType {
@@ -37,7 +46,7 @@ export interface UserSettingsType {
   accountType: string;
   alias: string;
   maxAmountTransfer: number;
-};
+}
 
 export interface ITypeTransfer {
   name: string;
@@ -54,6 +63,4 @@ export interface ITransactions {
   status: string;
 }
 
-export interface ICreateTransaction {
-  
-}
+export interface ICreateTransaction {}
