@@ -19,14 +19,29 @@ const initialValue: DepositFormType = {
 };
 
 export const DepositForm = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [formValues, setFormValues] = useState<DepositFormType>(initialValue);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if (
+      !formValues.cardNumber ||
+      !formValues.cardName ||
+      !formValues.expirationDate ||
+      !formValues.CVV
+    ) {
+      return toast('Por favor, completa los datos de la tarjeta');
+    }
+    if (!formValues.quantity) {
+      return toast('Por favor, ingresa la cantidad a depositar');
+    }
+
     function deposit(): Promise<void> {
+      setIsLoading(true);
       return new Promise(resolve => {
         setTimeout(() => {
+          setIsLoading(false);
           resolve();
         }, 1000);
       });
@@ -53,7 +68,38 @@ export const DepositForm = () => {
     setFormValues({ ...formValues, [name]: value });
   };
 
-  const isLoading = false;
+  const handleCardNumberChange = ({ target }) => {
+    const input = target.value.replace(/\D/g, '');
+
+    let formattedInput = '';
+    for (let i = 0; i < input.length; i++) {
+      if (i % 4 === 0 && i > 0) {
+        formattedInput += ' ';
+      }
+      formattedInput += input[i];
+    }
+    setFormValues({ ...formValues, cardNumber: formattedInput });
+  };
+
+  const handleExpirationDateChange = ({ target }) => {
+    const input = target.value.replace(/\D/g, '');
+
+    // Agrega una barra ('/') después de ingresar dos digitos
+    let formattedInput = '';
+    for (let i = 0; i < input.length; i++) {
+      if (i % 2 === 0 && i > 0) {
+        formattedInput += ' / ';
+      }
+      formattedInput += input[i];
+    }
+
+    setFormValues({ ...formValues, expirationDate: formattedInput });
+  };
+
+  const handleCVVChange = ({ target }) => {
+    const input = target.value.replace(/\D/g, '');
+    setFormValues({ ...formValues, CVV: input });
+  };
 
   return (
     <div className="justify-items-center border-indigo-300 dark:border-indigo-500 grid bg-indigo-200 dark:bg-indigo-950 shadow-xl mx-6 p-12 max-sm:p-8 border rounded-2xl w-[450px]">
@@ -88,9 +134,10 @@ export const DepositForm = () => {
             type="text"
             id="cardNumber"
             name="cardNumber"
+            maxLength={19}
             value={formValues.cardNumber}
-            onChange={handleChange}
-            className="border-indigo-400 focus:border-indigo-600 focus:dark:border-indigo-500 focus:outline-none dark:border-white bg-transparent px-2 py-4 pl-8 border rounded-md w-full h-8 text-black text-sm dark:text-white"
+            onChange={handleCardNumberChange}
+            className="border-indigo-400 focus:border-indigo-600 focus:dark:border-indigo-500 focus:outline-none dark:border-white bg-transparent px-2 py-4 pl-8 border rounded-md w-full h-8 text-black text-sm dark:text-white tracking-widest"
           />
         </div>
         <div className="flex gap-8 mb-2">
@@ -103,19 +150,20 @@ export const DepositForm = () => {
             </label>
             <div className="flex justify-between items-center">
               <input
+                maxLength={7}
                 type="text"
                 placeholder="MM / YY"
                 id="expirationDate"
                 name="expirationDate"
                 value={formValues.expirationDate}
-                onChange={handleChange}
+                onChange={handleExpirationDateChange}
                 className="border-indigo-400 focus:border-indigo-600 focus:dark:border-indigo-500 focus:outline-none dark:border-white bg-transparent px-2 py-4 border rounded-md w-full h-8 text-black text-sm dark:text-white"
               />
             </div>
           </div>
           <div>
             <label
-              htmlFor="expirationDate"
+              htmlFor="CVV"
               className="w-full text-gray-900 text-sm dark:text-white"
             >
               CVV
@@ -123,11 +171,12 @@ export const DepositForm = () => {
             <div className="flex justify-between items-center">
               <input
                 type="text"
-                id="expirationDate"
-                name="expirationDate"
-                value={formValues.expirationDate}
-                onChange={handleChange}
-                className="border-indigo-400 focus:border-indigo-600 focus:dark:border-indigo-500 focus:outline-none dark:border-white bg-transparent px-2 py-4 border rounded-md w-full h-8 text-black text-sm dark:text-white"
+                id="CVV"
+                name="CVV"
+                maxLength={3}
+                value={formValues.CVV}
+                onChange={handleCVVChange}
+                className="border-indigo-400 focus:border-indigo-600 focus:dark:border-indigo-500 focus:outline-none dark:border-white bg-transparent px-2 py-4 border rounded-md w-full h-8 text-black text-sm dark:text-white tracking-widest"
               />
             </div>
           </div>
