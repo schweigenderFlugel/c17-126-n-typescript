@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AxiosError } from 'axios';
 import toast from 'react-hot-toast';
@@ -7,12 +7,16 @@ import { useLogin } from '../Hooks/useLogin';
 import { AuthFormContainer } from '../Components/AuthFormContainer';
 import { AuthFormRow } from '../Components/AuthFormRow';
 import { ButtonAuthForm } from '../Components/ButtonAuthForm';
+import { useAuth } from '../Hooks/useAuth';
 
 export const Login = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
+
   const navigate = useNavigate();
+
+  const { accessToken } = useAuth();
 
   const onLoginError = (serverError: AxiosError) => {
     let error: string;
@@ -25,7 +29,7 @@ export const Login = () => {
     }
     toast.error(error);
   };
-  
+
   const { setLogin, loading } = useLogin({
     onSuccess: () => {
       navigate('/dashboard', { replace: true });
@@ -43,6 +47,10 @@ export const Login = () => {
 
   const passwordInputType = showPassword ? 'text' : 'password';
 
+  useEffect(() => {
+    if (accessToken) navigate('/dashboard', { replace: true });
+  }, [accessToken, navigate]);
+
   return (
     <>
       <AuthFormContainer subtitle="¡Nos alegra tenerte de vuelta!">
@@ -57,6 +65,7 @@ export const Login = () => {
               name="email"
               autoComplete="email"
               required
+              disable={loading}
             />
             <AuthFormRow
               onChange={e => setPassword(e.target.value)}
@@ -71,6 +80,7 @@ export const Login = () => {
               }
               required
               showPassword={showPassword}
+              disable={loading}
             />
           </div>
           <div className="flex justify-end mt-2 mb-4 w-full">

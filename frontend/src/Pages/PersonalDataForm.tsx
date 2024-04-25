@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AxiosError } from 'axios';
 import { toast } from 'react-hot-toast';
@@ -9,6 +9,7 @@ import { ButtonAuthForm } from '../Components/ButtonAuthForm';
 import { ICreateUserPayload } from '../Interfaces/interfaces';
 import { AuthFormSelect } from '../Components/AuthFormSelect';
 import { createUser } from '../Services/user';
+import { useAuth } from '../Hooks/useAuth';
 
 const initialValue: ICreateUserPayload = {
   name: '',
@@ -22,33 +23,49 @@ const initialValue: ICreateUserPayload = {
 export const PersonalDataForm = () => {
   const [formValues, setFormValues] =
     useState<ICreateUserPayload>(initialValue);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { accessToken } = useAuth();
 
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      createUser(formValues);
-      navigate('/dashboard', { replace: true })
+      setIsLoading(true);
+      await createUser(formValues);
+
+      navigate('/dashboard', { replace: true });
     } catch (serverError) {
-      let errorMessage: string;
-      if (serverError instanceof AxiosError && serverError.message) {
-        errorMessage = serverError.message;
+      console.log(serverError);
+      if (
+        serverError instanceof AxiosError &&
+        !!serverError.response?.data.length
+      ) {
+        serverError.response?.data.forEach(error => {
+          toast.error(`Error en el campo "${error.path}": ${error.message}`);
+        });
+      } else if (serverError instanceof AxiosError && serverError.message) {
+        toast.error(serverError.message);
       } else {
-        errorMessage = 'Error desconocido';
+        toast.error('Error desconocido');
       }
-      toast.error(errorMessage);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleChange = ({
     target: { name, value },
-  }: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement> ) => {
+  }:
+    | React.ChangeEvent<HTMLInputElement>
+    | React.ChangeEvent<HTMLSelectElement>) => {
     setFormValues({ ...formValues, [name]: value });
   };
 
-  //🔴[TODO]:Reemplazar por el del hook
-  const isLoading = false;
+  useEffect(() => {
+    if (!accessToken) navigate('/login', { replace: true });
+  }, [accessToken, navigate]);
 
   return (
     <AuthFormContainer subtitle="¡Un último paso!">
@@ -77,13 +94,17 @@ export const PersonalDataForm = () => {
           <AuthFormSelect
             key="accountType"
             name="accountType"
-            label='Tipo de cuenta'
+            label="Tipo de cuenta"
             onChange={handleChange}
             value={formValues.accountType}
             options={[
-              { value: initialValue.accountType, label: 'Seleccionar', disable: true },
-              { value: 'enterprise', label: 'Empresa', disable: false }, 
-              { value: 'personal', label: 'Personal', disable: false }
+              {
+                value: initialValue.accountType,
+                label: 'Seleccionar',
+                disable: true,
+              },
+              { value: 'enterprise', label: 'Empresa', disable: false },
+              { value: 'personal', label: 'Personal', disable: false },
             ]}
           />
           <AuthFormRow
@@ -131,5 +152,5 @@ export const PersonalDataForm = () => {
         </div>
       </form>
     </AuthFormContainer>
-  )
+  );
 };
