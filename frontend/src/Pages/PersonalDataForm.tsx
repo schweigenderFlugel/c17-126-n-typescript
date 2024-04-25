@@ -29,21 +29,29 @@ export const PersonalDataForm = () => {
     e.preventDefault();
     try {
       await createUser(formValues);
-      navigate('/dashboard', { replace: true })
+      navigate('/dashboard', { replace: true });
     } catch (serverError) {
-      let errorMessage: string;
-      if (serverError instanceof AxiosError && serverError.message) {
-        errorMessage = serverError.message;
+      console.log(serverError);
+      if (
+        serverError instanceof AxiosError &&
+        !!serverError.response?.data.length
+      ) {
+        serverError.response?.data.forEach(error => {
+          toast.error(`Error en el campo "${error.path}": ${error.message}`);
+        });
+      } else if (serverError instanceof AxiosError && serverError.message) {
+        toast.error(serverError.message);
       } else {
-        errorMessage = 'Error desconocido';
+        toast.error('Error desconocido');
       }
-      toast.error(errorMessage);
     }
   };
 
   const handleChange = ({
     target: { name, value },
-  }: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement> ) => {
+  }:
+    | React.ChangeEvent<HTMLInputElement>
+    | React.ChangeEvent<HTMLSelectElement>) => {
     setFormValues({ ...formValues, [name]: value });
   };
 
@@ -77,13 +85,17 @@ export const PersonalDataForm = () => {
           <AuthFormSelect
             key="accountType"
             name="accountType"
-            label='Tipo de cuenta'
+            label="Tipo de cuenta"
             onChange={handleChange}
             value={formValues.accountType}
             options={[
-              { value: initialValue.accountType, label: 'Seleccionar', disable: true },
-              { value: 'enterprise', label: 'Empresa', disable: false }, 
-              { value: 'personal', label: 'Personal', disable: false }
+              {
+                value: initialValue.accountType,
+                label: 'Seleccionar',
+                disable: true,
+              },
+              { value: 'enterprise', label: 'Empresa', disable: false },
+              { value: 'personal', label: 'Personal', disable: false },
             ]}
           />
           <AuthFormRow
@@ -131,5 +143,5 @@ export const PersonalDataForm = () => {
         </div>
       </form>
     </AuthFormContainer>
-  )
+  );
 };
