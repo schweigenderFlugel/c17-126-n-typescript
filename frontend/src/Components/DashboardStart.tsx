@@ -12,7 +12,7 @@ export const DashboardStart = () => {
       <DashboardNavbar>Inicio</DashboardNavbar>
       <BalanceCard user={userData}/>
       <WalletCard />
-      <LastTransfersTable />
+      <LastTransfersTable bank_account={userData?.bank_account} />
     </main>
   );
 };

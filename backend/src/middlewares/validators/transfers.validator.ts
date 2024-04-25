@@ -3,7 +3,7 @@ import { TYPETRANSFERS } from '../../config/constants'
 
 export const createTransfer = z.object({
   source_account: z.number().positive().int(),
-  destination_account: z
+  destination_alias: z
     .string()
     .trim()
     .min(1, 'Destination account is required'),

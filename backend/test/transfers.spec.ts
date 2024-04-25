@@ -7,7 +7,8 @@ import { sequelize } from '../src/models/db/database.manager';
 import { upSeed } from './utils/umzug';
 import { adminUserToken, normalUserToken } from '../src/models/db/seeders/1-auth';
 import { bankAccount1, bankAccount2 } from '../src/models/db/seeders/3-bank-account';
-import { typeTransfer1 } from '../src/models/db/seeders/5-type-transfer';
+import { adminUser, normalUser } from '../src/models/db/seeders/2-user';
+import { TYPETRANSFERS } from '../src/config/constants';
 
 describe('Testing the auth route', () => {
   let app;
@@ -30,9 +31,9 @@ describe('Testing the auth route', () => {
     it('Should not be allowed to create a transfer being an admin user', async () => {
       const data = {
         source_account: bankAccount1.id,
-        destination_account: bankAccount2.id,
+        destination_alias: normalUser.alias,
         amount: 10,
-        type: typeTransfer1.name,
+        type: TYPETRANSFERS.CREDIT,
       }
       const { statusCode } = await api.post('/api/v1/transfer')
         .auth(adminUserToken, { type: 'bearer' })
@@ -41,50 +42,63 @@ describe('Testing the auth route', () => {
     })
 
     it('Should not make a tranfer from an unexisting source account', async () => {
-        const data = {
-          source_account: 999,
-          destination_account: bankAccount1.id,
-          amount: 10,
-          type: typeTransfer1.name,
-        }
-        const { statusCode } = await api.post('/api/v1/transfer')
-          .auth(normalUserToken, { type: 'bearer' })
-          .send(data); 
-          expect(statusCode).toBe(404); 
-      })
+      const data = {
+        source_account: 999,
+        destination_alias: adminUser.alias,
+        amount: 10,
+        type: TYPETRANSFERS.CREDIT,
+      }
+      const { statusCode } = await api.post('/api/v1/transfer')
+        .auth(normalUserToken, { type: 'bearer' })
+        .send(data); 
+      expect(statusCode).toBe(404); 
+    })
 
-      it('Should not make a tranfer from an unexisting destination account', async () => {
-        const data = {
-          source_account: bankAccount1.id,
-          destination_account: 998,
-          amount: 10,
-          type: typeTransfer1.name,
-        }
-        const { statusCode } = await api.post('/api/v1/transfer')
-          .auth(normalUserToken, { type: 'bearer' })
-          .send(data); 
-          expect(statusCode).toBe(404); 
-      })
+    it('Should not make a tranfer because the token does not match with the user auth', async () => {
+      const data = {
+        source_account: bankAccount1.id,
+        destination_alias: normalUser.alias,
+        amount: 10,
+        type: TYPETRANSFERS.CREDIT,
+      }
+      const { statusCode } = await api.post('/api/v1/transfer')
+        .auth(normalUserToken, { type: 'bearer' })
+        .send(data); 
+      expect(statusCode).toBe(401); 
+    })
 
-      it('Should not be allowed to create because there is not enough funds', async () => {
-        const data = {
-          source_account: bankAccount1.id,
-          destination_account: bankAccount2.id,
-          amount: 10,
-          type: typeTransfer1.name,
-        }
-        const { statusCode } = await api.post('/api/v1/transfer')
-          .auth(normalUserToken, { type: 'bearer' })
-          .send(data); 
-          expect(statusCode).toBe(401); 
-      })
+    it('Should not make a tranfer from an unexisting destination account', async () => {
+      const data = {
+        source_account: bankAccount2.id,
+        destination_alias: 'no.one',
+        amount: 10,
+        type: TYPETRANSFERS.CREDIT,
+      }
+      const { statusCode } = await api.post('/api/v1/transfer')
+        .auth(normalUserToken, { type: 'bearer' })
+        .send(data); 
+      expect(statusCode).toBe(404); 
+    })
+
+    it('Should not be allowed to create because there is not enough funds', async () => {
+      const data = {
+        source_account: bankAccount1.id,
+        destination_alias: normalUser.alias,
+        amount: 10,
+        type: TYPETRANSFERS.CREDIT,
+      }
+      const { statusCode } = await api.post('/api/v1/transfer')
+        .auth(normalUserToken, { type: 'bearer' })
+        .send(data); 
+        expect(statusCode).toBe(401); 
+    })
 
     it('Should be allowed to create a transfer', async () => {
       const data = {
         source_account: bankAccount2.id,
-        destination_account: bankAccount1.id,
+        destination_alias: adminUser.alias,
         amount: 10,
-        type: typeTransfer1.name,
+        type: TYPETRANSFERS.CREDIT,
       }
       const { statusCode } = await api.post('/api/v1/transfer')
         .auth(normalUserToken, { type: 'bearer' })
@@ -96,5 +110,5 @@ describe('Testing the auth route', () => {
   afterAll(async () => {
     await sequelize.close()
     server.close()
-    })
+  })
 })

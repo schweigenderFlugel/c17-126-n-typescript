@@ -6,5 +6,8 @@ export interface IPreferences {
 }
 
 export interface IUserPreferenceData {
-  dataValues: { max_ammount_transfers: number }
+  dataValues: {
+    min_ammount_transfers: number;
+    max_ammount_transfers: number,
+  }
 }

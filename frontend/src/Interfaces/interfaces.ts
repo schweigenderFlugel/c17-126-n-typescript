@@ -17,6 +17,23 @@ export interface ICreateUserPayload {
   phone: string;
 }
 
+export interface ITransactions {
+  id: number;
+  source_account: number;
+  destination_account: number;
+  type_transfer_id: number;
+  amount: number;
+  date_transaction: Date;
+  status: string;
+  bank_account: {
+    number_account: string;
+    user: {
+      name: string;
+      lastname: string;
+    }
+  }
+}
+
 export interface IUser {
   id: number;
   name: string;
@@ -27,16 +44,18 @@ export interface IUser {
   phone: string;
   auth: {
     email: string;
-  },
-  preferences: {
+  };
+  preference: {
     min_ammount_transfers: number;
     max_ammount_transfers: number;
-  }
+  };
   bank_account: {
     id: number;
     number_account: string;
     balance: number;
-  } 
+    transactions_sent: ITransactions[];
+    transactions_received: ITransactions[];
+  };
 }
 
 export interface UserSettingsType {
@@ -54,19 +73,9 @@ export interface ITypeTransfer {
   description: string | null;
 }
 
-export interface ITransactions {
-  id: number;
-  source_account: number;
-  destination_account: number;
-  type_transfer_id: number;
-  amount: number;
-  date_transaction: Date;
-  status: string;
-}
-
 export interface ICreateTransaction {
-  source_account: string,
-  destination_account: string;
+  source_account: number,
+  destination_alias: string;
   amount: number;
   type: string;
 }

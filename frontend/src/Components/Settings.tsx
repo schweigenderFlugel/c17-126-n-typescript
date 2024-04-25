@@ -7,6 +7,11 @@ import { UserSettingsType } from '../Interfaces/interfaces';
 import { AxiosError } from 'axios';
 import toast from 'react-hot-toast';
 
+export enum TYPEACCOUNT {
+  ENTERPRISE = 'enterprise',
+  PERSONAL= 'personal',
+}
+
 export const Settings = () => {
   const { userData } = useAuth()
 
@@ -16,8 +21,8 @@ export const Settings = () => {
     alias: userData?.alias ?? 'juan.perez',
     phone: userData?.phone ?? '(000)-000-0000',
     address: userData?.address ?? 'Nowhere',
-    min_ammount_transfers: userData?.preferences.min_ammount_transfers ?? 10,
-    max_ammount_transfers: userData?.preferences.max_ammount_transfers ?? 1000,
+    min_ammount_transfers: userData?.preference.min_ammount_transfers ?? 10,
+    max_ammount_transfers: userData?.preference.max_ammount_transfers ?? 1000,
   };
 
   const [formValues, setFormValues] = useState<UserSettingsType>(user);
@@ -78,7 +83,10 @@ export const Settings = () => {
             name="accountType"
             label='Tipo de cuenta'
             onChange={handleChange}
-            value={userData?.accountType}
+            value={
+              userData?.accountType === TYPEACCOUNT.ENTERPRISE && 'Empresa' ||
+              userData?.accountType === TYPEACCOUNT.PERSONAL && 'Personal'
+            }
             disabled={true}
           />
           <FormRow

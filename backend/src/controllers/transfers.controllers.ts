@@ -18,16 +18,6 @@ export default class transfersController {
     try {
       const { source_account, destination_alias, amount, type } = req.body
 
-      const requestingUser = req.user as IUserToken
-
-      if (requestingUser.id !== source_account) {
-        throw new HttpError(
-          'You are not allowed to perform this action',
-          'You are not allowed to perform this action',
-          HTTP_STATUS.UNAUTHORIZED
-        )
-      }
-
       const sourceAccountFound =
         await bankAccountService.getBankAccountWithUserPreferences(
           source_account
@@ -40,8 +30,19 @@ export default class transfersController {
           HTTP_STATUS.NOT_FOUND
         )
       }
+
       const sourceAccountData: ISourceAccountData =
         sourceAccountFound.dataValues as ISourceAccountData
+
+        const requestingUser = req.user as IUserToken
+
+      if (requestingUser.id !== sourceAccountData.user.dataValues.auth.id) {
+        throw new HttpError(
+          'You are not allowed to perform this action',
+          'You are not allowed to perform this action',
+          HTTP_STATUS.UNAUTHORIZED
+        )
+      }
 
       const destinationAccountFound =
         await bankAccountService.getBankAccountByUserAlias(destination_alias)
@@ -59,17 +60,6 @@ export default class transfersController {
           'Insufficient funds',
           'Insufficient funds',
           HTTP_STATUS.UNAUTHORIZED
-        )
-      }
-
-      const typeTrnasferFound =
-        await typeTrnasfersService.getTypeTransfersByName(type)
-
-      if (!typeTrnasferFound) {
-        throw new HttpError(
-          'Type Transfer not found',
-          'Type Transfer not found',
-          HTTP_STATUS.NOT_FOUND
         )
       }
 

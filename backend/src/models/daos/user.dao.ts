@@ -1,7 +1,9 @@
 import { Model } from 'sequelize'
-import { User } from '../db'
+import { Auth, User } from '../db'
 import { ICreateUser, IUpdateUser, IUser } from '../../interfaces/user.interface'
 import { UserModel } from '../db/entity/user.entity'
+import { BankAccount } from '../db/entity/bank-account.entity'
+import { Preferences } from '../db/entity/preference.entity'
 
 export default class userDao {
   private static instance: userDao | null = null
@@ -74,7 +76,42 @@ export default class userDao {
       where: {
         authId: authId,
       },
-      include: ['auth', 'preferences', 'bank_account']
+      include: [
+        {
+          model: Auth,
+          attributes: ['email']
+        },
+        {
+          model: Preferences,
+          attributes: ['max_ammount_transfers', 'min_ammount_transfers']
+        },
+        {
+          model: BankAccount,
+          include: [{
+            association: 'transactions_sent', 
+            include: [{
+              model: BankAccount,
+              attributes: ['number_account'],
+              include: [{
+                model: User,
+                attributes: ['name', 'lastname']
+              }]
+            }]
+          },
+          {
+            association: 'transactions_received',
+            include: [{
+              model: BankAccount,
+              attributes: ['number_account'],
+              include: [{
+                model: User,
+                attributes: ['name', 'lastname']
+              }]
+            }]
+          }
+          ]
+        }
+       ]
     })
     return userFound;
   }

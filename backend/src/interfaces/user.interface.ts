@@ -1,3 +1,4 @@
+import { IUserAuthData } from './auth.interface'
 import { ICommon } from './common.interface'
 import { IUserPreferenceData } from './preference.interface'
 
@@ -14,7 +15,7 @@ export interface IUser extends ICommon {
 }
 
 export interface IUserData {
-  dataValues: { id: number; alias: string; preference: IUserPreferenceData }
+  dataValues: { id: number; alias: string; preference: IUserPreferenceData; auth: IUserAuthData  }
 }
 
 export interface IUpdateUser extends Omit<Omit<Omit<IUser, 'authId'>, 'createdAt'>, 'accountType'> {}

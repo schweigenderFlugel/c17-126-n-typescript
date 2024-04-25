@@ -11,6 +11,11 @@ import { AuthFormSelect } from '../Components/AuthFormSelect';
 import { createUser } from '../Services/user';
 import { useAuth } from '../Hooks/useAuth';
 
+export enum TYPEACCOUNT {
+  ENTERPRISE = 'enterprise',
+  PERSONAL= 'personal',
+}
+
 const initialValue: ICreateUserPayload = {
   name: '',
   lastname: '',
@@ -85,8 +90,8 @@ export const PersonalDataForm = () => {
             value={formValues.accountType}
             options={[
               { value: initialValue.accountType, label: 'Seleccionar', disable: true },
-              { value: 'enterprise', label: 'Empresa', disable: false }, 
-              { value: 'personal', label: 'Personal', disable: false }
+              { value: TYPEACCOUNT.ENTERPRISE, label: 'Empresa', disable: false }, 
+              { value: TYPEACCOUNT.PERSONAL, label: 'Personal', disable: false }
             ]}
           />
           <AuthFormRow

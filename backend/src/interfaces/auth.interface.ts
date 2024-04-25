@@ -11,3 +11,5 @@ export interface IAuth extends ICommon {
 export interface ISign extends Omit<Omit<Omit<Omit<Omit<Omit<IAuth, 'id'>, 'createdAt'>, 'updatedAt'>, 'role'>, 'refreshToken'>, 'status'> {}
 
 export interface IUpdateAuth extends Omit<Omit<IAuth, 'id'>, 'createdAt'> {}
+
+export interface IUserAuthData { id: number } 

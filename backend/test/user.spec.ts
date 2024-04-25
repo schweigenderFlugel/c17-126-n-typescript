@@ -42,13 +42,13 @@ describe('Testing the user route', () => {
       expect(body.address).toMatch(adminUser.address);
       expect(body.phone).toMatch(adminUser.phone);
       expect(body.auth.email).toMatch(adminAuth.email);
-      expect(body.preferences.min_ammount_transfers).toEqual(preference1.min_ammount_transfers);
-      expect(body.preferences.max_ammount_transfers).toEqual(preference1.max_ammount_transfers);
+      expect(body.preference.min_ammount_transfers).toEqual(preference1.min_ammount_transfers);
+      expect(body.preference.max_ammount_transfers).toEqual(preference1.max_ammount_transfers);
       expect(body.bank_account.number_account).toMatch(bankAccount1.number_account);
       expect(body.bank_account.balance).toEqual(bankAccount1.balance);
     })
 
-    it('Should get the normal user', async () => {
+    it.only('Should get the normal user', async () => {
       const { statusCode, body } = await api.get('/api/v1/user').auth(normalUserToken, { type: 'bearer' });
       expect(statusCode).toBe(200);
       expect(body.name).toMatch(normalUser.name);
@@ -57,10 +57,19 @@ describe('Testing the user route', () => {
       expect(body.address).toMatch(normalUser.address);
       expect(body.phone).toMatch(normalUser.phone);
       expect(body.auth.email).toMatch(normalAuth.email);
-      expect(body.preferences.min_ammount_transfers).toEqual(preference2.min_ammount_transfers);
-      expect(body.preferences.max_ammount_transfers).toEqual(preference2.max_ammount_transfers);
+      expect(body.preference.min_ammount_transfers).toEqual(preference2.min_ammount_transfers);
+      expect(body.preference.max_ammount_transfers).toEqual(preference2.max_ammount_transfers);
       expect(body.bank_account.number_account).toMatch(bankAccount2.number_account);
       expect(body.bank_account.balance).toEqual(bankAccount2.balance);
+      expect(body.bank_account.transactions_sent).toBeInstanceOf(Array);
+      expect(body.bank_account.transactions_received).toBeInstanceOf(Array);
+      body.bank_account.transactions_received.forEach((transaction: any) => {
+        expect(transaction.bank_account.user.name).toMatch(normalUser.name)
+        expect(transaction.bank_account.user.lastname).toMatch(normalUser.lastname)
+      });
+      body.bank_account.transactions_sent.forEach((transaction: any) => {
+        expect(transaction.bank_account.user.name).toMatch(adminUser.name)
+      });
     })
   })
 

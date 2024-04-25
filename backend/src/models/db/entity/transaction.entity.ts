@@ -2,12 +2,13 @@ import { DataTypes, Model } from 'sequelize'
 import { sequelize } from '../database.manager'
 import { TRANSACTION_STATUS, TYPETRANSFERS } from '../../../config/constants'
 import { ITransaction } from '../../../interfaces/transaction.interface'
+import { BankAccount } from './bank-account.entity'
 
 const { INTEGER, ENUM } = DataTypes
 
 export interface TransactionModel extends Model<ITransaction>, ITransaction {}
 
-const Transaction = sequelize.define<TransactionModel>('Transaction', {
+const Transaction = sequelize.define<TransactionModel>('transaction', {
   id: {
     type: INTEGER,
     autoIncrement: true,
@@ -16,10 +17,22 @@ const Transaction = sequelize.define<TransactionModel>('Transaction', {
   source_account: {
     type: INTEGER,
     allowNull: false,
+    references: {
+      model: BankAccount.getTableName(),
+      key: 'id',
+    },
+    onUpdate: 'CASCADE',
+    onDelete: 'SET NULL'
   },
   destination_account: {
     type: INTEGER,
     allowNull: false,
+    references: {
+      model: BankAccount.getTableName(),
+      key: 'id',
+    },
+    onUpdate: 'CASCADE',
+    onDelete: 'SET NULL'
   },
   type_transfer: {
     type: ENUM,
@@ -42,7 +55,7 @@ const Transaction = sequelize.define<TransactionModel>('Transaction', {
   },
 }, 
 { 
-  timestamps: false 
+  timestamps: false,
 })
 
 export { Transaction }

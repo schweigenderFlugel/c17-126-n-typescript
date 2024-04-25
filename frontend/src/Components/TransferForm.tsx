@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useAuth } from '../Hooks/useAuth';
 import { TransferTypeSelect } from './TransferTypeSelect';
+import { createTransaction } from '../Services/transfers';
+import { ICreateTransaction } from '../Interfaces/interfaces';
 
 export enum TYPETRANSFERS {
   INMEDIATE = 'inmediate',
@@ -10,27 +12,26 @@ export enum TYPETRANSFERS {
   DEBIT = 'debit',
 }
 
-type FormPersonalDataType = {
-  account: number;
-  alias: string;
-  quantity: string;
-  type: TYPETRANSFERS
-};
-
 export const TransferForm = () => {
   const { userData } = useAuth();
 
-  const initialValue: FormPersonalDataType = {
-    account: userData?.bank_account.id ?? 0,
-    alias: '',
-    quantity: '',
+  const initialValue: ICreateTransaction = {
+    source_account: userData?.bank_account.id ?? 0,
+    destination_alias: '',
+    amount: 0,
     type: TYPETRANSFERS.DEFERRED,
   };
 
-  const [formValues, setFormValues] = useState<FormPersonalDataType>(initialValue);
+  const [formValues, setFormValues] = useState<ICreateTransaction>(initialValue);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    try {
+      formValues.amount = parseInt(formValues.amount as unknown as string);
+      createTransaction(formValues)
+    } catch (error) {
+      
+    }
 
     function transfer(): Promise<void> {
       return new Promise(resolve => {
@@ -75,9 +76,9 @@ export const TransferForm = () => {
         <div className="relative flex justify-between items-center">
           <input
             type="text"
-            id="alias"
-            name="alias"
-            value={formValues.alias}
+            id="destination_alias"
+            name="destination_alias"
+            value={formValues.destination_alias}
             onChange={handleChange}
             className="border-indigo-400 focus:border-indigo-600 focus:dark:border-indigo-500 focus:outline-none dark:border-white bg-transparent px-2 py-4 border rounded-md w-full h-8 text-black text-sm dark:text-white"
           />
@@ -105,9 +106,9 @@ export const TransferForm = () => {
           <input
             placeholder="$"
             type="number"
-            id="quantity"
-            name="quantity"
-            value={formValues.quantity}
+            id="amount"
+            name="amount"
+            value={formValues.amount}
             onChange={handleChange}
             className="border-indigo-400 focus:border-indigo-600 focus:dark:border-indigo-500 focus:outline-none dark:border-white bg-transparent px-2 py-4 border rounded-md w-full h-8 text-black text-sm dark:text-white"
           />

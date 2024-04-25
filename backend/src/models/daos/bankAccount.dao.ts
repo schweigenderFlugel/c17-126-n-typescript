@@ -6,6 +6,7 @@ import {
 import { BankAccount, BankAccountModel } from '../db/entity/bank-account.entity'
 import { Preferences } from '../db/entity/preference.entity'
 import { User } from '../db/entity/user.entity'
+import { Auth } from '../db'
 
 export default class bankAccountDao {
   private static intance: bankAccountDao | null = null
@@ -72,12 +73,14 @@ export default class bankAccountDao {
           attributes: ['alias', 'id'],
           include: [
             {
-              model: Preferences,
-              attributes: ['max_ammount_transfers'],
+              model: Auth,
+              attributes: ['id'],
             },
-          ],
-        },
-      ],
+            {
+              model: Preferences,
+              attributes: ['max_ammount_transfers', 'min_ammount_transfers'],
+          },]
+        }],
     })
     return bankAccountFound as Model<Omit<IBankAccount, 'expenses'>>
   }
@@ -96,12 +99,6 @@ export default class bankAccountDao {
           model: User,
           where: { alias: userAlias },
           attributes: ['alias', 'id'],
-          include: [
-            {
-              model: Preferences,
-              attributes: ['max_ammount_transfers'],
-            },
-          ],
         },
       ],
     })
