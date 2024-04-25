@@ -30,7 +30,7 @@ export const Login = () => {
     toast.error(error);
   };
 
-  const { setLogin, loading } = useLogin({
+  const { setLogin, isLoading } = useLogin({
     onSuccess: () => {
       navigate('/dashboard', { replace: true });
       toast('Bienvenido', {
@@ -65,7 +65,7 @@ export const Login = () => {
               name="email"
               autoComplete="email"
               required
-              disable={loading}
+              disable={isLoading}
             />
             <AuthFormRow
               onChange={e => setPassword(e.target.value)}
@@ -80,7 +80,7 @@ export const Login = () => {
               }
               required
               showPassword={showPassword}
-              disable={loading}
+              disable={isLoading}
             />
           </div>
           <div className="flex justify-end mt-2 mb-4 w-full">
@@ -95,7 +95,7 @@ export const Login = () => {
             <ButtonAuthForm
               label="Ingresar"
               disabled={email.length < 6 || password.length < 6}
-              isLoading={loading}
+              isLoading={isLoading}
             />
           </div>
         </form>
