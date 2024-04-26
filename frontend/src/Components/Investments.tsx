@@ -1,4 +1,4 @@
-import { Card, SparkAreaChart, TableRow } from '@tremor/react';
+import { Card, SparkAreaChart } from '@tremor/react';
 import { DashboardNavbar } from './DashboardNavbar';
 import { stocks } from '../data/stocks';
 import { InvestmentDonutChart } from './InvestmentDonutChart';
