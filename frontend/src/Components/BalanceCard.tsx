@@ -21,7 +21,7 @@ export const BalanceCard = ({
               <>
                 <p className="dark:text-white">Balance</p>
                 <p className="font-semibold text-3xl dark:text-white">
-                  $ {balance}
+                  $ {`${balance ? balance : 'error'}`}
                 </p>
               </>
             )}

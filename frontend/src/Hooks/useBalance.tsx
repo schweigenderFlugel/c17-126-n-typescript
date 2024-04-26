@@ -8,9 +8,14 @@ export const useBalance = () => {
 
   const startLoadingUserBalance = async () => {
     setIsLoading(true);
-    const userBalance = await getUserBalance();
-    setUserBalance(userBalance);
-    setIsLoading(false);
+    try {
+      const userBalance = await getUserBalance();
+      setUserBalance(userBalance);
+    } catch (error) {
+      console.error();
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {

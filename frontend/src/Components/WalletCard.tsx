@@ -20,7 +20,6 @@ export const WalletCard = ({
 
   const closeDepositModal = () => {
     setIsDepositModalOpen(false);
-    
   };
 
   const { userData } = useAuth();
@@ -69,7 +68,7 @@ export const WalletCard = ({
               {isLoadingBalance ? (
                 <LoadingDots />
               ) : (
-                `$ ${showBalance ? balance : `●●●●.●●`}`
+                `$ ${showBalance ? `${balance ? balance : 'error'}` : `●●●●.●●`}`
               )}
             </span>
             <button onClick={() => setShowBalance(show => !show)}>
