@@ -12,11 +12,11 @@ export const Settings = () => {
   const { userData } = useAuth()
 
   const user: UserSettingsType = {
-    email: userData?.auth.email ?? 'Juan Alberto',
-    name: userData?.name ?? 'Perez',
-    lastname: userData?.lastname ?? 'Personal',
-    accountType: userData?.accountType ?? 'juan.perez',
-    alias: userData?.alias ?? 'calle falsa 123',
+    email: userData?.auth.email ?? 'juanalberto@example.com',
+    name: userData?.name ?? 'Juan Alberto',
+    lastname: userData?.lastname ?? 'Perez',
+    accountType: userData?.accountType ?? 'personal',
+    alias: userData?.alias ?? 'juan.perez',
     maxAmountTransfer: 1000,
   };
 

@@ -30,12 +30,11 @@ export const FormSelect = ({
           name={name}
           id={name}
           value={value}
-          defaultValue="Seleccionar"
           className="border-indigo-500 focus:dark:border-indigo-400 dark:border-white/70 bg-transparent p-2 border rounded-lg w-full disabled:text-gray-400 dark:disabled:text-gray-400 disabled:cursor-not-allowed focus:outline-none dark:text-white"
           onChange={onChange}
         >
           {options.map(option => (
-            <option key={option.value} value={option.value} disabled={option.disable} className="dark:bg-black">{option.label}</option>
+            <option key={option.value} value={option.value} disabled={option.disable} className="dark:bg-indigo-950">{option.label}</option>
           ))}
         </select>
       </div>
