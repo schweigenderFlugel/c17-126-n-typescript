@@ -2,62 +2,62 @@ import { LineChart } from '@tremor/react';
 
 const chartdata = [
   {
-    date: 'Jan 22',
+    date: 'May 23',
     Gastos: 2890,
     Balance: 2338,
   },
   {
-    date: 'Feb 22',
+    date: 'Jun 23',
     Gastos: 2756,
     Balance: 2103,
   },
   {
-    date: 'Mar 22',
-    Gastos: 3322,
+    date: 'Jul 23',
+    Gastos: 3323,
     Balance: 2194,
   },
   {
-    date: 'Apr 22',
+    date: 'Ago 23',
     Gastos: 3470,
     Balance: 2108,
   },
   {
-    date: 'May 22',
+    date: 'Sep 23',
     Gastos: 3475,
     Balance: 1812,
   },
   {
-    date: 'Jun 22',
+    date: 'Oct 23',
     Gastos: 3129,
     Balance: 1726,
   },
   {
-    date: 'Jul 22',
+    date: 'Nov 23',
     Gastos: 3490,
     Balance: 1982,
   },
   {
-    date: 'Aug 22',
+    date: 'Dic 23',
     Gastos: 2903,
     Balance: 2012,
   },
   {
-    date: 'Sep 22',
+    date: 'Ene 23',
     Gastos: 2643,
     Balance: 2342,
   },
   {
-    date: 'Oct 22',
+    date: 'Feb 23',
     Gastos: 2837,
     Balance: 2473,
   },
   {
-    date: 'Nov 22',
+    date: 'Mar 23',
     Gastos: 2954,
     Balance: 3848,
   },
   {
-    date: 'Dec 22',
+    date: 'Abr 24',
     Gastos: 3239,
     Balance: 3736,
   },
@@ -69,7 +69,7 @@ const dataFormatter = number =>
 export function HistoryGraph() {
   return (
     <LineChart
-      className="h-60"
+      className="h-52"
       data={chartdata}
       index="date"
       categories={['Balance', 'Gastos']}

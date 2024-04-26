@@ -12,7 +12,7 @@ const transactions = [
       lastName: 'Rodriguez',
     },
     amount: '1000',
-    dateTransaction: '22 de Abril - 17:12 hs',
+    dateTransaction: '22 Abr - 17:12',
   },
   {
     destinationAccount: {
@@ -26,7 +26,7 @@ const transactions = [
       lastName: 'Gonzalez',
     },
     amount: '500',
-    dateTransaction: '23 de Abril - 10:30 hs',
+    dateTransaction: '23 Abr - 10:30',
   },
   {
     destinationAccount: {
@@ -40,14 +40,14 @@ const transactions = [
       lastName: 'Perez',
     },
     amount: '750',
-    dateTransaction: '24 de Abril - 15:45 hs',
+    dateTransaction: '24 Abr - 15:45',
   },
 ];
 
 export const LastTransfersTable = () => {
   return (
-    <section className="col-span-12 row-span-6 dark:text-white">
-      <h2 className="font-bold">Últimas transferencias</h2>
+    <section className="max-[600px]:hidden col-span-12 row-span-6 mt-2 dark:text-white">
+      <h2 className="font-semibold text-2xl">Últimas transferencias</h2>
       {!transactions?.length ? (
         <p className="mx-auto mt-8 text-2xl">No se encontraron transacciones</p>
       ) : (

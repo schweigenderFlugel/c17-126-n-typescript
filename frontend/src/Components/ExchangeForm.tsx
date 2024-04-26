@@ -52,7 +52,7 @@ export const ExchangeForm = () => {
               </span>
             </span>
           </div>
-          <span className="right-[50%] bottom-[50%] absolute border-indigo-500 bg-indigo-950 p-1 border rounded-lg translate-x-[50%] translate-y-[50%]">
+          <span className="right-[50%] bottom-[50%] absolute border-indigo-500 bg-indigo-100 dark:bg-indigo-950 p-1 border rounded-lg translate-x-[50%] translate-y-[50%]">
             <HiArrowsUpDown className="w-6 h-6" />
           </span>
         </div>

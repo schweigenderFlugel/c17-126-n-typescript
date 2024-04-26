@@ -14,7 +14,7 @@ const transactions = [
       lastName: 'Rodriguez',
     },
     amount: '1000',
-    dateTransaction: '22 de Abril - 17:12 hs',
+    dateTransaction: '22 Abr - 17:12 hs',
   },
   {
     destinationAccount: {
@@ -28,7 +28,7 @@ const transactions = [
       lastName: 'Gonzalez',
     },
     amount: '500',
-    dateTransaction: '23 de Abril - 10:30 hs',
+    dateTransaction: '23 Abr - 10:30 hs',
   },
   {
     destinationAccount: {
@@ -42,7 +42,7 @@ const transactions = [
       lastName: 'Perez',
     },
     amount: '750',
-    dateTransaction: '24 de Abril - 15:45 hs',
+    dateTransaction: '24 Abr - 15:45 hs',
   },
   {
     destinationAccount: {
@@ -56,7 +56,7 @@ const transactions = [
       lastName: 'Perez',
     },
     amount: '1200',
-    dateTransaction: '25 de Abril - 09:20 hs',
+    dateTransaction: '25 Abr - 09:20 hs',
   },
   {
     destinationAccount: {
@@ -70,7 +70,7 @@ const transactions = [
       lastName: 'Hernandez',
     },
     amount: '850',
-    dateTransaction: '26 de Abril - 14:00 hs',
+    dateTransaction: '26 Abr - 14:00 hs',
   },
   {
     destinationAccount: {
@@ -84,7 +84,7 @@ const transactions = [
       lastName: 'Sanchez',
     },
     amount: '300',
-    dateTransaction: '27 de Abril - 11:55 hs',
+    dateTransaction: '27 Abr - 11:55 hs',
   },
   {
     destinationAccount: {
@@ -98,7 +98,7 @@ const transactions = [
       lastName: 'Perez',
     },
     amount: '2000',
-    dateTransaction: '28 de Abril - 16:30 hs',
+    dateTransaction: '28 Abr - 16:30 hs',
   },
   {
     destinationAccount: {
@@ -112,7 +112,7 @@ const transactions = [
       lastName: 'Diaz',
     },
     amount: '600',
-    dateTransaction: '29 de Abril - 08:45 hs',
+    dateTransaction: '29 Abr - 08:45 hs',
   },
   {
     destinationAccount: {
@@ -126,7 +126,7 @@ const transactions = [
       lastName: 'Perez',
     },
     amount: '3000',
-    dateTransaction: '30 de Abril - 12:20 hs',
+    dateTransaction: '30 Abr - 12:20 hs',
   },
   {
     destinationAccount: {
@@ -140,7 +140,7 @@ const transactions = [
       lastName: 'Perez',
     },
     amount: '1200',
-    dateTransaction: '25 de Abril - 09:20 hs',
+    dateTransaction: '25 Abr - 09:20 hs',
   },
 ];
 

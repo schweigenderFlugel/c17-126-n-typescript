@@ -19,7 +19,7 @@ export const Logo = ({
           height="47"
           viewBox="0 0 41 47"
           fill="none"
-          className={`max-sm:h-9 max-sm:w-9 ${small ? 'h-9 w-9' : extraSmall ? 'h-8 w-8' : ''} ${classNameIcon}`}
+          className={` max-sm:h-9 max-sm:w-9 ${small ? 'h-9 w-9' : extraSmall ? 'h-8 w-8 max-sm:w-8 max-sm:h-8' : ''} ${classNameIcon}`}
         >
           <path
             d="M20.45 4.57L28.26 9.08L32.22 6.8L20.45 0L0.790039 11.36L4.73004 13.64L20.45 4.57Z"
@@ -48,7 +48,7 @@ export const Logo = ({
         </svg>
       </div>
       <span
-        className={`font-extrabold align-middle max-sm:text-4xl ${small ? 'text-4xl' : extraSmall ? 'text-3xl' : 'text-5xl'}`}
+        className={`font-extrabold align-middle max-sm:text-4xl ${small ? 'text-4xl' : extraSmall ? 'text-3xl max-sm:text-[26px]' : 'text-5xl'}`}
       >
         Bank<span className="text-indigo-500">me.</span>
       </span>

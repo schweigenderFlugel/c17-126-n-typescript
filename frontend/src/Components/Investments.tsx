@@ -120,25 +120,33 @@ export const Investments = () => {
               Últimos movimientos
             </h4>
 
-            <div className='flex flex-col justify-between border-indigo-300 dark:border-indigo-600 dark:border-2 bg-indigo-100 dark:bg-indigo-950 shadow-lg p-4 border rounded-xl dark:text-white">'>
-              <div className="flex justify-between text-white">
+            <div className="flex flex-col justify-between border-indigo-300 dark:border-indigo-600 dark:border-2 bg-indigo-100 dark:bg-indigo-950 shadow-lg p-4 border rounded-xl font-medium dark:text-white">
+              <div className="flex justify-between dark:text-white">
                 <span>ETH - Ethereum</span>
-                <span className="text-emerald-500">+0.5 ETH</span>
+                <span className="text-emerald-500 dark:text-emerald-400">
+                  +0.5 ETH
+                </span>
               </div>
               <div className="bg-indigo-600 my-4 w-full h-[1px]"></div>
-              <div className="flex justify-between text-white">
+              <div className="flex justify-between dark:text-white">
                 <span>BTC - Bitcoin</span>
-                <span className="text-emerald-500">+0.02 BTC</span>
+                <span className="text-emerald-500 dark:text-emerald-400">
+                  +0.02 BTC
+                </span>
               </div>
               <div className="bg-indigo-600 my-4 w-full h-[1px]"></div>
-              <div className="flex justify-between text-white">
+              <div className="flex justify-between dark:text-white">
                 <span>USDT - Tether </span>
-                <span className="text-emerald-500">+200 USDT</span>
+                <span className="text-emerald-500 dark:text-emerald-400">
+                  +200 USDT
+                </span>
               </div>
               <div className="bg-indigo-600 my-4 w-full h-[1px]"></div>
-              <div className="flex justify-between text-white">
+              <div className="flex justify-between dark:text-white">
                 <span>XRP </span>
-                <span className="text-emerald-500">+1.5 XRP</span>
+                <span className="text-emerald-500 dark:text-emerald-400">
+                  +1.5 XRP
+                </span>
               </div>
             </div>
           </div>

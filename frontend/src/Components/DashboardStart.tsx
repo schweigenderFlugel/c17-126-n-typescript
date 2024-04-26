@@ -8,7 +8,7 @@ export const DashboardStart = () => {
   const { isLoading: isLoadingBalance, userBalance } = useBalance();
 
   return (
-    <main className="gap-x-8 grid grid-col-[2fr_1fr] bg-transparent w-full h-full">
+    <main className="max-[600px]:flex max-[600px]:flex-col gap-x-8 max-xl:gap-x-4 grid grid-cols-[2fr_1fr] bg-transparent w-full h-full">
       <DashboardNavbar>Inicio</DashboardNavbar>
       <BalanceCard
         balance={userBalance?.accountFound.balance}

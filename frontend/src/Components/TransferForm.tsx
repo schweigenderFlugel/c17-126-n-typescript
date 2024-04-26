@@ -72,7 +72,7 @@ export const TransferForm = ({ onClose }) => {
   };
 
   return (
-    <div className="justify-items-center border-indigo-300 dark:border-indigo-500 grid bg-indigo-200 dark:bg-indigo-950 shadow-xl mx-6 p-12 max-sm:p-8 border rounded-2xl w-[450px]">
+    <div className="justify-items-center border-indigo-300 dark:border-indigo-500 grid bg-indigo-200 dark:bg-indigo-950 shadow-xl max-sm:m-0 mx-6 p-12 max-sm:p-8 border rounded-2xl w-[450px] max-sm:w-full">
       <form className="w-full" onSubmit={handleSubmit}>
         <label
           htmlFor="alias"

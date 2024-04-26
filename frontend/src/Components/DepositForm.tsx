@@ -115,7 +115,7 @@ export const DepositForm = ({ onClose }) => {
   };
 
   return (
-    <div className="justify-items-center border-indigo-300 dark:border-indigo-500 grid bg-indigo-200 dark:bg-indigo-950 shadow-xl mx-6 p-12 max-sm:p-8 border rounded-2xl w-[450px]">
+    <div className="justify-items-center border-indigo-300 dark:border-indigo-500 grid bg-indigo-200 dark:bg-indigo-950 shadow-xl mx-auto p-12 max-sm:p-8 border rounded-2xl w-[450px] max-sm:w-[90%]">
       <form className="w-full" onSubmit={handleSubmit}>
         <label
           htmlFor="cardName"
@@ -159,7 +159,7 @@ export const DepositForm = ({ onClose }) => {
               htmlFor="expirationDate"
               className="w-full text-gray-900 text-sm dark:text-white"
             >
-              Fecha de expiración
+              Expiración
             </label>
             <div className="flex justify-between items-center">
               <input
