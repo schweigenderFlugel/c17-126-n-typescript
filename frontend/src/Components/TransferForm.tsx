@@ -2,6 +2,9 @@ import { DatePicker } from '@tremor/react';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { HiOutlineCurrencyDollar } from 'react-icons/hi2';
+import { useAuth } from '../Hooks/useAuth';
+import { makeTransfer } from '../Services/apiTransfer';
+import { useBalance } from '../Hooks/useBalance';
 
 type FormPersonalDataType = {
   alias: string;
@@ -13,27 +16,46 @@ const initialValue: FormPersonalDataType = {
   quantity: '',
 };
 
-export const TransferForm = () => {
+export const TransferForm = ({ onClose }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const [formValues, setFormValues] =
     useState<FormPersonalDataType>(initialValue);
+
+  const { userData } = useAuth();
+
+  const { startLoadingUserBalance } = useBalance();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    function transfer(): Promise<void> {
-      return new Promise(resolve => {
-        setTimeout(() => {
-          resolve();
-        }, 1000);
-      });
+    async function transfer(): Promise<void> {
+      setIsLoading(true);
+
+      const amount = +formValues.quantity;
+
+      if (userData?.id && amount)
+        return await makeTransfer({
+          amount,
+          destination_account: formValues.alias,
+          source_account: userData?.id,
+          type: 'inmediate',
+        });
     }
 
     toast.promise(
       transfer(),
       {
         loading: 'Cargando',
-        success: () => `Transferencia exitosa`,
-        error: () => `Error al Transferir`,
+        success: () => {
+          setIsLoading(false);
+          startLoadingUserBalance();
+          onClose();
+          return `Transferencia exitosa`;
+        },
+        error: () => {
+          setIsLoading(false);
+          return `Error al Transferir`;
+        },
       },
       {
         style: {
@@ -48,8 +70,6 @@ export const TransferForm = () => {
   }: React.ChangeEvent<HTMLInputElement>) => {
     setFormValues({ ...formValues, [name]: value });
   };
-
-  const isLoading = false;
 
   return (
     <div className="justify-items-center border-indigo-300 dark:border-indigo-500 grid bg-indigo-200 dark:bg-indigo-950 shadow-xl mx-6 p-12 max-sm:p-8 border rounded-2xl w-[450px]">

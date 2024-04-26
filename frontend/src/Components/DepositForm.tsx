@@ -63,7 +63,6 @@ export const DepositForm = ({ onClose }) => {
           return `Deposito exitoso`;
         },
         error: () => {
-          onClose();
           startLoadingUserBalance();
           return `Error al depositar`;
         },

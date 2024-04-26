@@ -53,6 +53,13 @@ export interface UserSettingsType {
   maxAmountTransfer: number;
 }
 
+export interface ITransfer {
+  source_account: number;
+  destination_account: string;
+  amount: number;
+  type: string;
+}
+
 export interface ITypeTransfer {
   name: string;
   description: string | null;
