@@ -12,9 +12,9 @@ export const TransferTable = ({ transactions }) => {
     <div className="border-indigo-300 dark:border-indigo-600 bg-indigo-100 dark:bg-indigo-950 shadow-lg mt-4 border rounded-lg h-fit min-h-8 max-h-full overflow-y-auto">
       <TableRow isHeader>
         <div>Cuenta</div>
-        <div>Tipo</div>
-        <div>Cantidad</div>
-        <div>Fecha</div>
+        <div className="max-[800px]:justify-self-center">Tipo</div>
+        <div className="max-[800px]:justify-self-end">Cantidad</div>
+        <div className="max-[800px]:hidden">Fecha</div>
       </TableRow>
       {transactions.map(
         ({ destinationAccount, sourceAccount, amount, dateTransaction }) => {
@@ -28,12 +28,12 @@ export const TransferTable = ({ transactions }) => {
             <TableRow key={nameDisplayed}>
               <div>{nameDisplayed}</div>
               <div
-                className={`rounded-full px-4 py-2 w-fit text-gray-700 text-sm ${isReceived ? 'bg-green-200' : 'bg-blue-200'}`}
+                className={`rounded-full px-4 py-2 w-fit text-gray-700 text-sm max-[800px]:justify-self-center ${isReceived ? 'bg-green-200' : 'bg-blue-200'}`}
               >
                 <span>{isReceived ? 'Recibida' : 'Envidada'}</span>
               </div>
-              <div>$ {amount}</div>
-              <div>{dateTransaction}</div>
+              <div className="max-[800px]:justify-self-end">$ {amount}</div>
+              <div className="max-[800px]:hidden">{dateTransaction}</div>
             </TableRow>
           );
         }

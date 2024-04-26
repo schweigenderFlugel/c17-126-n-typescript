@@ -29,6 +29,10 @@ export const SidebarDashboard = () => {
     });
   }
 
+  const closeTransferModal = () => {
+    setIsTransferModalOpen(false);
+  };
+
   const handleClickReport = () => {
     toast.promise(
       downloadReport(),
@@ -112,7 +116,7 @@ export const SidebarDashboard = () => {
         onCloseModal={() => setIsTransferModalOpen(false)}
         isOpen={isTransferModalOpen}
       >
-        <TransferForm />
+        <TransferForm onClose={closeTransferModal}/>
       </Modal>
     </>
   );
