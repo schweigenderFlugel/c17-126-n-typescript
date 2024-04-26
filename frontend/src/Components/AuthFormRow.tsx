@@ -10,6 +10,8 @@ type AuthFormRowProps = {
   autoComplete?: string;
   disable?: boolean;
   required?: boolean;
+  error?: boolean;
+  errorMessage?: string;
   onClickPasswordBtn?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   showPassword?: boolean;
 };
@@ -26,6 +28,8 @@ export const AuthFormRow = ({
   disable = false,
   onClickPasswordBtn,
   showPassword,
+  error,
+  errorMessage,
 }: AuthFormRowProps) => {
   return (
     <div>
@@ -38,7 +42,7 @@ export const AuthFormRow = ({
           placeholder={placeholder}
           id={name}
           name={name}
-          className="border-indigo-300 focus:border-indigo-600 focus:dark:border-indigo-500 focus:outline-none dark:border-white bg-transparent px-2 py-4 border rounded-md w-full h-8 text-black text-sm dark:text-white"
+          className={`border ${error ? `border-red-600 dark:border-red-600 focus:border-red-500 dark:focus:border-red-500` : `border-indigo-300 focus:border-indigo-600 focus:dark:border-indigo-500 focus:outline-none dark:border-white`} bg-transparent px-2 py-4 rounded-md w-full h-8 text-black text-sm dark:text-white`}
           onChange={onChange}
           value={value}
           required={required}
@@ -55,6 +59,7 @@ export const AuthFormRow = ({
           </button>
         )}
       </div>
+      {error && <p className='text-red-600 text-sm mt-2'>{errorMessage}</p>}
     </div>
   );
 };

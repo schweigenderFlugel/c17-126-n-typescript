@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AxiosError } from 'axios';
 import { toast } from 'react-hot-toast';
@@ -26,6 +26,7 @@ const initialValue: ICreateUserPayload = {
 };
 
 export const PersonalDataForm = () => {
+  const [inputError, setInputError] = useState<boolean>(false);
   const { setLoading } = useAuth();
   const [formValues, setFormValues] =
     useState<ICreateUserPayload>(initialValue);
@@ -54,6 +55,16 @@ export const PersonalDataForm = () => {
   }: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement> ) => {
     setFormValues({ ...formValues, [name]: value });
   };
+
+  const phoneRegex = new RegExp(/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/)
+
+  useEffect(() => {
+    if(!phoneRegex.test(formValues.phone)) {
+      setInputError(true)
+    } else {
+      setInputError(false)
+    }
+  }, [formValues.phone])
 
   //🔴[TODO]:Reemplazar por el del hook
   const isLoading = false;
@@ -123,6 +134,8 @@ export const PersonalDataForm = () => {
             name="phone"
             autoComplete="tel"
             required
+            error={inputError}
+            errorMessage='* Debe el siguiente formato: (xxx)-xxx-xxxx'
           />
         </div>
         <div className="my-4">
@@ -131,7 +144,8 @@ export const PersonalDataForm = () => {
               formValues.name.length < 1 ||
               formValues.lastname.length < 1 ||
               formValues.accountType == initialValue.accountType ||
-              formValues.alias.length < 1
+              formValues.alias.length < 1 ||
+              !phoneRegex.test(formValues.phone)
             }
             isLoading={isLoading}
             label="Terminar Registro"

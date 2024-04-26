@@ -1,4 +1,4 @@
-import {  useState } from 'react';
+import {  useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AxiosError } from 'axios';
 import { toast } from 'react-hot-toast';
@@ -12,6 +12,7 @@ export const SignUp = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
+  const [inputError, setInputError] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showConfirmPassword, setShowConfirmPassword] =
     useState<boolean>(false);
@@ -20,9 +21,6 @@ export const SignUp = () => {
 
   const handleSubmit = async e => {
     e.preventDefault();
-    if (password !== confirmPassword) {
-      return toast.error('Las contraseñas no coinciden');
-    }
     try {
       await signup({ email, password });
       navigate('/login', { replace: true });
@@ -36,6 +34,14 @@ export const SignUp = () => {
       toast.error(errorMessage);
     }
   };
+
+  useEffect(() => {
+    if(password !== confirmPassword) {
+      setInputError(true)
+    } else {
+      setInputError(false)
+    }
+  }, [password, confirmPassword])
 
   //🔴[TODO]:Reemplazar por el del hook
   const isLoading = false;
@@ -71,6 +77,7 @@ export const SignUp = () => {
               }
               required
               showPassword={showPassword}
+              error={inputError}
             />
             <AuthFormRow
               onChange={e => setConfirmPassword(e.target.value)}
@@ -87,12 +94,19 @@ export const SignUp = () => {
               }
               required
               showPassword={showConfirmPassword}
+              error={inputError}
+              errorMessage='* Las contraseñas no coinciden'
             />
           </div>
           <div className="my-4">
             <ButtonAuthForm
               label="Registrarse"
-              disabled={email.length < 6 || password.length < 6}
+              disabled={
+                email.length < 6 ||
+                password.length < 6 || 
+                confirmPassword.length < 6 ||
+                password !== confirmPassword
+              }
               isLoading={isLoading}
             />
           </div>

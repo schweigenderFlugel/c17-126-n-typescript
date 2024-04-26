@@ -4,8 +4,8 @@ export interface ILoginPayload {
 }
 
 export interface ISignUpPayload {
-  email: string
-  password: string
+  email: string;
+  password: string;
 }
 
 export interface ICreateUserPayload {
@@ -17,21 +17,69 @@ export interface ICreateUserPayload {
   phone: string;
 }
 
+export interface To {
+  id: number;
+  number_account: string;
+  user: {
+    name: string;
+    lastname: string;
+  }
+}
+
+export interface From {
+  id: number;
+  number_account: string;
+  user: {
+    name: string;
+    lastname: string;
+  }
+}
+
+export interface ITransactionsReceived {
+  id: number;
+  source_account: number;
+  destination_account: number;
+  type_transfer: string;
+  amount: number;
+  date_transaction: string;
+  status: string;
+  from: From;
+}
+
+export interface ITransactionsSent {
+  id: number;
+  source_account: number;
+  destination_account: number;
+  type_transfer: string;
+  amount: number;
+  date_transaction: string;
+  status: string;
+  to: To;
+}
+
 export interface ITransactions {
   id: number;
   source_account: number;
   destination_account: number;
-  type_transfer_id: number;
+  type_transfer: string;
   amount: number;
-  date_transaction: Date;
+  date_transaction: string;
   status: string;
-  bank_account: {
-    number_account: string;
-    user: {
-      name: string;
-      lastname: string;
-    }
-  }
+  to?: To;
+  from?: From;
+}
+
+export interface IPreference {
+  min_ammount_transfers: number;
+  max_ammount_transfers: number;
+}
+
+export interface IBankAccount {
+  id: number;
+  number_account: string;
+  balance: number;
+  transactions_sent: ITransactionsSent[];
+  transactions_received: ITransactionsReceived[];
 }
 
 export interface IUser {
@@ -45,17 +93,8 @@ export interface IUser {
   auth: {
     email: string;
   };
-  preference: {
-    min_ammount_transfers: number;
-    max_ammount_transfers: number;
-  };
-  bank_account: {
-    id: number;
-    number_account: string;
-    balance: number;
-    transactions_sent: ITransactions[];
-    transactions_received: ITransactions[];
-  };
+  preference: IPreference;
+  bank_account: IBankAccount;
 }
 
 export interface UserSettingsType {
@@ -67,11 +106,6 @@ export interface UserSettingsType {
   min_ammount_transfers: number;
   max_ammount_transfers: number;
 };
-
-export interface ITypeTransfer {
-  name: string;
-  description: string | null;
-}
 
 export interface ICreateTransaction {
   source_account: number,

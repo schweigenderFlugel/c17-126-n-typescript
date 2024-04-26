@@ -32,9 +32,11 @@ BankAccount.hasMany(Transaction, {
 })
 
 Transaction.belongsTo(BankAccount, {
+  as: 'from',
   foreignKey: 'source_account'
 })
 
 Transaction.belongsTo(BankAccount, {
+  as: 'to',
   foreignKey: 'destination_account',
 })

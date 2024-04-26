@@ -1,17 +1,36 @@
 import { HiChevronLeft, HiChevronRight } from 'react-icons/hi2';
+import { ITransactions, ITransactionsReceived, ITransactionsSent } from '../Interfaces/interfaces';
+
 import { TableRow } from './TransferRow';
 
-export const TransferTable = ({ sent, received, bank_account }) => {
-  const currentUser = {
-    id: '1111',
-    firstName: 'Juan',
-    lastName: 'Rodriguez',
-  };
+enum MONTHS {
+  JANUARY = '1',
+  FEBRUARY = '2',
+  MARCH = 'marzo',
+  APRIL = 'abril',
+  MAY = 'mayo',
+  JUNE = 'junio',
+  JULY = 'julio',
+  AUGUST = 'agosto',
+  SEPTEMBER = 'septiembre',
+  OCTOBER = 'octubre',
+  NOVEMBER = 'noviembre',
+  DECEMBER = 'diciembre',
+}
 
-  const sentReduce = sent?.reduce((item: any) => item)
-  // const receivedReduce = received?.reduce((item: any) => {item})
-  const transactions = [sentReduce]
-  console.log(sentReduce)
+export const TransferTable = ({ sent, received, bank_account }) => {
+  const transactionsSent = sent as ITransactionsSent[];
+  const transactionsReceived = received as ITransactionsReceived[];
+  
+  let transactions: ITransactions[] = [];
+  
+  transactionsSent.forEach((item: ITransactionsSent) => {
+    transactions.push(item);
+  })
+  
+  transactionsReceived.forEach((item: ITransactionsReceived) => {
+    transactions.push(item);
+  })
 
   return (
     <div className="border-indigo-300 dark:border-indigo-600 bg-indigo-100 dark:bg-indigo-950 shadow-lg mt-4 border rounded-lg h-fit min-h-8 max-h-full overflow-y-auto">
@@ -21,13 +40,59 @@ export const TransferTable = ({ sent, received, bank_account }) => {
         <div>Cantidad</div>
         <div>Fecha</div>
       </TableRow>
-      {sent?.map(
-        ({ destination_account, id, bank_account, amount, date_transaction}) => {
-          const isReceived = destination_account?.id === currentUser.id;
-
+      {transactions?.map(
+        ({ destination_account, id, amount, from, to, date_transaction }) => {
+          const isReceived = destination_account === bank_account?.id;
+          const year = parseInt(date_transaction.substring(0, 4));
+          const monthNumber = parseInt(date_transaction.substring(5, 7))
+          const day = parseInt(date_transaction.substring(8, 10))
+          let month: string;
+          switch (monthNumber) {
+            case 1:
+              month = MONTHS.JANUARY;
+              break;
+            case 2: 
+              month = MONTHS.FEBRUARY;
+              break;
+            case 3:
+              month = MONTHS.MARCH;
+              break;
+            case 4: 
+              month = MONTHS.APRIL;
+              break;
+            case 5:
+              month = MONTHS.MAY;
+              break;
+            case 6: 
+              month = MONTHS.JUNE;
+              break;
+            case 7:
+              month = MONTHS.JULY;
+              break;
+            case 8: 
+              month = MONTHS.AUGUST;
+              break;
+            case 9:
+              month = MONTHS.SEPTEMBER;
+              break;
+            case 10: 
+              month = MONTHS.OCTOBER;
+              break;
+            case 11:
+              month = MONTHS.NOVEMBER;
+              break;
+            case 12: 
+              month = MONTHS.DECEMBER;
+              break;
+            default: 
+              month = 'Invalid month';
+              break;
+          }
+          const dateTransaction  = `${day} de ${month}, ${year}`
+          const timeTransaction =  date_transaction.substring(11, 16)
           const nameDisplayed = isReceived
-            ? `${bank_account.user.name} ${bank_account.user.lastname}` // source 
-            : `${bank_account.user.name} ${bank_account.user.lastname}`; // destination
+            ? `${from?.user.name} ${from?.user.lastname}` // source 
+            : `${to?.user.name} ${to?.user.lastname}`; // destination
 
           return (
             <TableRow key={id}>
@@ -38,7 +103,11 @@ export const TransferTable = ({ sent, received, bank_account }) => {
                 <span>{isReceived ? 'Recibida' : 'Envidada'}</span>
               </div>
               <div>$ {amount}</div>
-              <div>{date_transaction}</div>
+              <div>
+                <div>{dateTransaction}</div>
+                <div>{timeTransaction}</div>
+              </div>
+              <div></div>
             </TableRow>
           );
         }
@@ -47,7 +116,7 @@ export const TransferTable = ({ sent, received, bank_account }) => {
         <div className="flex justify-between col-span-full">
           <div>
             Mostrando del <span className="font-bold">1</span> al{' '}
-            <span className="font-bold">{sent.length}</span> de{' '}
+            <span className="font-bold">{transactions.length}</span> de{' '}
             <span className="font-bold">10</span> transferencias
           </div>
           <div className="flex gap-2">

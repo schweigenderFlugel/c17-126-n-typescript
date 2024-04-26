@@ -91,7 +91,8 @@ export default class userDao {
             association: 'transactions_sent', 
             include: [{
               model: BankAccount,
-              attributes: ['number_account'],
+              association: 'to', 
+              attributes: ['id', 'number_account'],
               include: [{
                 model: User,
                 attributes: ['name', 'lastname']
@@ -102,14 +103,14 @@ export default class userDao {
             association: 'transactions_received',
             include: [{
               model: BankAccount,
-              attributes: ['number_account'],
+              association: 'from',
+              attributes: ['id', 'number_account'],
               include: [{
                 model: User,
                 attributes: ['name', 'lastname']
               }]
             }]
-          }
-          ]
+          }]
         }
        ]
     })

@@ -64,11 +64,12 @@ describe('Testing the user route', () => {
       expect(body.bank_account.transactions_sent).toBeInstanceOf(Array);
       expect(body.bank_account.transactions_received).toBeInstanceOf(Array);
       body.bank_account.transactions_received.forEach((transaction: any) => {
-        expect(transaction.bank_account.user.name).toMatch(normalUser.name)
-        expect(transaction.bank_account.user.lastname).toMatch(normalUser.lastname)
+        expect(transaction.from.user.name).toMatch(adminUser.name)
+        expect(transaction.from.user.lastname).toMatch(adminUser.lastname)
       });
       body.bank_account.transactions_sent.forEach((transaction: any) => {
-        expect(transaction.bank_account.user.name).toMatch(adminUser.name)
+        expect(transaction.to.user.name).toMatch(adminUser.name)
+        expect(transaction.to.user.lastname).toMatch(adminUser.lastname)
       });
     })
   })
