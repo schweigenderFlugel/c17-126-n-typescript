@@ -168,7 +168,6 @@ export default class authsController {
       const recoveryToken = await SessionUtils.generateRecoveryToken(payloadToken);
       res.status(HTTP_STATUS.OK).json({ link: `${DB_URL}/restablecer-contrasena/${recoveryToken}`})
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }

@@ -46,9 +46,17 @@ describe('Testing the user route', () => {
       expect(body.preference.max_ammount_transfers).toEqual(preference1.max_ammount_transfers);
       expect(body.bank_account.number_account).toMatch(bankAccount1.number_account);
       expect(body.bank_account.balance).toEqual(bankAccount1.balance);
+      body.bank_account.transactions_received.forEach((transaction: any) => {
+        expect(transaction.from.user.name).toMatch(normalUser.name)
+        expect(transaction.from.user.lastname).toMatch(normalUser.lastname)
+      });
+      body.bank_account.transactions_sent.forEach((transaction: any) => {
+        expect(transaction.to.user.name).toMatch(normalUser.name)
+        expect(transaction.to.user.lastname).toMatch(normalUser.lastname)
+      });
     })
 
-    it.only('Should get the normal user', async () => {
+    it('Should get the normal user', async () => {
       const { statusCode, body } = await api.get('/api/v1/user').auth(normalUserToken, { type: 'bearer' });
       expect(statusCode).toBe(200);
       expect(body.name).toMatch(normalUser.name);
