@@ -1,9 +1,14 @@
 import { useState } from 'react';
 import { Logo } from './Logo';
 import { HiOutlineEye, HiOutlineEyeSlash } from 'react-icons/hi2';
+import { Modal } from './Modal';
+import { TransferForm } from './TransferForm';
+import { DepositForm } from './DepositForm';
 
 export const WalletCard = () => {
   const [showBalance, setShowBalance] = useState(true);
+  const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
+  const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
 
   //👇 Obtenerlo del hook useAuth
   const currentUser = {
@@ -59,7 +64,10 @@ export const WalletCard = () => {
           </div>
         </div>
         <div className="flex justify-center gap-4 mt-auto">
-          <button className="flex flex-col justify-center items-center gap-2 dark:text-white">
+          <button
+            className="flex flex-col justify-center items-center gap-2 dark:text-white"
+            onClick={() => setIsDepositModalOpen(true)}
+          >
             <div className="flex justify-center items-center border-2 border-indigo-400 hover:bg-indigo-200/50 dark:hover:bg-indigo-900 p-1 rounded-lg w-14 h-14">
               <svg width="35" height="38" viewBox="0 0 35 38" fill="none">
                 <g clipPath="url(#clip0_227_8671)">
@@ -86,7 +94,10 @@ export const WalletCard = () => {
             </div>
             <span className="mb-1 text-xs">Ingresar</span>
           </button>
-          <button className="flex flex-col justify-center items-center gap-2 dark:text-white">
+          <button
+            className="flex flex-col justify-center items-center gap-2 dark:text-white"
+            onClick={() => setIsTransferModalOpen(true)}
+          >
             <div className="flex justify-center items-center border-2 border-indigo-400 hover:bg-indigo-200/50 dark:hover:bg-indigo-900 p-1 rounded-lg w-14 h-14">
               <svg width="35" height="38" viewBox="0 0 35 38" fill="none">
                 <path
@@ -140,6 +151,18 @@ export const WalletCard = () => {
           </button>
         </div>
       </main>
+      <Modal
+        onCloseModal={() => setIsTransferModalOpen(false)}
+        isOpen={isTransferModalOpen}
+      >
+        <TransferForm />
+      </Modal>
+      <Modal
+        onCloseModal={() => setIsDepositModalOpen(false)}
+        isOpen={isDepositModalOpen}
+      >
+        <DepositForm />
+      </Modal>
     </section>
   );
 };

@@ -30,6 +30,7 @@ export const PersonalDataForm = () => {
   const { setLoading } = useAuth();
   const [formValues, setFormValues] =
     useState<ICreateUserPayload>(initialValue);
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -40,19 +41,29 @@ export const PersonalDataForm = () => {
       setLoading(true);
       navigate('/dashboard', { replace: true })
     } catch (serverError) {
-      let errorMessage: string;
-      if (serverError instanceof AxiosError && serverError.message) {
-        errorMessage = serverError.message;
+      console.log(serverError);
+      if (
+        serverError instanceof AxiosError &&
+        !!serverError.response?.data.length
+      ) {
+        serverError.response?.data.forEach(error => {
+          toast.error(`Error en el campo "${error.path}": ${error.message}`);
+        });
+      } else if (serverError instanceof AxiosError && serverError.message) {
+        toast.error(serverError.message);
       } else {
-        errorMessage = 'Error desconocido';
+        toast.error('Error desconocido');
       }
-      toast.error(errorMessage);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleChange = ({
     target: { name, value },
-  }: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement> ) => {
+  }:
+    | React.ChangeEvent<HTMLInputElement>
+    | React.ChangeEvent<HTMLSelectElement>) => {
     setFormValues({ ...formValues, [name]: value });
   };
 
@@ -65,9 +76,6 @@ export const PersonalDataForm = () => {
       setInputError(false)
     }
   }, [formValues.phone])
-
-  //🔴[TODO]:Reemplazar por el del hook
-  const isLoading = false;
 
   return (
     <AuthFormContainer subtitle="¡Un último paso!">
@@ -96,7 +104,7 @@ export const PersonalDataForm = () => {
           <AuthFormSelect
             key="accountType"
             name="accountType"
-            label='Tipo de cuenta'
+            label="Tipo de cuenta"
             onChange={handleChange}
             value={formValues.accountType}
             options={[
@@ -153,5 +161,5 @@ export const PersonalDataForm = () => {
         </div>
       </form>
     </AuthFormContainer>
-  )
+  );
 };

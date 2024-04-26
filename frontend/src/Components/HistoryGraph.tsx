@@ -76,6 +76,7 @@ export function HistoryGraph() {
       colors={['indigo', 'rose']}
       valueFormatter={dataFormatter}
       yAxisWidth={60}
+      showAnimation
     />
   );
 }

@@ -7,6 +7,7 @@ import { signup } from '../Services/user';
 import { AuthFormContainer } from '../Components/AuthFormContainer';
 import { AuthFormRow } from '../Components/AuthFormRow';
 import { ButtonAuthForm } from '../Components/ButtonAuthForm';
+import { useAuth } from '../Hooks/useAuth';
 
 export const SignUp = () => {
   const [email, setEmail] = useState<string>('');
@@ -16,12 +17,14 @@ export const SignUp = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showConfirmPassword, setShowConfirmPassword] =
     useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
   const handleSubmit = async e => {
     e.preventDefault();
     try {
+      setIsLoading(true);
       await signup({ email, password });
       navigate('/login', { replace: true });
     } catch (serverError) {
@@ -32,6 +35,8 @@ export const SignUp = () => {
         errorMessage = 'Error desconocido';
       }
       toast.error(errorMessage);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -44,10 +49,15 @@ export const SignUp = () => {
   }, [password, confirmPassword])
 
   //🔴[TODO]:Reemplazar por el del hook
-  const isLoading = false;
 
   const passwordInputType = showPassword ? 'text' : 'password';
   const confirmPasswordInputType = showConfirmPassword ? 'text' : 'password';
+
+  const { accessToken } = useAuth();
+
+  useEffect(() => {
+    if (accessToken) navigate('/dashboard', { replace: true });
+  }, [accessToken, navigate]);
 
   return (
     <>

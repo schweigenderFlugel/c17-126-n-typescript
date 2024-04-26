@@ -43,7 +43,7 @@ export const SidebarDashboard = () => {
         },
         success: {
           icon: (
-            <HiMiniArrowDownTray className="opacity-70 text-[28px] dark:text-white" />
+            <HiMiniArrowDownTray className="opacity-70 text-2xl dark:text-white" />
           ),
         },
       }

@@ -56,22 +56,22 @@ export default {
           },
           background: {
             muted: '#131A2B',
-            subtle: colors.gray[800],
-            DEFAULT: colors.gray[900],
+            subtle: colors.indigo[800],
+            DEFAULT: colors.indigo[950],
             emphasis: colors.gray[300],
           },
           border: {
             DEFAULT: colors.gray[800],
           },
           ring: {
-            DEFAULT: colors.gray[800],
+            DEFAULT: colors.indigo[800],
           },
           content: {
-            subtle: colors.gray[600],
-            DEFAULT: colors.gray[500],
+            subtle: colors.gray[400],
+            DEFAULT: colors.gray[100],
             emphasis: colors.gray[200],
             strong: colors.gray[50],
-            inverted: colors.gray[950],
+            inverted: colors.indigo[950],
           },
         },
       },
