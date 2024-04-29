@@ -1,7 +1,7 @@
-import { ITransactionsReceived, ITransactionsSent } from '../Interfaces/interfaces';
+import { IBankAccount, ITransactionsReceived, ITransactionsSent } from '../Interfaces/interfaces';
 import { TransferTable } from './TransferTable';
 
-export const LastTransfersTable = ({ bank_account }) => {
+export const LastTransfersTable = ({ bank_account }: { bank_account: IBankAccount | undefined }) => {
   const sent = bank_account?.transactions_sent as ITransactionsSent[];
   const received = bank_account?.transactions_received as ITransactionsReceived[];
 

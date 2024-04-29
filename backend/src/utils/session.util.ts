@@ -22,7 +22,7 @@ const recoverySecret = NODE_ENV === ENVIROMENTS.PRODUCTION
 
 export default class SessionUtils {
   static async generateToken(payload: ITokenPayload): Promise<string> {
-    const token: string = sign(payload, accessSecret, { expiresIn: '15m' }) // FIXME: change to 10 minutes?
+    const token: string = sign(payload, accessSecret) // FIXME: change to 10 minutes?
     return token
   }
 

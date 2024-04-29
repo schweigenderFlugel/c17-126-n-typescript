@@ -6,6 +6,17 @@ export interface IBankAccount {
   number_account: string
   balance: number
   expenses: number
+  investments: number
+}
+
+export interface IAccountData {
+  id: number;
+  user: {
+    id: number;
+    auth: {
+      id: number;
+    }
+  }
 }
 
 export interface ISourceAccountData {

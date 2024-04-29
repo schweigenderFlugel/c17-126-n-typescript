@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { UniqueConstraintError } from 'sequelize'
 import { TokenExpiredError } from 'jsonwebtoken'
-import { ISign } from '../interfaces/auth.interface'
+import { ISign, IUpdateAuth } from '../interfaces/auth.interface'
 import { ITokenPayload } from '../interfaces/token.interface'
 import { createHash, isValidPassword } from '../utils/bcrypt.utils'
 import authService from '../services/auth.services'
@@ -138,6 +138,66 @@ export default class authsController {
       } else {
         next(err)
       }
+    }
+  }
+
+  /**
+   * Change the password.
+   *
+   * @param {Request} req - the request object containing the param with the id and provided request body data
+   * @param {Response} res - the response object with message of user updated
+   * @param {NextFunction} next - the next middleware function
+   * @return {Promise<void>} - a promise that resolves when the password is updated
+   */
+  static async changePassword(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const id = req.params.id as unknown as number;
+      const tokenPayload: ITokenPayload = req.user as ITokenPayload
+      const body: IUpdateAuth = req.body
+      const authFound = await authService.getAuthById(id);
+      console.log(id, tokenPayload.id)
+      if (!tokenPayload || !tokenPayload.id) throw new HttpError(
+        'Token payload error',
+        'Token payload error',
+        HTTP_STATUS.FORBIDDEN
+      )
+      if(!authFound) throw new HttpError(
+        'User not found',
+        'User not found',
+        HTTP_STATUS.NOT_FOUND
+      )
+      if (authFound.id != tokenPayload.id) throw new HttpError(
+        'You are not allowed to perform this action',
+        'Conflict with id and the id from token payload',
+        HTTP_STATUS.CONFLICT
+      )
+      const validPassword = isValidPassword(
+        authFound.password,
+        body.currentPassword
+      )
+      if (!validPassword) throw new HttpError(
+        'You are not allowed to perform this action',
+        'The password is invalid',
+        HTTP_STATUS.UNAUTHORIZED
+      )
+      if (body.currentPassword === body.newPassword) throw new HttpError(
+        'The password should not be the same',
+        'The password should not be the same',
+        HTTP_STATUS.BAD_REQUEST
+      )
+      const newData: Omit<Omit<Omit<Omit<Omit<IUpdateAuth, 'role'>, 'refreshToken'>, 'status'>, 'currentPassword'>, 'newPassword'> = {
+        password: createHash(body.newPassword),
+        updatedAt: new Date(),
+      }
+      await authService.updateAuth(id, newData);
+      res.status(HTTP_STATUS.CREATED).json({ message: 'user authentication updated'})
+    } catch (error) {
+      console.log(error)
+      next(error);
     }
   }
 

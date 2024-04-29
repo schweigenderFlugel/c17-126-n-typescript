@@ -23,8 +23,8 @@ export const useUser = ({ onSuccess, onReject }: options) => {
         })
         .catch(error => {
           onReject?.(error);
-         });
+        })
        // eslint-disable-next-line react-hooks/exhaustive-deps
       }
-    }, [accessToken || loading]);  
+    }, [accessToken, loading]);
 }

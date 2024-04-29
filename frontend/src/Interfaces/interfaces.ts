@@ -1,6 +1,6 @@
 export interface ILoginPayload {
-  email: string
-  password: string
+  email: string;
+  password: string;
 }
 
 export interface ISignUpPayload {
@@ -78,6 +78,8 @@ export interface IBankAccount {
   id: number;
   number_account: string;
   balance: number;
+  expenses: number;
+  investments: number;
   transactions_sent: ITransactionsSent[];
   transactions_received: ITransactionsReceived[];
 }
@@ -112,4 +114,9 @@ export interface ICreateTransaction {
   destination_alias: string;
   amount: number;
   type: string;
+}
+
+export interface IDeposit {
+  accountId: number;
+  amount: number;
 }

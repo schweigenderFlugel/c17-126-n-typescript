@@ -1,5 +1,5 @@
 import { HiChevronLeft, HiChevronRight } from 'react-icons/hi2';
-import { ITransactions, ITransactionsReceived, ITransactionsSent } from '../Interfaces/interfaces';
+import { IBankAccount, ITransactions, ITransactionsReceived, ITransactionsSent } from '../Interfaces/interfaces';
 
 import { TableRow } from './TransferRow';
 
@@ -18,17 +18,23 @@ enum MONTHS {
   DECEMBER = 'diciembre',
 }
 
-export const TransferTable = ({ sent, received, bank_account }) => {
-  const transactionsSent = sent as ITransactionsSent[];
-  const transactionsReceived = received as ITransactionsReceived[];
+export const TransferTable = ({ 
+  sent, 
+  received, 
+  bank_account 
+}: { 
+  sent: ITransactionsSent[], 
+  received: ITransactionsReceived[], 
+  bank_account: IBankAccount | undefined
+}) => {
   
   let transactions: ITransactions[] = [];
   
-  transactionsSent.forEach((item: ITransactionsSent) => {
+  sent.forEach((item: ITransactionsSent) => {
     transactions.push(item);
   })
   
-  transactionsReceived.forEach((item: ITransactionsReceived) => {
+  received.forEach((item: ITransactionsReceived) => {
     transactions.push(item);
   })
 
@@ -36,9 +42,9 @@ export const TransferTable = ({ sent, received, bank_account }) => {
     <div className="border-indigo-300 dark:border-indigo-600 bg-indigo-100 dark:bg-indigo-950 shadow-lg mt-4 border rounded-lg h-fit min-h-8 max-h-full overflow-y-auto">
       <TableRow isHeader>
         <div>Cuenta</div>
-        <div>Tipo</div>
-        <div>Cantidad</div>
-        <div>Fecha</div>
+        <div className="max-[800px]:justify-self-center">Tipo</div>
+        <div className="max-[800px]:justify-self-end">Cantidad</div>
+        <div className="max-[800px]:hidden">Fecha</div>
       </TableRow>
       {transactions?.map(
         ({ destination_account, id, amount, from, to, date_transaction }) => {
@@ -98,7 +104,7 @@ export const TransferTable = ({ sent, received, bank_account }) => {
             <TableRow key={id}>
               <div>{nameDisplayed}</div>
               <div
-                className={`rounded-full px-4 py-2 w-fit text-gray-700 text-sm ${isReceived ? 'bg-green-200' : 'bg-blue-200'}`}
+                className={`rounded-full px-4 py-2 w-fit text-gray-700 text-sm max-[800px]:justify-self-center ${isReceived ? 'bg-green-200' : 'bg-blue-200'}`}
               >
                 <span>{isReceived ? 'Recibida' : 'Envidada'}</span>
               </div>

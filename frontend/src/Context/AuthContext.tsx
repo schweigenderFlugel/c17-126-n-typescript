@@ -35,14 +35,16 @@ const defaultValues = {
   setLoading: () => {},
   darkMode: false,
   toggleDarkMode: () => {},
+  userBalance: null,
+  setUserBalance: () => {},
 } as AuthContextInterface;
 
 export const AuthContext = createContext<AuthContextInterface>(defaultValues);
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [ accessToken, setAccessToken ] = useState<string | null>(null);
-  const [ userData, setUserData ] = useState<IUser | null>(null);
-  const [ loading, setLoading ] = useState<boolean>(false);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [userData, setUserData] = useState<IUser | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
   const { darkMode, toggleDarkMode } = useLocalStorage();
   const navigate = useNavigate();
   const location = useLocation();
@@ -52,7 +54,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   setSession(accessToken);
 
   useRefresh({
-    onSuccess: () => navigate(from,  { replace: true }),
+    onSuccess: () => navigate(from, { replace: true }),
     setToken: (token: string | null) => setAccessToken(token),
   });
 

@@ -87,8 +87,9 @@ export default class userController {
       const bankAccountPayload: IGenerateBankAccount = {
         userId: userCreated.dataValues.id,
         number_account: numberAccount,
-        balance: 5000,
-        expenses: 3750,
+        balance: 0,
+        expenses: 0,
+        investments: 0
       }
 
       const bankAccountCreated =
@@ -194,6 +195,14 @@ export default class userController {
     }
   }
 
+  /**
+   * Update the user with the correct token and provided request body data.
+   *
+   * @param {Request} req - the request object containing the token payload and user data
+   * @param {Response} res - the response object to send the message of user updated
+   * @param {NextFunction} next - the next middleware function
+   * @return {Promise<void>} - a promise that resolves when the user is updated
+   */
   static async updateUser(
     req: Request,
     res: Response,

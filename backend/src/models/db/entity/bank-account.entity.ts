@@ -38,6 +38,11 @@ const BankAccount = sequelize.define<BankAccountModel>(
       type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 0,
+    },
+    investments: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0
     }
   },
   { timestamps: false }

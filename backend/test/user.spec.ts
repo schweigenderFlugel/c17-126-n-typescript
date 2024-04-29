@@ -46,6 +46,8 @@ describe('Testing the user route', () => {
       expect(body.preference.max_ammount_transfers).toEqual(preference1.max_ammount_transfers);
       expect(body.bank_account.number_account).toMatch(bankAccount1.number_account);
       expect(body.bank_account.balance).toEqual(bankAccount1.balance);
+      expect(body.bank_account.expenses).toEqual(bankAccount1.expenses);
+      expect(body.bank_account.investments).toEqual(bankAccount1.investments);
       body.bank_account.transactions_received.forEach((transaction: any) => {
         expect(transaction.from.user.name).toMatch(normalUser.name)
         expect(transaction.from.user.lastname).toMatch(normalUser.lastname)
@@ -69,6 +71,8 @@ describe('Testing the user route', () => {
       expect(body.preference.max_ammount_transfers).toEqual(preference2.max_ammount_transfers);
       expect(body.bank_account.number_account).toMatch(bankAccount2.number_account);
       expect(body.bank_account.balance).toEqual(bankAccount2.balance);
+      expect(body.bank_account.expenses).toEqual(bankAccount2.expenses);
+      expect(body.bank_account.investments).toEqual(bankAccount2.investments);
       expect(body.bank_account.transactions_sent).toBeInstanceOf(Array);
       expect(body.bank_account.transactions_received).toBeInstanceOf(Array);
       body.bank_account.transactions_received.forEach((transaction: any) => {

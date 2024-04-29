@@ -49,6 +49,8 @@ export const nonUserToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm
 
 export const anonUserToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwicm9sZSI6Im5vcm1hbCIsImlhdCI6MTcxMzQ2NTY0NX0.UEnbMzafoGfCbKrW_sJn_5SXLt3w4aHB3xHo-aELDCE";
 
+export const unexistingUserToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6Im5vcm1hbCIsImlhdCI6MTcxNDQyMTQ4MX0.-serRr9wT-a2IdfLS5eH4ctXEGe8wfOTEdWqstTOvJI";
+
 export const tokenWithInvalidPayload = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoxLCJsYXN0bmFtZSI6Im5vcm1hbCIsImlhdCI6MTcxMzUzNjE3M30.V-Eva_24DcPeumsZpX3c_xl7Px3R-g1NJQj8XqylrRc";
 
 // REFRESH TOKENS

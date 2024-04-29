@@ -33,3 +33,14 @@ export const recoverySchema = z.object({
     .email('it should be a valid email')
     .min(1, 'Email is required'),
 })
+
+export const updatePasswordSchema = z.object({
+  currentPassword: z
+    .string()
+    .trim(),
+  newPassword: z
+    .string()
+    .min(1, 'New password is required.')
+    .min(8, 'New password to short')
+    .trim(),
+})

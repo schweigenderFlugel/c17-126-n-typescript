@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { HiOutlineCreditCard, HiOutlineCurrencyDollar } from 'react-icons/hi2';
+import { useAuth } from '../Hooks/useAuth';
+import { makeDeposit } from '../Services/transfers';
 
 type DepositFormType = {
   cardName: string;
@@ -11,16 +13,18 @@ type DepositFormType = {
 };
 
 const initialValue: DepositFormType = {
-  cardName: '',
-  cardNumber: '',
-  expirationDate: '',
-  CVV: '',
+  cardName: 'Juan Perez',
+  cardNumber: '1234 1234 1234 1234',
+  expirationDate: '12 / 24',
+  CVV: '123',
   quantity: '',
 };
 
-export const DepositForm = () => {
+export const DepositForm = ({ onClose }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [formValues, setFormValues] = useState<DepositFormType>(initialValue);
+
+  const { userData } = useAuth();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -37,22 +41,26 @@ export const DepositForm = () => {
       return toast('Por favor, ingresa la cantidad a depositar');
     }
 
-    function deposit(): Promise<void> {
+    async function deposit(): Promise<void> {
       setIsLoading(true);
-      return new Promise(resolve => {
-        setTimeout(() => {
-          setIsLoading(false);
-          resolve();
-        }, 1000);
-      });
+      if (userData?.id)
+        return await makeDeposit({
+          accountId: userData?.bank_account.id,
+          amount: +formValues.quantity,
+        });
     }
 
     toast.promise(
       deposit(),
       {
         loading: 'Cargando',
-        success: () => `Deposito exitoso`,
-        error: () => `Error al Transferir`,
+        success: () => {
+          onClose();
+          return `Deposito exitoso`;
+        },
+        error: () => {
+          return `Error al depositar`;
+        },
       },
       {
         style: {
@@ -102,7 +110,7 @@ export const DepositForm = () => {
   };
 
   return (
-    <div className="justify-items-center border-indigo-300 dark:border-indigo-500 grid bg-indigo-200 dark:bg-indigo-950 shadow-xl mx-6 p-12 max-sm:p-8 border rounded-2xl w-[450px]">
+    <div className="justify-items-center border-indigo-300 dark:border-indigo-500 grid bg-indigo-200 dark:bg-indigo-950 shadow-xl mx-auto p-12 max-sm:p-8 border rounded-2xl w-[450px] max-sm:w-[90%]">
       <form className="w-full" onSubmit={handleSubmit}>
         <label
           htmlFor="cardName"
@@ -146,7 +154,7 @@ export const DepositForm = () => {
               htmlFor="expirationDate"
               className="w-full text-gray-900 text-sm dark:text-white"
             >
-              Fecha de expiración
+              Expiración
             </label>
             <div className="flex justify-between items-center">
               <input

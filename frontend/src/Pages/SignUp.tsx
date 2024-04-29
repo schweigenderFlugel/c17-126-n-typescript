@@ -41,7 +41,7 @@ export const SignUp = () => {
   };
 
   useEffect(() => {
-    if(password !== confirmPassword) {
+    if(confirmPassword && password !== confirmPassword) {
       setInputError(true)
     } else {
       setInputError(false)

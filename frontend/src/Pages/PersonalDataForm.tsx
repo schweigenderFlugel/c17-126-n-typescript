@@ -19,7 +19,7 @@ export enum TYPEACCOUNT {
 const initialValue: ICreateUserPayload = {
   name: '',
   lastname: '',
-  accountType: '',
+  accountType: 'personal',
   alias: '',
   address: '',
   phone: '',
@@ -55,6 +55,7 @@ export const PersonalDataForm = () => {
         toast.error('Error desconocido');
       }
     } finally {
+      setLoading(false)
       setIsLoading(false);
     }
   };
@@ -70,7 +71,7 @@ export const PersonalDataForm = () => {
   const phoneRegex = new RegExp(/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/)
 
   useEffect(() => {
-    if(!phoneRegex.test(formValues.phone)) {
+    if(formValues.phone && !phoneRegex.test(formValues.phone)) {
       setInputError(true)
     } else {
       setInputError(false)

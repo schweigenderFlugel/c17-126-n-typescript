@@ -67,7 +67,7 @@ export default class authDao {
    * @param {IAuth} authPayload - the new authentication payload
    * @return {Promise<AuthModel | null>} the updated authentication model or null if not found
    */
-  async updateAuth(id: number, authPayload: IAuth): Promise<AuthModel | null> {
+  async updateAuth(id: number, authPayload: Partial<IAuth>): Promise<AuthModel | null> {
     const authUpdated = await Auth.update(authPayload, {
       where: { id },
       returning: true,

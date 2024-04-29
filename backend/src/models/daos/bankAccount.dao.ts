@@ -45,7 +45,15 @@ export default class bankAccountDao {
    */
   async getBankAccountById(id: number): Promise<BankAccountModel | null> {
     const bankAccountFound: BankAccountModel | null =
-      await BankAccount.findByPk(id)
+      await BankAccount.findByPk(id, {
+        include: [{
+          model: User,
+          include: [{
+            model: Auth,
+            attributes: ['id']
+          }]
+        }]
+      })
     return bankAccountFound
   }
 
@@ -82,7 +90,7 @@ export default class bankAccountDao {
           },]
         }],
     })
-    return bankAccountFound as Model<Omit<IBankAccount, 'expenses'>>
+    return bankAccountFound as Model<Omit<Omit<IBankAccount, 'expenses'>, 'investments'>>
   }
 
   async getBankAccountByUserId(userId: number) {

@@ -6,6 +6,8 @@ import apiSuccessResponse from '../utils/apiResponse.utils'
 import { IUserToken } from '../interfaces/user.interface'
 import transactionService from '../services/transaction.services'
 import transactionHelper from '../utils/transactionsHelper'
+import { ITokenPayload } from '../interfaces/token.interface'
+import { IAccountData } from '../interfaces/bankAccount.interface'
 
 export default class bankAccountController {
   /**
@@ -22,7 +24,19 @@ export default class bankAccountController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const { accountId, amount } = req.body
+      const accountId = req.params.id as unknown as number;
+      const { amount } = req.body;
+
+      const tokenPayload: ITokenPayload = req.user as ITokenPayload
+
+      if (!tokenPayload || !tokenPayload.id) {
+        throw new HttpError(
+          'Token payload error',
+          'Token payload error',
+          HTTP_STATUS.FORBIDDEN
+        )
+      }
+
       const accountFound =
         await bankAccountService.getBankAccountById(accountId)
 
@@ -33,6 +47,18 @@ export default class bankAccountController {
           HTTP_STATUS.NOT_FOUND
         )
       }
+
+      const accountData: IAccountData =
+        accountFound.dataValues as unknown as IAccountData;
+
+      if (accountData.user.auth.id !== tokenPayload.id) {
+        throw new HttpError(
+          'Conflict',
+          'Conclict with bank accou8nt and id from the token payload',
+          HTTP_STATUS.CONFLICT
+        )
+      }
+
       if (!amount || amount <= 0) {
         throw new HttpError(
           'Must provide an amount',
@@ -47,14 +73,6 @@ export default class bankAccountController {
         accountId,
         accountFound.dataValues
       )
-
-      if (!accountUpdated) {
-        throw new HttpError(
-          'Account was not updated',
-          'Account was not updated',
-          HTTP_STATUS.NOT_FOUND
-        )
-      }
 
       const response = apiSuccessResponse(accountUpdated)
 

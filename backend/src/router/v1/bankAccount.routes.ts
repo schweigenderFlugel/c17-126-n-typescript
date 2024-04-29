@@ -6,8 +6,8 @@ import { depositMoney } from '../../middlewares/validators/bankAccount.validator
 
 const bankAccountRouter = Router()
 
-bankAccountRouter.post(
-  '/deposit',
+bankAccountRouter.put(
+  '/deposit/:id',
   userAuth,
   schemaValidator(depositMoney, null),
   bankAccountController.depositMoney

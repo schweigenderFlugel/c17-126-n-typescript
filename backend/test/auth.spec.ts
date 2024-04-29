@@ -10,8 +10,12 @@ import { Roles } from '../src/models/db/entity/auth.entity';
 import { upSeed } from './utils/umzug';
 import { 
   adminUserRefreshToken, 
+  adminUserToken, 
   expiredRefreshToken, 
   normalUserRefreshToken,
+  normalUserToken,
+  tokenWithInvalidPayload,
+  unexistingUserToken,
 } from '../src/models/db/seeders/1-auth';
 import { ISign } from '../src/interfaces/auth.interface';
 
@@ -173,6 +177,79 @@ describe('Testing the auth route', () => {
       const { statusCode, header } = await api.get('/api/v1/auth/refresh');
       expect(statusCode).toBe(404);
       expect(header['set-cookie']).toBeUndefined();
+    })
+  })
+
+  describe('PUT /change-password', () => {
+    it('Should not be allowed to change the password', async () => {
+      const { statusCode } = await api.put('/api/v1/auth/change-password/4');
+      expect(statusCode).toBe(401);
+    })
+
+    it('Should not change the password because the token contains invalid payload', async () => {
+      const newData = {
+        currentPassword: 'anonuser1234',
+        newPassword: 'anonuser12345',
+      }
+      const { statusCode } = await api.put('/api/v1/auth/change-password/4')
+        .auth(tokenWithInvalidPayload, { type: 'bearer'})
+        .send(newData);
+      expect(statusCode).toBe(403);
+    })
+
+    it('Should not change the password of unexisting user', async () => {
+      const newData = {
+        currentPassword: 'anonuser12345',
+        newPassword: 'anonuser12345',
+      }
+      const { statusCode } = await api.put('/api/v1/auth/change-password/5')
+        .auth(unexistingUserToken, { type: 'bearer' })
+        .send(newData);
+      expect(statusCode).toBe(404);
+    })
+
+    it(`Should not allowed to change password because the id and id from the token payload don't match`, async () => {
+      const newData = {
+        currentPassword: 'anonuser1234',
+        newPassword: 'anonuser12345',
+      }
+      const { statusCode } = await api.put('/api/v1/auth/change-password/1')
+        .auth(normalUserToken, { type: 'bearer' })
+        .send(newData);
+      expect(statusCode).toBe(409);
+    })
+
+    it(`Should not allowed to change password because your current password is invalid`, async () => {
+      const newData = {
+        currentPassword: 'admin1234',
+        newPassword: 'admin1234',
+      }
+      const { statusCode } = await api.put('/api/v1/auth/change-password/1')
+        .auth(adminUserToken, { type: 'bearer'})
+        .send(newData);
+      expect(statusCode).toBe(401);
+    })
+
+    it(`Should not allowed to change password because the passwords are the same`, async () => {
+      const newData = {
+        currentPassword: 'admin12345',
+        newPassword: 'admin12345',
+      }
+      const { statusCode } = await api.put('/api/v1/auth/change-password/1')
+        .auth(adminUserToken, { type: 'bearer'})
+        .send(newData);
+      expect(statusCode).toBe(400);
+    })
+
+    it(`Should change the password`, async () => {
+      const newData = {
+        currentPassword: 'admin12345',
+        newPassword: 'newadmin12345',
+      }
+      const { statusCode } = await api.put('/api/v1/auth/change-password/1')
+        .auth(adminUserToken, { type: 'bearer' })
+        .send(newData);
+      expect(statusCode).toBe(201);
     })
   })
 

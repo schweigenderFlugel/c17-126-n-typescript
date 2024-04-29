@@ -87,6 +87,7 @@ export default class userDao {
         },
         {
           model: BankAccount,
+          attributes: ['id', 'number_account', 'balance', 'expenses', 'investments'], 
           include: [{
             association: 'transactions_sent', 
             include: [{

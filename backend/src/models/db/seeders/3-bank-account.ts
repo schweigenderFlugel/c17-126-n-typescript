@@ -14,6 +14,7 @@ export const bankAccount1: BankAccountFixture = {
   }`,
   balance: 0,
   expenses: 0,
+  investments: 0,
 }
 
 export const bankAccount2: BankAccountFixture = {
@@ -24,6 +25,7 @@ export const bankAccount2: BankAccountFixture = {
   }`,
   balance: 100,
   expenses: 50,
+  investments: 100,
 }
 
 const bankAccountFixtures = [bankAccount1, bankAccount2];

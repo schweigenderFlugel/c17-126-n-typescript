@@ -1,10 +1,9 @@
 import { DatePicker } from '@tremor/react';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { useAuth } from '../Hooks/useAuth';
 import { TransferTypeSelect } from './TransferTypeSelect';
 import { createTransaction } from '../Services/transfers';
-import { ICreateTransaction } from '../Interfaces/interfaces';
+import { ICreateTransaction, IUser } from '../Interfaces/interfaces';
 import { HiOutlineCurrencyDollar } from 'react-icons/hi2';
 
 export enum TYPETRANSFERS {
@@ -14,11 +13,11 @@ export enum TYPETRANSFERS {
   DEBIT = 'debit',
 }
 
-export const TransferForm = () => {
-  const { userData } = useAuth();
+export const TransferForm = ({ user, onClose }: { user: IUser | undefined, onClose: () => void }) => {
+  const [isTransferLoading, setIsTransferLoading] = useState(false);
 
   const initialValue: ICreateTransaction = {
-    source_account: userData?.bank_account.id ?? 0,
+    source_account: user?.bank_account.id ?? 0,
     destination_alias: '',
     amount: 0,
     type: TYPETRANSFERS.DEFERRED,
@@ -28,27 +27,19 @@ export const TransferForm = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      formValues.amount = parseInt(formValues.amount as unknown as string);
-      createTransaction(formValues)
-    } catch (error) {
-      
-    }
-
-    function transfer(): Promise<void> {
-      return new Promise(resolve => {
-        setTimeout(() => {
-          resolve();
-        }, 1000);
-      });
-    }
-
+    setIsTransferLoading(true);
+    formValues.amount = +formValues.amount
     toast.promise(
-      transfer(),
+      createTransaction(formValues),
       {
         loading: 'Cargando',
-        success: () => `Transferencia exitosa`,
-        error: () => `Error al Transferir`,
+        success: () => {
+          onClose();
+          return `Transferencia exitosa`;
+        },
+        error: () => {
+          return `Error al Transferir`;
+        },
       },
       {
         style: {
@@ -64,10 +55,8 @@ export const TransferForm = () => {
     setFormValues({ ...formValues, [name]: value });
   };
 
-  const isLoading = false;
-
   return (
-    <div className="justify-items-center border-indigo-300 dark:border-indigo-500 grid bg-indigo-200 dark:bg-indigo-950 shadow-xl mx-6 p-12 max-sm:p-8 border rounded-2xl w-[450px]">
+    <div className="justify-items-center border-indigo-300 dark:border-indigo-500 grid bg-indigo-200 dark:bg-indigo-950 shadow-xl max-sm:m-0 mx-6 p-12 max-sm:p-8 border rounded-2xl w-[450px] max-sm:w-full">
       <form className="w-full" onSubmit={handleSubmit}>
         <label
           htmlFor="alias"
@@ -133,7 +122,7 @@ export const TransferForm = () => {
         </div>
         <button
           className="bg-indigo-500 hover:bg-indigo-600 disabled:bg-indigo-400 mt-4 py-2 rounded-lg w-full text-white transition disabled:cursor-not-allowed"
-          disabled={isLoading}
+          disabled={isTransferLoading}
         >
           Transferir
         </button>

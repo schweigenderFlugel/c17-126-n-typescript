@@ -1,4 +1,5 @@
 import { useAuth } from '../Hooks/useAuth';
+import { IUser } from '../Interfaces/interfaces';
 import { BalanceCard } from './BalanceCard';
 import { DashboardNavbar } from './DashboardNavbar';
 import { LastTransfersTable } from './LastTransfersTable';
@@ -8,10 +9,10 @@ export const DashboardStart = () => {
   const { userData } = useAuth();
 
   return (
-    <main className="gap-x-8 grid grid-col-[2fr_1fr] bg-transparent w-full h-full">
+    <main className="max-[600px]:flex max-[600px]:flex-col gap-x-8 max-xl:gap-x-4 grid grid-cols-[2fr_1fr] bg-transparent w-full h-full">
       <DashboardNavbar>Inicio</DashboardNavbar>
-      <BalanceCard user={userData}/>
-      <WalletCard />
+      <BalanceCard bank_account={userData?.bank_account}/>
+      <WalletCard user={userData as IUser | undefined} />
       <LastTransfersTable bank_account={userData?.bank_account} />
     </main>
   );

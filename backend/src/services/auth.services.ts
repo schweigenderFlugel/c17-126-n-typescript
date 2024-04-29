@@ -56,7 +56,7 @@ export default class authService {
    */
   static async updateAuth(
     id: number,
-    authPayload: IAuth
+    authPayload: Partial<IAuth>
   ): Promise<IAuth> {
     const authUpdated = await authDao.getInstance().updateAuth(id, authPayload)
     return authUpdated as IAuth;
