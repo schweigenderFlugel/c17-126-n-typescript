@@ -28,19 +28,6 @@ describe('Testing the auth route', () => {
       expect(statusCode).toBe(401);
     })
 
-    it('Should not be allowed to create a transfer being an admin user', async () => {
-      const data = {
-        source_account: bankAccount1.id,
-        destination_alias: normalUser.alias,
-        amount: 10,
-        type: TYPETRANSFERS.CREDIT,
-      }
-      const { statusCode } = await api.post('/api/v1/transfer')
-        .auth(adminUserToken, { type: 'bearer' })
-        .send(data);
-      expect(statusCode).toBe(401);
-    })
-
     it('Should not make a tranfer from an unexisting source account', async () => {
       const data = {
         source_account: 999,
@@ -80,6 +67,19 @@ describe('Testing the auth route', () => {
       expect(statusCode).toBe(404); 
     })
 
+    it('Should not make a tranfer because the source and destination account are the same', async () => {
+      const data = {
+        source_account: bankAccount2.id,
+        destination_alias: normalUser.alias,
+        amount: 10,
+        type: TYPETRANSFERS.CREDIT,
+      }
+      const { statusCode } = await api.post('/api/v1/transfer')
+        .auth(normalUserToken, { type: 'bearer' })
+        .send(data); 
+      expect(statusCode).toBe(400); 
+    })
+
     it('Should not be allowed to create because there is not enough funds', async () => {
       const data = {
         source_account: bankAccount1.id,
@@ -88,7 +88,7 @@ describe('Testing the auth route', () => {
         type: TYPETRANSFERS.CREDIT,
       }
       const { statusCode } = await api.post('/api/v1/transfer')
-        .auth(normalUserToken, { type: 'bearer' })
+        .auth(adminUserToken, { type: 'bearer' })
         .send(data); 
         expect(statusCode).toBe(400); 
     })

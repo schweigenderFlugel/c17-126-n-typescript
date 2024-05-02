@@ -54,6 +54,14 @@ export default class transfersController {
         )
       }
 
+      if (sourceAccountData.id === destinationAccountFound.id) {
+        throw new HttpError(
+          'The source and the destination account are the same',
+          'The source and the destination account are the same',
+          HTTP_STATUS.BAD_REQUEST
+        )
+      }
+
       if (sourceAccountData.balance < amount) {
         throw new HttpError(
           'Insufficient funds',

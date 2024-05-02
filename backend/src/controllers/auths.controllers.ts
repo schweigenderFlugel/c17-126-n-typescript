@@ -202,7 +202,6 @@ export default class authsController {
       await authService.updateAuth(id, newData);
       res.status(HTTP_STATUS.CREATED).json({ message: 'user authentication updated' })
     } catch (error) {
-      console.log(error)
       next(error);
     }
   }
