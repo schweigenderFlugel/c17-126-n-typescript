@@ -1,59 +1,203 @@
-import { Request, Response } from 'express'
-import { IAuth } from '../interfaces/auth.interface';
-import { ITokenPayload } from '../interfaces/token.interface';
+import { NextFunction, Request, Response } from 'express'
+import { UniqueConstraintError } from 'sequelize'
+import { TokenExpiredError } from 'jsonwebtoken'
+import { ISign } from '../interfaces/auth.interface'
+import { ITokenPayload } from '../interfaces/token.interface'
 import { createHash, isValidPassword } from '../utils/bcrypt.utils'
 import authService from '../services/auth.services'
 import apiSuccessResponse from '../utils/apiResponse.utils'
-import { HTTP_STATUS } from '../config/constants'
+import { HTTP_STATUS, envs } from '../config/constants'
 import HttpError from '../utils/HttpError.utils'
+
 import SessionUtils from '../utils/session.util';
+import CookiesUtils from '../utils/cookies.utils';
+import { ENVIROMENTS } from '../../enviroments';
+
+const { NODE_ENV, HTTPONLY_COOKIE_NAME, DB_URL } = envs
+
+
+const cookieName =
+  NODE_ENV === ENVIROMENTS.PRODUCTION ? HTTPONLY_COOKIE_NAME : 'bankme'
 
 export default class authsController {
   /**
-   * A description of the entire function.
+   * Sign up a new user authentication with the provided request body data.
    *
-   * @param {Request} req - request object
-   * @param {Response} res - response object
-   * @return {Promise<Response>} response containing the result of the operation
+   * @param {Request} req - the request object containing new user auth data
+   * @param {Response} res - the response object to send the created user auth data
+   * @param {NextFunction} next - the next middleware function
+   * @return {Promise<void>} - a promise that resolves when the user auth is created
    */
-  static async signUp(req: Request, res: Response): Promise<Response> {
-    const payload: IAuth = req.body
-    payload.password = createHash(payload.password)
+  static async signUp(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
+      const payload: ISign = req.body
+      payload.password = createHash(payload.password)
       const newAuth = await authService.createAuth(payload)
       const response = apiSuccessResponse(newAuth)
-      return res.status(HTTP_STATUS.CREATED).json(response)
+      res.status(HTTP_STATUS.CREATED).json(response)
     } catch (err: any) {
-      console.log(err) // FIXME: Replace with a Morgan
-      const response: HttpError = new HttpError(
-        err.description || err.message,
-        err.details || err.message
-      )
-      return res.status(err.status || HTTP_STATUS.SERVER_ERROR).json(response)
+      if (err instanceof UniqueConstraintError) {
+        next(
+          new HttpError(
+            'Validation error',
+            'The user already exists',
+            HTTP_STATUS.CONFLICT
+          )
+        )
+      } else {
+        next(err)
+      }
     }
   }
 
-  static async login(req: Request, res: Response): Promise<string | Response> {
-    const payload: IAuth = req.body;
+  /**
+   * Login with an existing user.
+   *
+   * @param {Request} req - the request object containing auth data
+   * @param {Response} res - the response object to send an access token
+   * @param {NextFunction} next - the next middleware function
+   * @return {Promise<void>} - a promise that resolves when the auth data is valid
+   */
+  static async login(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
-      const authFound = await authService.getAuthByEmail(payload.email);
-      isValidPassword(authFound.password, payload.password)
-      const tokenPayload: ITokenPayload = { 
+      const jwtCookie = req.cookies[cookieName]
+      if (jwtCookie)
+        throw new HttpError('Session open', 'Cookie is still existing', 400)
+      const payload: ISign = req.body
+      const authFound = await authService.getAuthByEmail(payload.email)
+      if (!authFound)
+        throw new HttpError(
+          'Invalid Credentials',
+          'Must provide valid credentials',
+          HTTP_STATUS.NOT_FOUND
+        )
+      const validPassword = isValidPassword(
+        authFound.password,
+        payload.password
+      )
+      if (!validPassword)
+        throw new HttpError(
+          'Invalid Credentials',
+          'Must provide valid credentials',
+          HTTP_STATUS.UNAUTHORIZED
+        )
+      const tokenPayload: ITokenPayload = {
         id: authFound.id,
         role: authFound.role,
+
       }
+
       const accessToken = await SessionUtils.generateToken(tokenPayload);
-      return accessToken;
+      const refreshToken = await SessionUtils.generateRefreshToken(tokenPayload);
+      await CookiesUtils.setJwtCookie(cookieName, res, refreshToken)
+      res.status(HTTP_STATUS.OK).json({ accessToken })
     } catch (err: any) {
-      const response: HttpError = new HttpError(
-        err.description || err.message,
-        err.details || err.message
-      )
-      return res.status(err.status || HTTP_STATUS.SERVER_ERROR).json(response)
+      next(err)
     }
   }
 
-  static async logout(req: Request, res: Response): Promise<void> {
+  /**
+   * Refresh session with the refresh token.
+   *
+   * @param {Request} req - the request object containig a cookie with the refresh token
+   * @param {Response} res - the response object to send a new access token
+   * @param {NextFunction} next - the next middleware function
+   * @return {Promise<void>} - a promise that resolves when the refresh token is still valid
+   */
+  static async refresh(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
 
+      const jwtCookie = req.cookies[cookieName];
+      if (!jwtCookie) throw new HttpError(
+        'Refresh token not found', 
+        'Refresh token should exist to refresh', 
+        HTTP_STATUS.NOT_FOUND
+      )
+      await CookiesUtils.removeJwtCookie(cookieName, res)
+      const verified = await SessionUtils.verifyRefreshToken(jwtCookie)
+      const payload: ITokenPayload = { id: verified.id, role: verified.role }
+      const newAccessToken = await SessionUtils.generateToken(payload)
+      const newRefreshToken = await SessionUtils.generateRefreshToken(payload)
+      await CookiesUtils.setJwtCookie(cookieName, res, newRefreshToken)
+      res.status(HTTP_STATUS.OK).json({ accessToken: newAccessToken })
+    } catch (err: any) {
+      if (err instanceof TokenExpiredError) {
+        next(new HttpError(err.message, err.stack, HTTP_STATUS.FORBIDDEN))
+      } else {
+        next(err)
+      }
+    }
+  }
+
+  /**
+   * Restore password process.
+   *
+   * @param {Request} req - the request object containing the email
+   * @param {Response} res - the response object to send a link with the recovery token
+   * @param {NextFunction} next - the next middleware function
+   * @return {Promise<void>} - a promise that resolves when the email is valid
+   */
+  static async forgotPassword(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const payload: ISign = req.body;
+      const authFound = await authService.getAuthByEmail(payload.email);
+      if(!authFound) throw new HttpError(
+        'User not found',
+        'User not found',
+        HTTP_STATUS.NOT_FOUND
+      )
+      const payloadToken: Omit<ITokenPayload, 'role'> = {
+        id: authFound.id,
+      }
+      const recoveryToken = await SessionUtils.generateRecoveryToken(payloadToken);
+      res.status(HTTP_STATUS.OK).json({ link: `${DB_URL}/restablecer-contrasena/${recoveryToken}`})
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  }
+
+  /**
+   * Logout the session.
+   *
+   * @param {Request} req - the request object containig a cookie with the refresh token
+   * @param {Response} res - the response object to send the message "logout successfully"
+   * @param {NextFunction} next - the next middleware function
+   * @return {Promise<void>} - a promise that resolves when the refresh token is still valid
+   */
+  static async logout(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const jwtCookie = req.cookies[cookieName]
+
+      if (!jwtCookie) throw new HttpError(
+        'Cookie not found',
+        'Cookie should exist to logout',
+        HTTP_STATUS.NOT_FOUND
+      )
+      await CookiesUtils.removeJwtCookie(cookieName, res)
+      res.status(HTTP_STATUS.OK).json({ message: 'logout succesfully' })
+    } catch (err: any) {
+      next(err)
+    }
   }
 }

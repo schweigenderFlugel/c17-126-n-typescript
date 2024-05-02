@@ -1,0 +1,319 @@
+{
+	"info": {
+		"_postman_id": "1e403e93-daf8-4617-8d64-e9b701a0d35e",
+		"name": "Bank NC.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17992777"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Create an Auth",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"saul@gmail.com\",\n    \"password\": \"Qwerty123!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/signup",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"juan@gmail.com\",\n    \"password\": \"Qwerty123!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Type Accounts",
+			"item": [
+				{
+					"name": "Create Type Account",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Empresarial\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/types-account",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"types-account"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Types Account",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/types-account",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"types-account"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Create an User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6Im5vcm1hbCIsImlhdCI6MTcxMzg3ODUyOSwiZXhwIjoxNzEzODc5NDI5fQ.cRc_uJJ9Y6g5PKHY8BcccJwjw4tl-_Ams02RwM1LNik",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Saúl Iván\",\n    \"lastname\": \"Belbey\",\n    \"accountType\": \"personal\",\n    \"alias\":\"sbelbey\",\n    \"address\": \"{{$randomStreetAddress}}\",\n    \"phone\": \"{{$randomPhoneNumber}}\" \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/user",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Types Transfer",
+			"item": [
+				{
+					"name": "All Types Transfer",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/types-transfers/all",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"types-transfers",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Transfer Type",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"inmediate\",\n    \"description\":\"Transferencias menores de 2M con acreditación diferida\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/types-transfers/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"types-transfers",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Transfers",
+			"item": [
+				{
+					"name": "Create a transfer",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"source_account\": 2,\n    \"destination_account\": \"saul\",\n    \"amount\": 16,\n    \"type\": \"inmediate\"\n\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/transfer",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"transfer"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Bank Account",
+			"item": [
+				{
+					"name": "Deposit Money",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"accountId\": 1,\n    \"amount\": 10000\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/bank-account/deposit",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"bank-account",
+								"deposit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Balance",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/bank-account/getBalance",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"bank-account",
+								"getBalance"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

@@ -1,17 +1,24 @@
-import { BalanceCard } from "./BalanceCard"
-import { DashboardNavbar } from "./DashboardNavbar"
-import { LastTransfersTable } from "./LastTransfersTable"
-import { WalletCard } from "./WalletCard"
+import { useBalance } from '../Hooks/useBalance';
+import { BalanceCard } from './BalanceCard';
+import { DashboardNavbar } from './DashboardNavbar';
+import { LastTransfersTable } from './LastTransfersTable';
+import { WalletCard } from './WalletCard';
 
 export const DashboardStart = () => {
+  const { isLoading: isLoadingBalance, userBalance } = useBalance();
+
   return (
-    <main className="w-full h-[900px] grid grid-cols-12 grid-rows-12 gap-y-10 bg-transparent">
+    <main className="max-[600px]:flex max-[600px]:flex-col gap-x-8 max-xl:gap-x-4 grid grid-cols-[2fr_1fr] bg-transparent w-full h-full">
       <DashboardNavbar>Inicio</DashboardNavbar>
-      <div className="col-span-12 row-span-5 grid grid-cols-12 gap-x-12">
-        <BalanceCard />
-        <WalletCard />
-      </div>
+      <BalanceCard
+        balance={userBalance?.accountFound.balance}
+        isLoadingBalance={isLoadingBalance}
+      />
+      <WalletCard
+        balance={userBalance?.accountFound.balance}
+        isLoadingBalance={isLoadingBalance}
+      />
       <LastTransfersTable />
     </main>
-  )
-}
+  );
+};

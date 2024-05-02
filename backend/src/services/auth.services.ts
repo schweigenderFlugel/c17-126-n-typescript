@@ -1,16 +1,14 @@
-import { Model } from 'sequelize'
-import { IAuth } from '../interfaces/auth.interface'
+import { IAuth, ISign } from '../interfaces/auth.interface'
 import authDao from '../models/daos/auth.dao'
-import { AuthModel } from '../models/db'
 
 export default class authService {
   /**
    * A description of the entire function.
    *
    * @param {IAuth} authPayload - description of parameter
-   * @return {Promise<AuthModel | null>} description of return value
+   * @return {Promise<IAuth>} description of return value
    */
-  static async createAuth(authPayload: IAuth): Promise<IAuth> {
+  static async createAuth(authPayload: ISign): Promise<IAuth> {
     const authCreated = await authDao.getInstance().createAuth(authPayload)
     return authCreated;
   }
@@ -29,7 +27,7 @@ export default class authService {
   /**
    * Retrieve all authentication records.
    *
-   * @return {Promise<AuthModel[]>} Found authentication records
+   * @return {Promise<IAuth[]>} Found authentication records
    */
   static async getAllAuth(): Promise<IAuth[]> {
     const authsFound = await authDao.getInstance().getAllAuth()
@@ -68,7 +66,7 @@ export default class authService {
    * Delete authentication by ID.
    *
    * @param {number} id - The ID of the authentication to delete.
-   * @return {Promise<AuthModel | null>} The deleted authentication if successful, otherwise null.
+   * @return {Promise<IAuth | null>} The deleted authentication if successful, otherwise null.
    */
   static async deleteAuth(id: number): Promise<IAuth> {
     const authDeleted = await authDao.getInstance().deleteAuth(id)

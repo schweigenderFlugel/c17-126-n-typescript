@@ -10,6 +10,8 @@ export const envs = {
   CLUSTER: env.get('IS_CLUSTER').asBool(),
   ACCESS_TOKEN_SECRET: env.get('ACCESS_TOKEN_SECRET').required().asString(),
   REFRESH_TOKEN_SECRET: env.get('REFRESH_TOKEN_SECRET').required().asString(),
+  RECOVERY_TOKEN_SECRET: env.get('RECOVERY_TOKEN_SECRET').required().asString(),
+  HTTPONLY_COOKIE_NAME: env.get('HTTPONLY_COOKIE_NAME').required().asString(),
 }
 
 export enum HTTP_STATUS {
@@ -22,4 +24,17 @@ export enum HTTP_STATUS {
   NOT_FOUND = 404,
   CONFLICT = 409,
   SERVER_ERROR = 500,
+}
+
+export enum TYPETRANSFERS {
+  INMEDIATE = 'inmediate',
+  DEFERRED = 'deferred',
+  CREDIT = 'credit',
+  DEBIT = 'debit',
+}
+
+export enum TRANSACTION_STATUS {
+  PENDING = 'pending',
+  SUCCESS = 'success',
+  FAILED = 'failed',
 }

@@ -1,8 +1,13 @@
-export interface IAuth {
-  id: number
-  email: string
-  password: string
+import { ICommon } from "./common.interface";
+
+export interface IAuth extends ICommon {
+  email: string;
+  password: string;
   role: string;
-  refreshToken: string
-  status: boolean
+  refreshToken: string | null;
+  status: boolean;
 }
+
+export interface ISign extends Omit<Omit<Omit<Omit<Omit<Omit<IAuth, 'id'>, 'createdAt'>, 'updatedAt'>, 'role'>, 'refreshToken'>, 'status'> {}
+
+export interface IUpdateAuth extends Omit<Omit<IAuth, 'id'>, 'createdAt'> {}

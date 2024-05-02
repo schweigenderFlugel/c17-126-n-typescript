@@ -1,6 +1,7 @@
 import { Model } from 'sequelize'
 import userDao from '../models/daos/user.dao'
-import { IUser } from '../interfaces/user.interface'
+import { ICreateUser, IUpdateUser, IUser } from '../interfaces/user.interface'
+import { UserModel } from '../models/db/entity/user.entity'
 
 export default class userService {
   /**
@@ -9,7 +10,7 @@ export default class userService {
    * @param {IUser} userPayload - the payload for creating the user
    * @return {Promise<Model<IUser> | null>} the created user model, or null if creation fails
    */
-  static async createUser(userPayload: IUser): Promise<Model<IUser> | null> {
+  static async createUser(userPayload: ICreateUser): Promise<Model<IUser> | null> {
     const userCreated = await userDao.getInstance().createUser(userPayload)
     return userCreated
   }
@@ -20,9 +21,9 @@ export default class userService {
    * @param {number} id - The ID of the user to retrieve
    * @return {Promise<Model<IUser> | null>} The user found, or null if not found
    */
-  static async getUserById(id: number): Promise<Model<IUser> | null> {
+  static async getUserById(id: number): Promise<IUser> {
     const userFound = await userDao.getInstance().getUserById(id)
-    return userFound
+    return userFound as IUser
   }
 
   /**
@@ -38,12 +39,23 @@ export default class userService {
   /**
    * Get a user by their email address.
    *
-   * @param {string} email - the email address of the user
+   * @param {string} alias - the alias address of the user
    * @return {Promise<Model<IUser> | null>} the user found or null if not found
    */
-  static async getUserByEmail(email: string): Promise<Model<IUser> | null> {
-    const userFound = await userDao.getInstance().getUserByEmail(email)
+  static async getUserByAlias(alias: string): Promise<Model<IUser> | null> {
+    const userFound = await userDao.getInstance().getUserByAlias(alias)
     return userFound
+  }
+
+  /**
+   * Retrieves a user by their authentication ID.
+   *
+   * @param {number} authId - The authentication ID of the user to retrieve.
+   * @return {Promise<Model<IUser> | null>} The user model if found, otherwise null.
+   */
+  static async getUserByAuthId(authId: number): Promise<IUser> {
+    const userFound = await userDao.getInstance().getUserByAuthId(authId)
+    return userFound as IUser;
   }
 
   /**
@@ -55,8 +67,8 @@ export default class userService {
    */
   static async updateUser(
     id: number,
-    userPayload: IUser
-  ): Promise<Model<IUser> | null> {
+    userPayload: IUpdateUser
+  ): Promise<UserModel | null> {
     const userUpdated = await userDao.getInstance().updateUser(id, userPayload)
     return userUpdated
   }

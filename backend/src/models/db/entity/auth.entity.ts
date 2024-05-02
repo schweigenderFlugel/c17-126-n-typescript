@@ -1,5 +1,5 @@
-import { DataTypes, Model } from 'sequelize'
-import { sequelize } from '../postgres.manager'
+import { DataTypes, Model, ModelOptions, NOW, Sequelize } from 'sequelize'
+import { sequelize } from '../database.manager'
 import { IAuth } from '../../../interfaces/auth.interface'
 
 export enum Roles {
@@ -18,6 +18,7 @@ export const Auth = sequelize.define<AuthModel>('auth', {
   email: {
     type: DataTypes.STRING,
     allowNull: false,
+    unique: true,
   },
   password: {
     type: DataTypes.STRING,
@@ -29,6 +30,7 @@ export const Auth = sequelize.define<AuthModel>('auth', {
     defaultValue: Roles.NORMAL,
   },
   refreshToken: {
+    field: 'refresh_token',
     type: DataTypes.STRING,
     allowNull: true,
   },
@@ -36,6 +38,16 @@ export const Auth = sequelize.define<AuthModel>('auth', {
     type: DataTypes.BOOLEAN,
     allowNull: false,
     defaultValue: false,
+  }, 
+  createdAt: {
+    field: 'created_at',
+    type: DataTypes.DATE,
+    defaultValue: NOW,
   },
-}
+  updatedAt: {
+    field: 'updated_at',
+    type: DataTypes.DATE,
+    defaultValue: NOW,
+  }
+}, 
 )

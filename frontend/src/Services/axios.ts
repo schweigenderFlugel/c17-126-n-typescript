@@ -8,7 +8,7 @@ export const AxiosAuth: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL,
   headers: {
     'Access-Control-Allow-Credentials': true,
-    'Access-Control-Allow-Origiu': '*',
+    'Access-Control-Allow-Origin': '*',
   },
   withCredentials: true,
 })

@@ -1,9 +1,13 @@
-import { DataTypes, Model } from 'sequelize'
-import { sequelize } from '../postgres.manager'
+import { AssociationOptions, DataTypes, Model, NOW } from 'sequelize'
+import { IUser } from '../../../interfaces/user.interface'
+import { sequelize } from '../database.manager'
+import { Auth } from './auth.entity';
 
-const { STRING, INTEGER } = DataTypes
+const { STRING, INTEGER } = DataTypes;
 
-const User = sequelize.define('users', {
+export interface UserModel extends Model<IUser>, IUser {}
+
+const User = sequelize.define<UserModel>('users', {
   id: {
     type: INTEGER,
     autoIncrement: true,
@@ -15,6 +19,11 @@ const User = sequelize.define('users', {
   },
   lastname: {
     type: STRING,
+    allowNull: false,
+  },
+  accountType: {
+    field: 'account_type',
+    type: DataTypes.STRING,
     allowNull: false,
   },
   alias: {
@@ -31,6 +40,26 @@ const User = sequelize.define('users', {
   },
   authId: {
     type: INTEGER,
+    field: 'auth_id',
+    allowNull: false,
+    unique: true,
+    references: {
+      model: Auth.getTableName(),
+      key: 'id',
+    },
+    onUpdate: 'CASCADE',
+    onDelete: 'SET NULL'
+  },
+  createdAt: {
+    type: DataTypes.DATE,
+    field: 'created_at',
+    defaultValue: NOW,
+    allowNull: false,
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
+    field: 'updated_at',
+    defaultValue: NOW,
     allowNull: false,
   },
 })
