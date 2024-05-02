@@ -8,6 +8,11 @@ export interface ISignUpPayload {
   password: string;
 }
 
+export interface IChangePassword {
+  currentPassword: string;
+  newPassword: string;
+}
+
 export interface ICreateUserPayload {
   name: string;
   lastname: string;
@@ -93,6 +98,7 @@ export interface IUser {
   address: string;
   phone: string;
   auth: {
+    id: number;
     email: string;
   };
   preference: IPreference;

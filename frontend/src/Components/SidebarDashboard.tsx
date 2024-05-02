@@ -15,8 +15,9 @@ import { SidebarMobileMenu } from './SidebarMobileMenu';
 import { Modal } from './Modal';
 import { useState } from 'react';
 import { TransferForm } from './TransferForm';
+import { IUser } from '../Interfaces/interfaces';
 
-export const SidebarDashboard = () => {
+export const SidebarDashboard = ({ user }: { user: IUser | null }) => {
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
 
   // Cambiar la función por la que descargaría el pdf
@@ -116,7 +117,7 @@ export const SidebarDashboard = () => {
         onCloseModal={() => setIsTransferModalOpen(false)}
         isOpen={isTransferModalOpen}
       >
-        <TransferForm onClose={closeTransferModal}/>
+        <TransferForm bank_account={user?.bank_account} onClose={closeTransferModal}/>
       </Modal>
     </>
   );

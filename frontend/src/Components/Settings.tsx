@@ -147,6 +147,9 @@ export const Settings = () => {
             disabled={isLoading}
             type="number"
           />
+          <div className='text-white'>
+            Actualizar Contraseña
+          </div>
           <div className="flex justify-end max-[500px]:justify-between w-full max-sm:text-sm">
             <button
               className="border-indigo-500 dark:border-white hover:bg-indigo-200/50 dark:hover:bg-indigo-500/20 disabled:bg-inherit dark:disabled:bg-inherit mr-3 px-4 max-sm:px-2 py-3 border rounded-lg disabled:text-gray-400 dark:text-white transition disabled:cursor-not-allowed"

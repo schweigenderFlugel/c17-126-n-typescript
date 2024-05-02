@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios'
-import { ILoginPayload, ISignUpPayload, ICreateUserPayload, IUser, UserSettingsType } from '../Interfaces/interfaces'
+import { ILoginPayload, ISignUpPayload, ICreateUserPayload, IUser, UserSettingsType, IChangePassword } from '../Interfaces/interfaces'
 import { Axios, AxiosAuth } from './axios'
 
 const controller = new AbortController()
@@ -27,6 +27,16 @@ export const forgotPassword = async (payload: Omit<ISignUpPayload, 'id'>): Promi
   const res: AxiosResponse<{ recoveryToken: string }> = await Axios({
     method: 'POST',
     url: '/auth/forgot-password',
+    data: payload,
+    signal: controller.signal,
+  })
+  return res.data;
+}
+
+export const changePassword = async (id: number, payload: IChangePassword) => {
+  const res: AxiosResponse<{ recoveryToken: string }> = await Axios({
+    method: 'PUT',
+    url: `/auth/change-password/${id}`,
     data: payload,
     signal: controller.signal,
   })

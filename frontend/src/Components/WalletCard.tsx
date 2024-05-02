@@ -6,7 +6,7 @@ import { TransferForm } from './TransferForm';
 import { DepositForm } from './DepositForm';
 import { IUser } from '../Interfaces/interfaces';
 
-export const WalletCard = ({ user }: { user: IUser | undefined }) => {
+export const WalletCard = ({ user }: { user: IUser | null }) => {
   const [showBalance, setShowBalance] = useState(true);
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
   const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
@@ -56,7 +56,7 @@ export const WalletCard = ({ user }: { user: IUser | undefined }) => {
             </div>
             <div className="flex text-white">
               <span className="min-w-44 font-semibold text-3xl max-lg:text-2xl tracking-wider">
-                $ {showBalance ? `${user?.bank_account.balance ? user?.bank_account.balance : 'error'}` : `●●●●.●●`}
+                $ {showBalance ? `${user?.bank_account.balance ? user?.bank_account.balance : 0}` : `●●●●.●●`}
               </span>
               <button onClick={() => setShowBalance(show => !show)}>
                 {showBalance ? (
@@ -160,7 +160,7 @@ export const WalletCard = ({ user }: { user: IUser | undefined }) => {
         onCloseModal={() => setIsTransferModalOpen(false)}
         isOpen={isTransferModalOpen}
       >
-        <TransferForm user={user} onClose={closeTransferModal} />
+        <TransferForm bank_account={user?.bank_account} onClose={closeTransferModal} />
       </Modal>
       <Modal
         onCloseModal={() => setIsDepositModalOpen(false)}

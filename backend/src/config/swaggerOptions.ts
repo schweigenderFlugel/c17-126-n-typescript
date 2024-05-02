@@ -7,14 +7,15 @@ export const options = {
       description: 'API Documentation for Bank NC',
     },
     servers: [{ url: 'http://localhost:8080' }],
-  },
-  securityDefinitions: {
-    bearerAuth: {
-      type: 'apiKey',
-      name: 'Authorization',
-      scheme: 'bearer',
-      in: 'header',
-    },
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
+    }, 
   },
   apis: ['./src/docs/**/*.yaml'],
 }

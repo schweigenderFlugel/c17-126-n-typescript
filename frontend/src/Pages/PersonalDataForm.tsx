@@ -55,7 +55,6 @@ export const PersonalDataForm = () => {
         toast.error('Error desconocido');
       }
     } finally {
-      setLoading(false)
       setIsLoading(false);
     }
   };

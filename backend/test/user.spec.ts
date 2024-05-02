@@ -41,6 +41,7 @@ describe('Testing the user route', () => {
       expect(body.alias).toMatch(adminUser.alias);
       expect(body.address).toMatch(adminUser.address);
       expect(body.phone).toMatch(adminUser.phone);
+      expect(body.auth.id).toEqual(adminAuth.id);
       expect(body.auth.email).toMatch(adminAuth.email);
       expect(body.preference.min_ammount_transfers).toEqual(preference1.min_ammount_transfers);
       expect(body.preference.max_ammount_transfers).toEqual(preference1.max_ammount_transfers);
@@ -66,6 +67,7 @@ describe('Testing the user route', () => {
       expect(body.alias).toMatch(normalUser.alias);
       expect(body.address).toMatch(normalUser.address);
       expect(body.phone).toMatch(normalUser.phone);
+      expect(body.auth.id).toEqual(normalAuth.id);
       expect(body.auth.email).toMatch(normalAuth.email);
       expect(body.preference.min_ammount_transfers).toEqual(preference2.min_ammount_transfers);
       expect(body.preference.max_ammount_transfers).toEqual(preference2.max_ammount_transfers);

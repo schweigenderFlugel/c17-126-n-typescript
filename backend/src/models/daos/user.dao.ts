@@ -79,7 +79,7 @@ export default class userDao {
       include: [
         {
           model: Auth,
-          attributes: ['email']
+          attributes: ['id', 'email']
         },
         {
           model: Preferences,

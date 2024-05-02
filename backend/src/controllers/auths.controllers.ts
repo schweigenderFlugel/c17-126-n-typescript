@@ -76,7 +76,7 @@ export default class authsController {
       if (!authFound)
         throw new HttpError(
           'Invalid Credentials',
-          'Must provide valid credentials',
+          'Auth not found',
           HTTP_STATUS.NOT_FOUND
         )
       const validPassword = isValidPassword(
@@ -92,9 +92,7 @@ export default class authsController {
       const tokenPayload: ITokenPayload = {
         id: authFound.id,
         role: authFound.role,
-
       }
-
       const accessToken = await SessionUtils.generateToken(tokenPayload);
       const refreshToken = await SessionUtils.generateRefreshToken(tokenPayload);
       await CookiesUtils.setJwtCookie(cookieName, res, refreshToken)
@@ -118,16 +116,25 @@ export default class authsController {
     next: NextFunction
   ): Promise<void> {
     try {
-
       const jwtCookie = req.cookies[cookieName];
-      if (!jwtCookie) throw new HttpError(
-        'Refresh token not found', 
-        'Refresh token should exist to refresh', 
-        HTTP_STATUS.NOT_FOUND
-      )
+      if (!jwtCookie) 
+        throw new HttpError(
+          'Refresh token not found', 
+          'Refresh token should exist to refresh', 
+          HTTP_STATUS.NOT_FOUND
+        )
       await CookiesUtils.removeJwtCookie(cookieName, res)
       const verified = await SessionUtils.verifyRefreshToken(jwtCookie)
-      const payload: ITokenPayload = { id: verified.id, role: verified.role }
+      const authFound = await authService.getAuthById(verified.id);
+      if (!authFound) {
+        await CookiesUtils.removeJwtCookie(cookieName, res);
+        throw new HttpError(
+          'Invalid Credentials',
+          'Auth not Found',
+          HTTP_STATUS.NOT_FOUND,
+        )
+      }
+      const payload: ITokenPayload = { id: authFound.id, role: authFound.role }
       const newAccessToken = await SessionUtils.generateToken(payload)
       const newRefreshToken = await SessionUtils.generateRefreshToken(payload)
       await CookiesUtils.setJwtCookie(cookieName, res, newRefreshToken)
@@ -159,7 +166,6 @@ export default class authsController {
       const tokenPayload: ITokenPayload = req.user as ITokenPayload
       const body: IUpdateAuth = req.body
       const authFound = await authService.getAuthById(id);
-      console.log(id, tokenPayload.id)
       if (!tokenPayload || !tokenPayload.id) throw new HttpError(
         'Token payload error',
         'Token payload error',
@@ -189,12 +195,12 @@ export default class authsController {
         'The password should not be the same',
         HTTP_STATUS.BAD_REQUEST
       )
-      const newData: Omit<Omit<Omit<Omit<Omit<IUpdateAuth, 'role'>, 'refreshToken'>, 'status'>, 'currentPassword'>, 'newPassword'> = {
+      const newData: Partial<IUpdateAuth> = {
         password: createHash(body.newPassword),
         updatedAt: new Date(),
       }
       await authService.updateAuth(id, newData);
-      res.status(HTTP_STATUS.CREATED).json({ message: 'user authentication updated'})
+      res.status(HTTP_STATUS.CREATED).json({ message: 'user authentication updated' })
     } catch (error) {
       console.log(error)
       next(error);

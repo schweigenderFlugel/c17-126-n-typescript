@@ -15,6 +15,7 @@ import {
   normalUserRefreshToken,
   normalUserToken,
   tokenWithInvalidPayload,
+  unexistingUserRefreshToken,
   unexistingUserToken,
 } from '../src/models/db/seeders/1-auth';
 import { ISign } from '../src/interfaces/auth.interface';
@@ -147,6 +148,11 @@ describe('Testing the auth route', () => {
     it('Should not refresh the session because the refresh token is expired', async () => {
       const { statusCode } = await api.get('/api/v1/auth/refresh').set('Cookie', `bankme=${expiredRefreshToken}`);
       expect(statusCode).toBe(403);
+    })
+
+    it(`Should not refresh the session because the auth id from payload doesn't exist`, async () => {
+      const { statusCode } = await api.get('/api/v1/auth/refresh').set('Cookie', `bankme=${unexistingUserRefreshToken}`);
+      expect(statusCode).toBe(404);
     })
 
     it('Should refresh the session as admin user', async () => {

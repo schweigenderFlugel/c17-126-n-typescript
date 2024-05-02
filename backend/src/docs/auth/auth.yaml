@@ -12,6 +12,8 @@ paths:
       responses:
         '201':
           description: User successfully registered
+        '409':
+          description: User already exists
         '500':
           description: Unexpected error when trying to register a user
 
@@ -35,14 +37,28 @@ paths:
                 properties:
                   accessToken:
                     type: string
-        '400':
-          description: The session is already open
         '404':
-          description: Invalid credentials
-        '401':
-          description: Invalid credentials
+          description: Auth not found
         '500':
           description: Unexpected error when trying to authenticate a user
+
+  /api/v1/auth/forgot-password:
+    post:
+      summary: Start process 
+      tags:
+        - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#components/schemas/AuthPayload'
+      responses:
+        '201':
+          description: User successfully registered
+        '409':
+          description: User already exists
+        '500':
+          description: Unexpected error when trying to register a user
 
   /api/v1/auth/refresh:
     get:
@@ -62,7 +78,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  accessToken:
+                  link:
                     type: string
         '404':
           description: Refresh token not found
@@ -95,6 +111,48 @@ paths:
           description: Refresh token not found
         '500':
           description: Unexpected error when trying to refresh the session
+  
+  /api/v1/auth/change-password/{id}:
+    put:
+      summary: Modify password.
+      security:
+        - bearerAuth: 'Authorization'
+      tags:
+        - auth
+      parameters:
+        - in: path
+          name: id
+          schema: 
+            type: number,
+            required: true,
+            description: the auth id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#components/schemas/ModifyPasswordPayload'
+      responses:
+        '200':
+          description: Password modified successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '403':
+          description: Token payload error
+        '404':
+          description: Auth not found
+        '409':
+          description: Conflict with id from payload and auth found id
+        '401':
+          description: The current password is invalid
+        '400':
+          description: The current password and the new password are the same
+        '500':
+          description: Unexpected error when trying to authenticate a user
 
 components:
   schemas:
@@ -104,4 +162,16 @@ components:
         email:
           type: string
         password:
+          type: string
+    ModifyPasswordPayload:
+      type: object
+      properties:
+        currentPassword:
+          type: string
+        newPassword:
+          type: string
+    RestorePasswordPayload:
+      type: object
+      properties:
+        email:
           type: string
