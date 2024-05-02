@@ -6,7 +6,7 @@ import { TransferForm } from './TransferForm';
 import { DepositForm } from './DepositForm';
 import { IUser } from '../Interfaces/interfaces';
 
-export const WalletCard = ({ user }: { user: IUser | null }) => {
+export const WalletCard = ({ user }: { user: IUser | undefined }) => {
   const [showBalance, setShowBalance] = useState(true);
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
   const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);

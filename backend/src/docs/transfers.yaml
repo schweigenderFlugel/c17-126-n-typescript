@@ -1,0 +1,40 @@
+paths:
+  /api/v1/transfer:
+    post:
+      summary: Make a transfer
+      security:
+        - bearerAuth: []
+      tags:
+        - transfer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#components/schemas/TransferPayload'
+      responses:
+        '200':
+          description: Deposit successfully
+        '401': 
+          description: Not logged in
+        '404':
+          description: Source or destination account not found
+        '409':
+          description: The ids don't match
+        '400':
+          description: The amount was not provided or it exceeds the balance
+        '500': 
+          description: 'Unexpected error'
+
+components:
+  schemas:
+    TransferPayload:
+      type: object
+      properties:
+        source_account:
+          type: number
+        destination_alias:
+          type: string
+        amount:
+          type: number
+        type:
+          type: string

@@ -93,7 +93,7 @@ export default class userDao {
             include: [{
               model: BankAccount,
               association: 'to', 
-              attributes: ['id', 'number_account'],
+              attributes: ['number_account'],
               include: [{
                 model: User,
                 attributes: ['name', 'lastname']
@@ -105,7 +105,7 @@ export default class userDao {
             include: [{
               model: BankAccount,
               association: 'from',
-              attributes: ['id', 'number_account'],
+              attributes: ['number_account'],
               include: [{
                 model: User,
                 attributes: ['name', 'lastname']

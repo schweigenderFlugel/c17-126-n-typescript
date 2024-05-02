@@ -54,7 +54,7 @@ export default class bankAccountController {
       if (accountData.user.auth.id !== tokenPayload.id) {
         throw new HttpError(
           'Conflict',
-          'Conclict with bank accou8nt and id from the token payload',
+          'Conclict with bank account and id from the token payload',
           HTTP_STATUS.CONFLICT
         )
       }

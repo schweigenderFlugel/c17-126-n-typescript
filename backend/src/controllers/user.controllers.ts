@@ -29,7 +29,7 @@ export default class userController {
     try {
       if (!req.user) {
         throw new HttpError(
-          'User not found',
+          'Not logged in',
           'Must be logged in',
           HTTP_STATUS.UNAUTHORIZED
         )
@@ -145,14 +145,17 @@ export default class userController {
     next: NextFunction
   ): Promise<void> {
     try {
-      if (!req.user) {
-        throw new HttpError(
-          'User not found',
-          'Must be logged in',
-          HTTP_STATUS.UNAUTHORIZED
-        )
-      }
-      const tokenPayload = req.user as ITokenPayload
+      if (!req.user) throw new HttpError(
+        'Not logged in',
+        'Must be logged in',
+        HTTP_STATUS.UNAUTHORIZED
+      )
+      const tokenPayload = req.user as ITokenPayload;
+      if (!tokenPayload || !tokenPayload.id) throw new HttpError(
+        'Token payload error',
+        'Token payload error',
+        HTTP_STATUS.FORBIDDEN
+      )
       const userFound = await userService.getUserByAuthId(tokenPayload.id)
       if (!userFound) {
         throw new HttpError(

@@ -17,5 +17,5 @@ export const options = {
       },
     }, 
   },
-  apis: ['./src/docs/**/*.yaml'],
+  apis: ['./src/docs/*.yaml'],
 }

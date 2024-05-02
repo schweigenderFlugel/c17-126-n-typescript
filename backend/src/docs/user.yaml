@@ -1,0 +1,226 @@
+paths:
+  /api/v1/user:
+    get:
+      summary: Get an user
+      security:
+        - bearerAuth: []
+      tags:
+        - user
+      responses:
+        '200':
+          description: Get the user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401': 
+          description: 'Not logged in'
+        '403':
+          description: 'Token with wrong payload'
+        '500': 
+          description: 'Unexpected error'
+
+    post:
+      summary: Create a new user
+      security:
+        - bearerAuth: []
+      tags:
+        - user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequest'
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateUserResponse'
+
+  /api/v1/user/{id}:
+    put:
+      summary: Update the user
+      security:
+        - bearerAuth: []
+      tags:
+        - user
+      parameters:
+        - in: path
+          name: id
+          schema: 
+            type: number,
+            required: true,
+            description: the user id
+      responses:
+        '201':
+          description: User updated successfully
+        '401': 
+          description: 'Not logged in'
+        '403':
+          description: 'Token with wrong payload'
+        '500': 
+          description: 'Unexpected error'
+
+components:
+  schemas:
+    CreateUserRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        lastname:
+          type: string
+        accountType:
+          type: string
+        alias:
+          type: string
+        address:
+          type: string
+        phone:
+          type: string
+    CreateUserResponse:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/User'
+        bankAccount:
+          $ref: '#/components/schemas/BankAccount'
+    UpdateUserRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        lastname:
+          type: string
+        alias:
+          type: string
+        address:
+          type: string
+        phone:
+          type: string
+        min_ammount_transfers:
+          type: number
+        max_ammount_transfers:
+          type: number
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        lastname:
+          type: string
+        accountType:
+          type: string
+        alias:
+          type: string
+        address:
+          type: string
+        phone:
+          type: string
+        authId:
+          $ref: '#/components/schemas/Auth'
+        preference:
+          $ref: '#/components/schemas/Preference'
+        bank_account:
+          $ref: '#/components/schemas/BankAccount'
+    Auth: 
+      type: object
+      properties:
+        id: 
+          type: number
+        email:
+          type: string
+    Preference:
+      type: object
+      properties:
+        min_ammount_transfers:
+          type: number
+        max_ammount_transfers:
+          type: number
+    BankAccount:
+      type: object
+      properties:
+        id:
+          type: number
+        number_account:
+          type: string
+        balance:
+          type: number
+        expenses:
+          type: number
+        investments:
+          type: number
+        transactions_sent: 
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionsSent'
+        transactions_received: 
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionsReceived'
+    TransactionsSent:
+      type: object
+      properties: 
+        id: 
+          type: number
+        source_account:
+          type: number
+        destination_account:
+          type: number
+        type_transfer: 
+          type: string
+        amount: 
+          type: number
+        date_transaction:
+          type: string
+        status: 
+          type: string
+        to:
+          $ref: '#/components/schemas/To'
+    TransactionsReceived:
+      type: object
+      properties: 
+        id: 
+          type: number
+        source_account:
+          type: number
+        destination_account:
+          type: number
+        type_transfer: 
+          type: string
+        amount: 
+          type: number
+        date_transaction:
+          type: string
+        status: 
+          type: string
+        from:
+          $ref: '#/components/schemas/From'
+    To:
+      type: object
+      properties:
+        bank_account:
+          type: string
+        user:
+          type: object
+          properties:
+            name:
+              type: string
+            lastname: 
+              type: string
+    From:
+      type: object
+      properties: 
+        bank_account:
+          type: string
+        user:
+          type: object
+          properties:
+            name:
+              type: string
+            lastname: 
+              type: string

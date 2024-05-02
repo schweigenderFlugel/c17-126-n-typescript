@@ -23,7 +23,6 @@ export interface ICreateUserPayload {
 }
 
 export interface To {
-  id: number;
   number_account: string;
   user: {
     name: string;
@@ -32,7 +31,6 @@ export interface To {
 }
 
 export interface From {
-  id: number;
   number_account: string;
   user: {
     name: string;

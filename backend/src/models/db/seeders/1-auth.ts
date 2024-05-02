@@ -35,7 +35,7 @@ export const nonAuth: AuthFixture = {
   password: "$2b$10$85FoRWGIr7Z1Zyo5HHHA5O1a0RzC/oDvG3t/kjQSAblO3ZGGAJ1Nu",
   refresh_token: null,
   role: Roles.NORMAL,
-  status: true,
+  status: false,
   created_at: new Date(),
   updated_at: new Date(),
 }

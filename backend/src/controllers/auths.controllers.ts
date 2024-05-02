@@ -12,9 +12,9 @@ import HttpError from '../utils/HttpError.utils'
 import SessionUtils from '../utils/session.util';
 import CookiesUtils from '../utils/cookies.utils';
 import { ENVIROMENTS } from '../../enviroments';
+import CryptoUtils from '../utils/crypto.utils'
 
 const { NODE_ENV, HTTPONLY_COOKIE_NAME, DB_URL } = envs
-
 
 const cookieName =
   NODE_ENV === ENVIROMENTS.PRODUCTION ? HTTPONLY_COOKIE_NAME : 'bankme'
@@ -253,7 +253,6 @@ export default class authsController {
   ): Promise<void> {
     try {
       const jwtCookie = req.cookies[cookieName]
-
       if (!jwtCookie) throw new HttpError(
         'Cookie not found',
         'Cookie should exist to logout',

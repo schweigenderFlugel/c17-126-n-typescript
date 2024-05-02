@@ -64,7 +64,7 @@ describe('Testing the auth route', () => {
       const { statusCode } = await api.post('/api/v1/transfer')
         .auth(normalUserToken, { type: 'bearer' })
         .send(data); 
-      expect(statusCode).toBe(401); 
+      expect(statusCode).toBe(409); 
     })
 
     it('Should not make a tranfer from an unexisting destination account', async () => {
@@ -90,7 +90,7 @@ describe('Testing the auth route', () => {
       const { statusCode } = await api.post('/api/v1/transfer')
         .auth(normalUserToken, { type: 'bearer' })
         .send(data); 
-        expect(statusCode).toBe(401); 
+        expect(statusCode).toBe(400); 
     })
 
     it('Should be allowed to create a transfer', async () => {

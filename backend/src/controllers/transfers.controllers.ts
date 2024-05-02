@@ -39,7 +39,7 @@ export default class transfersController {
         throw new HttpError(
           'You are not allowed to perform this action',
           'You are not allowed to perform this action',
-          HTTP_STATUS.UNAUTHORIZED
+          HTTP_STATUS.CONFLICT
         )
       }
 
@@ -58,7 +58,7 @@ export default class transfersController {
         throw new HttpError(
           'Insufficient funds',
           'Insufficient funds',
-          HTTP_STATUS.UNAUTHORIZED
+          HTTP_STATUS.BAD_REQUEST
         )
       }
 

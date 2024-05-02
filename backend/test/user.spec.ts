@@ -50,10 +50,12 @@ describe('Testing the user route', () => {
       expect(body.bank_account.expenses).toEqual(bankAccount1.expenses);
       expect(body.bank_account.investments).toEqual(bankAccount1.investments);
       body.bank_account.transactions_received.forEach((transaction: any) => {
+        expect(transaction.from.number_account).toMatch(bankAccount2.number_account);
         expect(transaction.from.user.name).toMatch(normalUser.name)
         expect(transaction.from.user.lastname).toMatch(normalUser.lastname)
       });
       body.bank_account.transactions_sent.forEach((transaction: any) => {
+        expect(transaction.to.number_account).toMatch(bankAccount2.number_account);
         expect(transaction.to.user.name).toMatch(normalUser.name)
         expect(transaction.to.user.lastname).toMatch(normalUser.lastname)
       });
@@ -78,10 +80,12 @@ describe('Testing the user route', () => {
       expect(body.bank_account.transactions_sent).toBeInstanceOf(Array);
       expect(body.bank_account.transactions_received).toBeInstanceOf(Array);
       body.bank_account.transactions_received.forEach((transaction: any) => {
-        expect(transaction.from.user.name).toMatch(adminUser.name)
-        expect(transaction.from.user.lastname).toMatch(adminUser.lastname)
+        expect(transaction.from.number_account).toMatch(bankAccount1.number_account);
+        expect(transaction.from.user.name).toMatch(adminUser.name);
+        expect(transaction.from.user.lastname).toMatch(adminUser.lastname);
       });
       body.bank_account.transactions_sent.forEach((transaction: any) => {
+        expect(transaction.to.number_account).toMatch(bankAccount1.number_account);
         expect(transaction.to.user.name).toMatch(adminUser.name)
         expect(transaction.to.user.lastname).toMatch(adminUser.lastname)
       });

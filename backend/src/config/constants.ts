@@ -11,6 +11,8 @@ export const envs = {
   ACCESS_TOKEN_SECRET: env.get('ACCESS_TOKEN_SECRET').required().asString(),
   REFRESH_TOKEN_SECRET: env.get('REFRESH_TOKEN_SECRET').required().asString(),
   RECOVERY_TOKEN_SECRET: env.get('RECOVERY_TOKEN_SECRET').required().asString(),
+  SECRET_KEY: env.get('SECRET_KEY').required().asString(),
+  IV: env.get('IV').required().asString(),
   HTTPONLY_COOKIE_NAME: env.get('HTTPONLY_COOKIE_NAME').required().asString(),
 }
 

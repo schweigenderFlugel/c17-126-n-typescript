@@ -116,7 +116,7 @@ paths:
     put:
       summary: Modify password.
       security:
-        - bearerAuth: 'Authorization'
+        - bearerAuth: []
       tags:
         - auth
       parameters:

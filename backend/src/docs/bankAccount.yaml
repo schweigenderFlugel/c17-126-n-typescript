@@ -1,0 +1,43 @@
+paths:
+  /api/v1/bank-account/deposit/{id}:
+    put:
+      summary: Make a deposit
+      security:
+        - bearerAuth: []
+      tags:
+        - bank account
+      parameters:
+        - in: path
+          name: id
+          schema: 
+            type: number,
+            required: true,
+            description: the account id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#components/schemas/DepositPayload'
+      responses:
+        '200':
+          description: Deposit successfully
+        '401': 
+          description: Not logged in
+        '403':
+          description: Token with wrong payload
+        '404':
+          description: Bank account not found
+        '409':
+          description: The ids don't match
+        '400':
+          description: The amount was not provided
+        '500': 
+          description: 'Unexpected error'
+
+components:
+  schemas:
+    DepositPayload:
+      type: object
+      properties:
+        amount:
+          type: number
