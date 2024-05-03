@@ -24,6 +24,7 @@ export interface ISourceAccountData {
   userId: number
   number_account: string
   balance: number
+  expenses: number
   user: IUserData
 }
 

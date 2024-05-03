@@ -2,7 +2,6 @@ import { IBankAccount } from '../Interfaces/interfaces';
 import { HistoryGraph } from './HistoryGraph';
 
 export const BalanceCard = ( { bank_account }: { bank_account: IBankAccount | undefined }) => {
-  console.log(bank_account?.id)
   return (
     <section className="col-span-8 max-md:col-span-12 w-full">
       <main className="gap-3 grid overflow-hidden">

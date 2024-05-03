@@ -91,6 +91,7 @@ export interface IUser {
   id: number;
   name: string;
   lastname: string;
+  avatar: string | null;
   accountType: string;
   alias: string;
   address: string;
@@ -106,6 +107,7 @@ export interface IUser {
 export interface UserSettingsType {
   name: string;
   lastname: string;
+  avatar: string;
   alias: string;
   address: string;
   phone: string;

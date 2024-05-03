@@ -5,7 +5,15 @@ import request from 'supertest';
 import createExpressApp from '../src/config/createApp';
 import { upSeed } from './utils/umzug';
 import { sequelize } from '../src/models/db/database.manager';
-import { adminAuth, adminUserToken, anonUserToken, nonUserToken, normalAuth, normalUserToken, tokenWithInvalidPayload } from '../src/models/db/seeders/1-auth';
+import { 
+  adminAuth, 
+  adminUserToken,
+  normalUserToken,
+  anonUserToken, 
+  nonUserToken, 
+  normalAuth, 
+  tokenWithInvalidPayload 
+} from '../src/models/db/seeders/1-auth';
 import { adminUser, normalUser } from '../src/models/db/seeders/2-user';
 import { preference1, preference2 } from '../src/models/db/seeders/4-preferences';
 import { bankAccount1, bankAccount2 } from '../src/models/db/seeders/3-bank-account';
@@ -36,8 +44,10 @@ describe('Testing the user route', () => {
     it('Should get the admin user', async () => {
       const { statusCode, body } = await api.get('/api/v1/user').auth(adminUserToken, { type: 'bearer' });
       expect(statusCode).toBe(200);
+      expect(body.id).toEqual(adminUser.id);
       expect(body.name).toMatch(adminUser.name);
       expect(body.lastname).toMatch(adminUser.lastname);
+      expect(body.avatar).toMatch(adminUser.avatar);
       expect(body.alias).toMatch(adminUser.alias);
       expect(body.address).toMatch(adminUser.address);
       expect(body.phone).toMatch(adminUser.phone);
@@ -64,8 +74,10 @@ describe('Testing the user route', () => {
     it('Should get the normal user', async () => {
       const { statusCode, body } = await api.get('/api/v1/user').auth(normalUserToken, { type: 'bearer' });
       expect(statusCode).toBe(200);
+      expect(body.id).toEqual(normalUser.id);
       expect(body.name).toMatch(normalUser.name);
       expect(body.lastname).toMatch(normalUser.lastname);
+      expect(body.avatar).toMatch(normalUser.avatar);
       expect(body.alias).toMatch(normalUser.alias);
       expect(body.address).toMatch(normalUser.address);
       expect(body.phone).toMatch(normalUser.phone);

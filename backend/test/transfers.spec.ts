@@ -100,10 +100,10 @@ describe('Testing the auth route', () => {
         amount: 10,
         type: TYPETRANSFERS.CREDIT,
       }
-      const { statusCode } = await api.post('/api/v1/transfer')
+      const { statusCode, body } = await api.post('/api/v1/transfer')
         .auth(normalUserToken, { type: 'bearer' })
         .send(data); 
-        expect(statusCode).toBe(201); 
+        expect(statusCode).toBe(201);
     })
   })
 

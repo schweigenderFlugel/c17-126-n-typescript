@@ -18,7 +18,7 @@ import { TransferForm } from './TransferForm';
 import { IUser } from '../Interfaces/interfaces';
 
 export const SidebarDashboard = ({ user }: { user: IUser | null }) => {
-  const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
+  const [ openModal, setOpenModal ] = useState(false);
 
   // Cambiar la función por la que descargaría el pdf
   // Podria descargar la información del dashboard
@@ -30,8 +30,8 @@ export const SidebarDashboard = ({ user }: { user: IUser | null }) => {
     });
   }
 
-  const closeTransferModal = () => {
-    setIsTransferModalOpen(false);
+  const closeModal = () => {
+    setOpenModal(false);
   };
 
   const handleClickReport = () => {
@@ -98,7 +98,7 @@ export const SidebarDashboard = ({ user }: { user: IUser | null }) => {
             label="Transferir"
             icon={<img src="/icons/transfer.svg" className="w-[24px]" />}
             className="max-sm:mx-auto max-xl:px-2 max-xl:py-1 max-sm:w-fit text-center text-white"
-            onClick={() => setIsTransferModalOpen(true)}
+            onClick={() => setOpenModal(true)}
           />
         </li>
         <li className="max-md:sm:flex-1 max-md:order-7 max-sm:hidden">
@@ -114,10 +114,10 @@ export const SidebarDashboard = ({ user }: { user: IUser | null }) => {
         </li>
       </ul>
       <Modal
-        onCloseModal={() => setIsTransferModalOpen(false)}
-        isOpen={isTransferModalOpen}
+        onCloseModal={() => setOpenModal(false)}
+        isOpen={openModal}
       >
-        <TransferForm bank_account={user?.bank_account} onClose={closeTransferModal}/>
+        <TransferForm bank_account={user?.bank_account} onClose={closeModal}/>
       </Modal>
     </>
   );

@@ -8,7 +8,7 @@ const initialValue: IChangePassword = {
   newPassword: '',
 }
 
-export const TransferForm = ({ user, onClose }: { user: IUser | null, onClose: () => void }) => {
+export const ChangePasswordForm = ({ user, onClose }: { user: IUser | null, onClose: () => void }) => {
   const [formValues, setFormValues] = useState<IChangePassword>(initialValue);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -20,10 +20,10 @@ export const TransferForm = ({ user, onClose }: { user: IUser | null, onClose: (
         loading: 'Cargando',
         success: () => {
           onClose();
-          return `Transferencia exitosa`;
+          return `Contraseña modificada exitosamente`;
         },
         error: () => {
-          return `Error al Transferir`;
+          return `Error al cambiar la contraseña`;
         },
       },
       {
@@ -52,8 +52,8 @@ export const TransferForm = ({ user, onClose }: { user: IUser | null, onClose: (
         <div className="relative flex justify-between items-center mb-2">
           <input
             type="text"
-            id="destination_alias"
-            name="destination_alias"
+            id="currentPassword"
+            name="currentPassword"
             value={formValues.currentPassword}
             onChange={handleChange}
             className="border-indigo-400 focus:border-indigo-600 focus:dark:border-indigo-500 focus:outline-none dark:border-white bg-transparent px-2 py-4 border rounded-md w-full h-8 text-black text-sm dark:text-white"
@@ -68,8 +68,8 @@ export const TransferForm = ({ user, onClose }: { user: IUser | null, onClose: (
         <div className="relative flex justify-between items-center mb-2">
           <input
             type="text"
-            id="destination_alias"
-            name="destination_alias"
+            id="newPassword"
+            name="newPassword"
             value={formValues.newPassword}
             onChange={handleChange}
             className="border-indigo-400 focus:border-indigo-600 focus:dark:border-indigo-500 focus:outline-none dark:border-white bg-transparent px-2 py-4 border rounded-md w-full h-8 text-black text-sm dark:text-white"

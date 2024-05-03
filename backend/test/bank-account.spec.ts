@@ -5,7 +5,11 @@ import { Server } from 'http';
 import createExpressApp from '../src/config/createApp';
 import { sequelize } from '../src/models/db/database.manager';
 import { upSeed } from './utils/umzug';
-import { adminUserToken, anonUserToken, nonUserToken, normalUserToken, tokenWithInvalidPayload } from '../src/models/db/seeders/1-auth';
+import { adminUserToken,
+  nonUserToken, 
+  normalUserToken, 
+  tokenWithInvalidPayload 
+} from '../src/models/db/seeders/1-auth';
 
 describe('Testing the auth route', () => {
   let app;

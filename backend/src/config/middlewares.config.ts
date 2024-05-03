@@ -2,6 +2,7 @@
 import express from 'express'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
+// import multer from 'multer'
 import dotenv from 'dotenv'
 
 import swaggerJsdoc from 'swagger-jsdoc'
@@ -33,6 +34,7 @@ export default {
     )
     app.use(express.json())
     app.use(express.urlencoded({ extended: true }))
+    // app.use(multer)
 
     const specs = swaggerJsdoc(options)
     app.use('/apidocs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs))

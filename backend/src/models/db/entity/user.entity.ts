@@ -21,6 +21,11 @@ const User = sequelize.define<UserModel>('users', {
     type: STRING,
     allowNull: false,
   },
+  avatar: {
+    field: 'avatar',
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
   accountType: {
     field: 'account_type',
     type: DataTypes.STRING,

@@ -33,7 +33,7 @@ export default class transfersController {
       const sourceAccountData: ISourceAccountData =
         sourceAccountFound.dataValues as ISourceAccountData
 
-        const requestingUser = req.user as IUserToken
+      const requestingUser = req.user as IUserToken
 
       if (requestingUser.id !== sourceAccountData.user.dataValues.auth.id) {
         throw new HttpError(

@@ -253,7 +253,6 @@ export default class userController {
       const { name, lastname, alias, address, phone, min_ammount_transfers, max_ammount_transfers } = req.body;
 
       const userPayload: IUpdateUser = {
-        id: userFound.id,
         name,
         lastname,
         alias,
@@ -262,7 +261,7 @@ export default class userController {
         updatedAt: new Date(),
       }
 
-      const userUpdated = await userService.updateUser(userPayload.id, userPayload);
+      const userUpdated = await userService.updateUser(userFound.id, userPayload);
 
       const preferencePayload: Omit<IPreferences, 'userId'> = {
         min_ammount_transfers: min_ammount_transfers,

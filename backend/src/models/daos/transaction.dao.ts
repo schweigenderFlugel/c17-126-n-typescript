@@ -186,12 +186,14 @@ export default class TransactionDao {
       await BankAccount.update(
         {
           balance: sourceAccountPayload.balance - amount,
+          expenses: sourceAccountPayload.expenses + amount,
         },
         {
           where: { id: sourceAccountPayload.id },
           transaction: transaction,
         }
       )
+
       await transaction.commit()
       return transactionCreated
     } catch (error) {

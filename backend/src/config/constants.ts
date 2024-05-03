@@ -14,6 +14,9 @@ export const envs = {
   SECRET_KEY: env.get('SECRET_KEY').required().asString(),
   IV: env.get('IV').required().asString(),
   HTTPONLY_COOKIE_NAME: env.get('HTTPONLY_COOKIE_NAME').required().asString(),
+  CLOUDINARY_CLOUDNAME: env.get('CLOUDINARY_CLOUDNAME').asString(),
+  CLOUDINARY_API_KEY: env.get('CLOUDINARY_API_KEY').asString(),
+  CLOUDINARY_API_SECRET: env.get('CLOUDINARY_API_SECRET').asString(),
 }
 
 export enum HTTP_STATUS {

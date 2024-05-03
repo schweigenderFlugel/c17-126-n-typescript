@@ -9,6 +9,7 @@ import { sequelize } from '../src/models/db/database.manager';
 import { Roles } from '../src/models/db/entity/auth.entity';
 import { upSeed } from './utils/umzug';
 import { 
+  adminAuth,
   adminUserRefreshToken, 
   adminUserToken, 
   expiredRefreshToken, 
@@ -42,6 +43,17 @@ describe('Testing the auth route', () => {
       expect(validationResult.success).toBe(false);
     })
 
+    it('Should not register an existing user', async () => {
+      const inputData: ISign = {
+        email: adminAuth.email,
+        password: 'admin12345'
+      }
+      const validationResult = signUpSchema.safeParse(inputData);
+      expect(validationResult.success).toBe(true);
+      const { statusCode } = await api.post('/api/v1/auth/signup').send(inputData)
+      expect(statusCode).toBe(409);
+    })
+
     it('Should register an user succesfully', async () => {
       const inputData: ISign = {
         email: 'newuser@email.com',
@@ -51,17 +63,6 @@ describe('Testing the auth route', () => {
       expect(validationResult.success).toBe(true);
       const { statusCode } = await api.post('/api/v1/auth/signup').send(inputData)
       expect(statusCode).toBe(201);
-    })
-
-    it('Should not register an existing user', async () => {
-      const inputData: ISign = {
-        email: 'newuser@email.com',
-        password: 'newuser1234'
-      }
-      const validationResult = signUpSchema.safeParse(inputData);
-      expect(validationResult.success).toBe(true);
-      const { statusCode } = await api.post('/api/v1/auth/signup').send(inputData)
-      expect(statusCode).toBe(409);
     })
   })
 
