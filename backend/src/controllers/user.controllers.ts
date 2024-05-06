@@ -178,7 +178,7 @@ export default class userController {
    * @param {NextFunction} next - the next middleware function
    * @return {Promise<void>} - a promise that resolves when all users are retrieved
    */
-  static async getAllUser(
+  static async getAllUsers(
     req: Request,
     res: Response,
     next: NextFunction
@@ -186,13 +186,77 @@ export default class userController {
     try {
       if (!req.user) {
         throw new HttpError(
-          'User not found',
+          'Not logged in',
           'Must be logged in',
           HTTP_STATUS.UNAUTHORIZED
         )
       }
       const users = await userService.getAllUsers()
       res.status(200).json(users)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  /**
+   * Get all user with the provided alias on the request body.
+   *
+   * @param {Request} req - the request object containing the alias
+   * @param {Response} res - the response object to send all the users that includes the letters from request body
+   * @param {NextFunction} next - the next middleware function
+   * @return {Promise<void>} - a promise that resolves when all users are retrieved
+   */
+  static async getUsersAlias(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    const aliasRequest = req.body.alias as string;
+    let aliases: string[] = [];
+    try {
+      if (!req.user) throw new HttpError(
+        'Not logged in',
+        'Must be logged in',
+        HTTP_STATUS.UNAUTHORIZED
+      );
+
+      const tokenPayload = req.user as ITokenPayload;
+
+      if (!tokenPayload || !tokenPayload.id) throw new HttpError(
+        'Token payload error',
+        'Token payload error',
+        HTTP_STATUS.FORBIDDEN
+      )
+
+      const currentUser = await userService.getUserByAuthId(tokenPayload.id);
+
+      if (!currentUser) {
+        throw new HttpError(
+          'User not found',
+          'The user does not exist',
+          HTTP_STATUS.NOT_FOUND
+        )
+      }
+
+      const users = await userService.getAllUsersAlias();
+
+      users?.forEach(user => aliases.push(user.alias));
+
+      const aliasesFound = aliases.filter(alias => 
+        aliasRequest.split('').every(letter =>
+          alias.includes(letter)
+        )
+      )
+
+      const aliasesFiltered = aliasesFound.filter(alias => alias !== currentUser.alias);
+
+      if (aliasesFiltered.length === 0) throw new HttpError(
+        'Alias not found',
+        'Alias not found',
+        HTTP_STATUS.NOT_FOUND,
+      )
+
+      res.status(200).json(aliasesFiltered)
     } catch (error) {
       next(error)
     }

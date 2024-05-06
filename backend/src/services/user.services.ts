@@ -37,6 +37,16 @@ export default class userService {
   }
 
   /**
+   * Retrieve all users from the database by their alias.
+   *
+   * @return {Promise<Model<IUser>[]>} Array of user models
+   */
+  static async getAllUsersAlias(): Promise<UserModel[] | null> {
+    const usersFound = await userDao.getInstance().getAllUsersAlias()
+    return usersFound
+  }
+
+  /**
    * Get a user by their email address.
    *
    * @param {string} alias - the alias address of the user

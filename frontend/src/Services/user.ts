@@ -74,6 +74,15 @@ export const getUser = async (): Promise<IUser | null > => {
   return response.data
 }
 
+export const getAliases = async (alias: string): Promise<string[] | null> => {
+  const response: AxiosResponse<string[] | null> = await Axios({
+    method: 'POST',
+    url: '/user/all-alias',
+    data: { alias: alias }
+  })
+  return response.data;
+}
+
 export const createUser = async (payload: ICreateUserPayload): Promise<void> => {
   await Axios({
     method: 'POST',

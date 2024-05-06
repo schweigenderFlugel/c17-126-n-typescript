@@ -21,11 +21,11 @@ export const TransferTypeSelect = ({
   options = [],
 }: TypeTransferSelectProps) => {
   return (
-    <div className="max-lg:flex flex-col max-lg:gap-1 grid grid-cols-3 max-2xl:grid-cols-2">
-      <label htmlFor={name} className="col-span-1 dark:text-white">
+    <div>
+      <label htmlFor={name} className="w-full text-gray-900 text-sm dark:text-white">
         {label}
       </label>
-      <div className="relative flex justify-between items-center">
+      <div className="relative flex justify-between items-center mb-2">
         <select
           name={name}
           id={name}

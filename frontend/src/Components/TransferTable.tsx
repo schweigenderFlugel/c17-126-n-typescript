@@ -42,7 +42,7 @@ export const TransferTable = ({
     <div className="border-indigo-300 dark:border-indigo-600 bg-indigo-100 dark:bg-indigo-950 shadow-lg mt-4 border rounded-lg h-fit min-h-8 max-h-full overflow-y-auto">
       <TableRow isHeader>
         <div>Cuenta</div>
-        <div className="max-[800px]:justify-self-center">Tipo</div>
+        <div className="max-[800px]:justify-self-center">Estado</div>
         <div className="max-[800px]:justify-self-end">Cantidad</div>
         <div className="max-[800px]:hidden">Fecha</div>
       </TableRow>

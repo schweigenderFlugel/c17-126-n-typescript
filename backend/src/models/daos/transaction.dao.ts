@@ -1,6 +1,7 @@
 import { TRANSACTION_STATUS } from '../../config/constants'
 import {
   IBankAccount,
+  IDestinationAccountData,
   ISourceAccountData,
 } from '../../interfaces/bankAccount.interface'
 import { ITransaction } from '../../interfaces/transaction.interface'
@@ -175,6 +176,7 @@ export default class TransactionDao {
   async transferTransaction(
     transactionPayload: ITransaction,
     sourceAccountPayload: ISourceAccountData,
+    destinationAccountPayload: IDestinationAccountData,
     amount: number
   ): Promise<TransactionModel | null> {
     const transaction = await sequelize.transaction()
@@ -190,6 +192,16 @@ export default class TransactionDao {
         },
         {
           where: { id: sourceAccountPayload.id },
+          transaction: transaction,
+        }
+      )
+
+      await BankAccount.update(
+        {
+          balance: destinationAccountPayload.balance + amount,
+        },
+        {
+          where: { id: destinationAccountPayload.id },
           transaction: transaction,
         }
       )

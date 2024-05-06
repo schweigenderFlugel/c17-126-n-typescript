@@ -120,6 +120,64 @@ describe('Testing the user route', () => {
       expect(statusCode).toBe(200);
     })
   })
+  
+  describe('GET /all-alias', () => {
+    it('Should not access to the list of aliases', async () => {
+      const { statusCode } = await api.post('/api/v1/user/all-alias');
+      expect(statusCode).toBe(401);
+    })
+
+    it('Should not get aliases because three characters are neccesary', async () => {
+      const request = {
+        alias: 'ok'
+      };
+      const { statusCode } = await api.post('/api/v1/user/all-alias')
+        .auth(normalUserToken, { type: 'bearer' })
+        .send(request);
+      expect(statusCode).toBe(400);
+    })
+
+    it('Should not get aliases because the payload from token is invalid', async () => {
+      const request = {
+        alias: 'okp'
+      };
+      const { statusCode } = await api.post('/api/v1/user/all-alias')
+        .auth(tokenWithInvalidPayload, { type: 'bearer' })
+        .send(request);
+      expect(statusCode).toBe(403);
+    })
+
+    it('Should not get aliases because the current user not found', async () => {
+      const request = {
+        alias: 'okp'
+      };
+      const { statusCode } = await api.post('/api/v1/user/all-alias')
+        .auth(anonUserToken, { type: 'bearer' })
+        .send(request);
+      expect(statusCode).toBe(404);
+    })
+
+    it('Should not get any alias', async () => {
+      const request = {
+        alias: 'oam'
+      };
+      const { statusCode } = await api.post('/api/v1/user/all-alias')
+        .auth(normalUserToken, { type: 'bearer' })
+        .send(request);
+      expect(statusCode).toBe(404);
+    })
+
+    it('Should get one or more aliases', async () => {
+      const request = {
+        alias: 'adm'
+      };
+      const { statusCode, body } = await api.post('/api/v1/user/all-alias')
+        .auth(normalUserToken, { type: 'bearer' })
+        .send(request);
+      expect(body).toBeInstanceOf(Array);
+      expect(statusCode).toBe(200);
+    })
+  })
 
   describe('POST /', () => {
     it('Should not create user without login', async () => {

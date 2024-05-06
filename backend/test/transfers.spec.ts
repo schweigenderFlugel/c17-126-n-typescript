@@ -90,7 +90,7 @@ describe('Testing the auth route', () => {
       const { statusCode } = await api.post('/api/v1/transfer')
         .auth(adminUserToken, { type: 'bearer' })
         .send(data); 
-        expect(statusCode).toBe(400); 
+        expect(statusCode).toBe(403); 
     })
 
     it('Should be allowed to create a transfer', async () => {

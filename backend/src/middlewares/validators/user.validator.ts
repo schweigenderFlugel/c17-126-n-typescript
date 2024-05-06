@@ -4,6 +4,10 @@ const phoneRegex = new RegExp(
   /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/
 )
 
+export const getUsersByAlias = z.object({
+  alias: z.string().trim().min(3, 'It required at least three characters')
+})
+
 export const userCreate = z.object({
   name: z.string().trim().min(1, 'Name is required'),
   lastname: z.string().trim().min(1, 'Lastname is required'),

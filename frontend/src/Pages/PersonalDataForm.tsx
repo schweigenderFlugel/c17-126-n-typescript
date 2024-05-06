@@ -19,7 +19,7 @@ export enum TYPEACCOUNT {
 const initialValue: ICreateUserPayload = {
   name: '',
   lastname: '',
-  accountType: 'personal',
+  accountType: '',
   alias: '',
   address: '',
   phone: '',

@@ -1,6 +1,7 @@
 import { TRANSACTION_STATUS } from '../config/constants'
 import {
   IBankAccount,
+  IDestinationAccountData,
   ISourceAccountData,
 } from '../interfaces/bankAccount.interface'
 import { ITransaction } from '../interfaces/transaction.interface'
@@ -140,11 +141,17 @@ export default class transactionService {
   static async transferTransaction(
     transactionPayload: ITransaction,
     sourceAccountData: ISourceAccountData,
+    destinationAccountPayload: IDestinationAccountData,
     amount: number
   ): Promise<TransactionModel | null> {
     const sourceAccountUpdated = await transactionDao
       .getInstance()
-      .transferTransaction(transactionPayload, sourceAccountData, amount)
+      .transferTransaction(
+        transactionPayload, 
+        sourceAccountData, 
+        destinationAccountPayload,
+        amount
+      )
 
     return sourceAccountUpdated
   }

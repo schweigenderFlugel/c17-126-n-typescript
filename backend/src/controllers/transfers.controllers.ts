@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express'
 import { HTTP_STATUS, TRANSACTION_STATUS } from '../config/constants'
 import bankAccountService from '../services/bankAccount.services'
 import HttpError from '../utils/HttpError.utils'
-import { ISourceAccountData } from '../interfaces/bankAccount.interface'
+import { IDestinationAccountData, ISourceAccountData } from '../interfaces/bankAccount.interface'
 import transactionService from '../services/transaction.services'
 import { ITransaction } from '../interfaces/transaction.interface'
 import { IUserToken } from '../interfaces/user.interface'
@@ -54,6 +54,9 @@ export default class transfersController {
         )
       }
 
+      const destinationAccountData: IDestinationAccountData = 
+        destinationAccountFound.dataValues as IDestinationAccountData;
+
       if (sourceAccountData.id === destinationAccountFound.id) {
         throw new HttpError(
           'The source and the destination account are the same',
@@ -66,7 +69,7 @@ export default class transfersController {
         throw new HttpError(
           'Insufficient funds',
           'Insufficient funds',
-          HTTP_STATUS.BAD_REQUEST
+          HTTP_STATUS.FORBIDDEN
         )
       }
 
@@ -82,6 +85,7 @@ export default class transfersController {
       const transactionCreated = await transactionService.transferTransaction(
         transactionPayload,
         sourceAccountData,
+        destinationAccountData,
         amount
       )
 

@@ -51,7 +51,7 @@ export default class userDao {
   }
 
   /**
-   * Asynchronously retrieves a user by their email.
+   * Asynchronously retrieves a user by their alias.
    *
    * @param {string} alias - the email of the user to retrieve
    * @return {Promise<Model<IUser> | null>} the user model if found, or null if not found
@@ -64,6 +64,20 @@ export default class userDao {
     })
     return userFound
   }
+
+  /**
+   * Asynchronously retrieves a user by their alias.
+   *
+   * @param {string} alias - the email of the user to retrieve
+   * @return {Promise<Model<IUser> | null>} the user model if found, or null if not found
+   */
+  async getAllUsersAlias(): Promise<UserModel[] | null> {
+    const usersFound: UserModel[] | null = await User.findAll({
+      attributes: ['alias'],
+    })
+    return usersFound;
+  }
+
 
   /**
    * Retrieves a user by their authentication ID.
