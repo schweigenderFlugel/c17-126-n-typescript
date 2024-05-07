@@ -14,7 +14,7 @@ const checkRoles = (...roles: (string | Roles[])[]) => {
       throw new HttpError(
         'Unauthorized',
         'Your role is wrong',
-        HTTP_STATUS.UNAUTHORIZED
+        HTTP_STATUS.FORBIDDEN
       )
     }
   }

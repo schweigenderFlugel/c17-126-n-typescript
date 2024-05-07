@@ -1,8 +1,8 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { AxiosError } from 'axios';
 import { login } from '../Services/user';
 import { ILoginPayload } from '../Interfaces/interfaces';
-import { AuthContext } from '../Context/AuthContext';
+import { useAuth } from './useAuth';
 
 type options = {
   onSuccess?: () => void;
@@ -10,14 +10,15 @@ type options = {
 };
 
 export const useLogin = ({ onSuccess, onReject }: options) => {
-  const { setAccessToken } = useContext(AuthContext);
-  const [isLoading, setIsLoading] = useState(false);
+  const { setAccessToken, setLoadingUser } = useAuth();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const setLogin = async (payload: ILoginPayload) => {
     setIsLoading(true);
     await login(payload)
       .then(res => {
         setAccessToken(res.accessToken);
+        setLoadingUser(true);
       })
       .then(() => {
         onSuccess?.();
@@ -25,9 +26,6 @@ export const useLogin = ({ onSuccess, onReject }: options) => {
       .catch(error => {
         onReject?.(error);
       })
-      .finally(() => {
-        setIsLoading(false);
-      });
   };
-  return { setLogin, isLoading };
+  return { setLogin, isLoading, setIsLoading, setLoadingUser };
 };

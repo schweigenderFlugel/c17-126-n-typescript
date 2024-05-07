@@ -1,4 +1,3 @@
-import { TypeAccountModel } from '../models/db/entity/type-account.entity'
 import bankAccountService from '../services/bankAccount.services'
 
 export default class bankAccountHelper {

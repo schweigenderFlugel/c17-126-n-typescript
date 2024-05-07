@@ -245,7 +245,7 @@ describe('Testing the auth route', () => {
       const { statusCode } = await api.put('/api/v1/auth/change-password/1')
         .auth(adminUserToken, { type: 'bearer'})
         .send(newData);
-      expect(statusCode).toBe(400);
+      expect(statusCode).toBe(406);
     })
 
     it(`Should change the password`, async () => {

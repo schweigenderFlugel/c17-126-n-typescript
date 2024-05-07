@@ -5,6 +5,7 @@ import { createTransaction } from '../Services/transfers';
 import { IBankAccount, ICreateTransaction } from '../Interfaces/interfaces';
 import { HiOutlineCurrencyDollar } from 'react-icons/hi2';
 import { getAliases } from '../Services/user';
+import { useAuth } from '../Hooks/useAuth';
 
 export enum TYPETRANSFERS {
   INMEDIATE = 'inmediate',
@@ -18,6 +19,7 @@ export const TransferForm = ({ bank_account, onClose }: { bank_account: IBankAcc
   const [aliases, setAliases] = useState<string[] | null>(null);
   const [openDropdown, setOpenDropdown] = useState<boolean>(false);
   const [selectedAlias, setSelectedAlias] = useState<string | null>(null)
+  const { setUpdateData } = useAuth();
 
   const initialValue: ICreateTransaction = {
     source_account: bank_account?.id ?? 0,
@@ -38,9 +40,11 @@ export const TransferForm = ({ bank_account, onClose }: { bank_account: IBankAcc
         loading: 'Cargando',
         success: () => {
           onClose();
+          setUpdateData(true);
           return `Transferencia exitosa`;
         },
         error: () => {
+          setIsTransferLoading(false);
           return `Error al Transferir`;
         },
       },

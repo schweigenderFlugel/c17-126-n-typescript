@@ -30,14 +30,17 @@ export const Login = () => {
     toast.error(error);
   };
 
-  const { setLogin, isLoading } = useLogin({
+  const { setLogin, isLoading, setIsLoading } = useLogin({
     onSuccess: () => {
       navigate('/dashboard', { replace: true });
       toast('Bienvenido', {
         icon: '👋',
       });
     },
-    onReject: error => onLoginError(error),
+    onReject: error => {
+      setIsLoading(false)
+      onLoginError(error)
+    },
   });
 
   const handleSubmit = e => {

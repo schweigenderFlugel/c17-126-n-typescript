@@ -23,8 +23,7 @@ const initialValue: DepositFormType = {
 export const DepositForm = ({ onClose }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [formValues, setFormValues] = useState<DepositFormType>(initialValue);
-
-  const { userData } = useAuth();
+  const { userData, setUpdateData } = useAuth();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -56,6 +55,7 @@ export const DepositForm = ({ onClose }) => {
         loading: 'Cargando',
         success: () => {
           onClose();
+          setUpdateData(true);
           return `Deposito exitoso`;
         },
         error: () => {

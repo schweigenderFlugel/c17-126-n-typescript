@@ -1,5 +1,4 @@
-import { Outlet, useNavigate } from 'react-router-dom';
-
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { SidebarDashboard } from '../Components/SidebarDashboard';
 import { Logo } from '../Components/Logo';
 import { AxiosError } from 'axios';
@@ -7,8 +6,11 @@ import { useUser } from '../Hooks/useUser';
 import { useAuth } from '../Hooks/useAuth';
 
 export const Dashboard = () => {
-  const { setLoading, userData } = useAuth();
+  const { userData } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const from = location.state?.from.pathname;
 
   const onUserError = (error: AxiosError) => {
     if (error.response?.status === 404) {
@@ -19,15 +21,13 @@ export const Dashboard = () => {
   };
 
   useUser({
-    onSuccess: () => { 
-      navigate('/dashboard', { replace: true })
+    onSuccess: () => {
+      navigate(from, { replace: true })
     },
-    onReject: (error: AxiosError) => onUserError(error),
+    onReject: (error: AxiosError) => {
+      onUserError(error);
+    }  
   });
-
-  setTimeout(() => {
-    setLoading(false)
-  }, 1000)
 
   return (
     <main className="gap-2 grid grid-cols-[350px_1fr] max-md:grid-cols-1 max-2xl:grid-cols-[300px_1fr] max-xl:grid-cols-[100px_1fr] max-md:grid-rows-[1fr_80px] p-6 max-md:p-2 w-full h-full text-gray-900/70">

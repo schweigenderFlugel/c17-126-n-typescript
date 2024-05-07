@@ -12,7 +12,6 @@ import HttpError from '../utils/HttpError.utils'
 import SessionUtils from '../utils/session.util';
 import CookiesUtils from '../utils/cookies.utils';
 import { ENVIROMENTS } from '../../enviroments';
-import CryptoUtils from '../utils/crypto.utils'
 
 const { NODE_ENV, HTTPONLY_COOKIE_NAME, DB_URL } = envs
 
@@ -69,26 +68,27 @@ export default class authsController {
   ): Promise<void> {
     try {
       const jwtCookie = req.cookies[cookieName]
-      if (jwtCookie)
-        throw new HttpError('Session open', 'Cookie is still existing', 400)
+      if (jwtCookie) throw new HttpError(
+        'Session open', 
+        'Cookie is still existing', 
+        HTTP_STATUS.BAD_REQUEST,
+      )
       const payload: ISign = req.body
       const authFound = await authService.getAuthByEmail(payload.email)
-      if (!authFound)
-        throw new HttpError(
-          'Invalid Credentials',
-          'Auth not found',
-          HTTP_STATUS.NOT_FOUND
-        )
+      if (!authFound) throw new HttpError(
+        'Invalid Credentials',
+        'Auth not found',
+        HTTP_STATUS.NOT_FOUND
+      )
       const validPassword = isValidPassword(
         authFound.password,
         payload.password
       )
-      if (!validPassword)
-        throw new HttpError(
-          'Invalid Credentials',
-          'Must provide valid credentials',
-          HTTP_STATUS.UNAUTHORIZED
-        )
+      if (!validPassword) throw new HttpError(
+        'Invalid Credentials',
+        'Must provide valid credentials',
+        HTTP_STATUS.UNAUTHORIZED
+      )
       const tokenPayload: ITokenPayload = {
         id: authFound.id,
         role: authFound.role,
@@ -117,12 +117,11 @@ export default class authsController {
   ): Promise<void> {
     try {
       const jwtCookie = req.cookies[cookieName];
-      if (!jwtCookie) 
-        throw new HttpError(
-          'Refresh token not found', 
-          'Refresh token should exist to refresh', 
-          HTTP_STATUS.NOT_FOUND
-        )
+      if (!jwtCookie) throw new HttpError(
+        'Refresh token not found', 
+        'Refresh token should exist to refresh', 
+        HTTP_STATUS.NOT_FOUND
+      )
       await CookiesUtils.removeJwtCookie(cookieName, res)
       const verified = await SessionUtils.verifyRefreshToken(jwtCookie)
       const authFound = await authService.getAuthById(verified.id);
@@ -193,7 +192,7 @@ export default class authsController {
       if (body.currentPassword === body.newPassword) throw new HttpError(
         'The password should not be the same',
         'The password should not be the same',
-        HTTP_STATUS.BAD_REQUEST
+        HTTP_STATUS.NOT_ACCEPTABLE
       )
       const newData: Partial<IUpdateAuth> = {
         password: createHash(body.newPassword),

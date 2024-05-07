@@ -32,6 +32,7 @@ export interface IDestinationAccountData {
   id: number
   number_account: string
   balance: number
+  user?: IUserData
 }
 
 export interface IGenerateBankAccount extends Omit<IBankAccount, 'id'> {}

@@ -12,6 +12,8 @@ paths:
       responses:
         '201':
           description: User successfully registered
+        '400':
+          description: There not any entry on the request body
         '409':
           description: User already exists
         '500':
@@ -37,39 +39,20 @@ paths:
                 properties:
                   accessToken:
                     type: string
+        '400': 
+          description: 'No entry on the request body or the session is already open'
+        '401':
+          description: 'The credentials are invalid'
         '404':
           description: Auth not found
         '500':
           description: Unexpected error when trying to authenticate a user
-
-  /api/v1/auth/forgot-password:
-    post:
-      summary: Start process 
-      tags:
-        - auth
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#components/schemas/AuthPayload'
-      responses:
-        '201':
-          description: User successfully registered
-        '409':
-          description: User already exists
-        '500':
-          description: Unexpected error when trying to register a user
 
   /api/v1/auth/refresh:
     get:
       summary: Refresh the session with the refresh token provided.
       tags:
         - auth
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#components/schemas/AuthPayload'
       responses:
         '200':
           description: Session refresh successfully
@@ -78,12 +61,12 @@ paths:
               schema:
                 type: object
                 properties:
-                  link:
+                  accessToken:
                     type: string
-        '404':
-          description: Refresh token not found
         '403':
           description: Refresh token is expired or contains wrong payload
+        '404':
+          description: Refresh token not found or user not found
         '500':
           description: Unexpected error when trying to refresh the session
   
@@ -92,11 +75,6 @@ paths:
       summary: Logout and erase the refresh token.
       tags:
         - auth
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#components/schemas/AuthPayload'
       responses:
         '200':
           description: Logout successfully
@@ -141,18 +119,38 @@ paths:
                 properties:
                   message:
                     type: string
+        '400':
+          description: there is not any entry on the request body
+        '401':
+          description: The current password is invalid or the access is not allowed
         '403':
           description: Token payload error
         '404':
           description: Auth not found
+        '406':
+          description: The current password and the new password are the same
         '409':
           description: Conflict with id from payload and auth found id
-        '401':
-          description: The current password is invalid
-        '400':
-          description: The current password and the new password are the same
         '500':
           description: Unexpected error when trying to authenticate a user
+
+  /api/v1/auth/forgot-password:
+    post:
+      summary: Start process of password restoration
+      tags:
+        - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#components/schemas/RestorePasswordPayload'
+      responses:
+        '200':
+          description: User successfully registered
+        '404':
+          description: User not found
+        '500':
+          description: Unexpected error when trying to register a user
 
 components:
   schemas:

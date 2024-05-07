@@ -5,6 +5,7 @@ import {
   ISourceAccountData,
 } from '../../interfaces/bankAccount.interface'
 import { ITransaction } from '../../interfaces/transaction.interface'
+import { User } from '../db'
 import { sequelize } from '../db/database.manager'
 import { BankAccount, BankAccountModel } from '../db/entity/bank-account.entity'
 import { Transaction, TransactionModel } from '../db/entity/transaction.entity'
@@ -43,8 +44,26 @@ export default class TransactionDao {
    * @return {Promise<TransactionModel | null>} The transaction model if found, otherwise null
    */
   async getTransactionById(id: number): Promise<TransactionModel | null> {
-    const transactionFound = await Transaction.findByPk(id)
-    return transactionFound
+    const transactionFound = await Transaction.findByPk(id, {
+      include: [{
+        association: 'to',
+        attributes: ['number_account'],
+        include: [{
+          model: User,
+          attributes: ['name', 'lastname']
+        }]
+      },
+      {
+        association: 'from',
+        attributes: ['number_account'],
+        include: [{
+          model: User,
+          attributes: ['name', 'lastname']
+        }]
+      }
+    ]
+    })
+    return transactionFound;
   }
 
   /**

@@ -8,6 +8,14 @@ import userAuth from '../../middlewares/userAuth.middlewares'
 
 const transferRouter = Router()
 
+transferRouter.get(
+  '/:id',
+  userAuth,
+  transfersController.getTransferDetails,
+  errorHandler
+)
+
+
 transferRouter.post(
   '/',
   userAuth,

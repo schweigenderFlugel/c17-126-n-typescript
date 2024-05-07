@@ -10,10 +10,10 @@ type options = {
 };
 
 export const useUser = ({ onSuccess, onReject }: options) => {
-  const { accessToken, setUserData, loading } = useAuth();
+  const { accessToken, setUserData, updateData, setUpdateData } = useAuth();
 
   useEffect(() => {
-    if (accessToken || (accessToken && loading)) {
+    if (accessToken) {
       getUser()
         .then((user: IUser | null) => {
           setUserData(user);
@@ -24,7 +24,10 @@ export const useUser = ({ onSuccess, onReject }: options) => {
         .catch(error => {
           onReject?.(error);
         })
+        .finally(() => {
+          setUpdateData(false);
+        })
        // eslint-disable-next-line react-hooks/exhaustive-deps
       }
-    }, [accessToken, loading]);
+    }, [accessToken, updateData]);
 }

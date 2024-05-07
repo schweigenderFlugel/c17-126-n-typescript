@@ -17,6 +17,8 @@ paths:
           description: 'Not logged in'
         '403':
           description: 'Token with wrong payload'
+        '404':
+          description: 'User not found'
         '500': 
           description: 'Unexpected error'
 
@@ -38,6 +40,62 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CreateUserResponse'
+        '400':
+          description: 'There is not any entry on the request body'
+        '401':
+          description: 'Not logged in'
+        '403':
+          description: 'Token with invalid payload'
+        '409':
+          description: 'User already exists'
+        '500':
+          description: 'Unexpected error'
+
+  /api/v1/user/all:
+    get:
+      summary: Get all users
+      security:
+        - bearerAuth: []
+      tags:
+        - user
+      responses:
+        '200':
+          description: Get the list of all users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401': 
+          description: 'Not logged in'
+        '403':
+          description: 'Token with wrong payload or the role is not admin'
+        '500': 
+          description: 'Unexpected error'
+
+  /api/v1/user/all-alias:
+    get:
+      summary: Get users alias
+      security:
+        - bearerAuth: []
+      tags:
+        - user
+      responses:
+        '200':
+          description: Get the list of aliases that match with the request body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsersAlias'
+        '400':
+          description: 'There is not any entry on the request'
+        '401': 
+          description: 'Not logged in'
+        '403':
+          description: 'Token with wrong payload'
+        '404':
+          description: 'Current user not found or user alias not found'
+        '500': 
+          description: 'Unexpected error'
 
   /api/v1/user/{id}:
     put:
@@ -60,6 +118,8 @@ paths:
           description: 'Not logged in'
         '403':
           description: 'Token with wrong payload'
+        '404':
+          description: 'User not found'
         '500': 
           description: 'Unexpected error'
 
@@ -104,6 +164,10 @@ components:
           type: number
         max_ammount_transfers:
           type: number
+    UsersAlias:
+      type: array
+      items:
+        type: string
     User:
       type: object
       properties:
@@ -214,7 +278,7 @@ components:
               type: string
     From:
       type: object
-      properties: 
+      properties:
         bank_account:
           type: string
         user:

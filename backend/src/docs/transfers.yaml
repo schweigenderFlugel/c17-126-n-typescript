@@ -12,16 +12,48 @@ paths:
             schema:
               $ref: '#components/schemas/TransferPayload'
       responses:
-        '200':
-          description: Deposit successfully
+        '201':
+          description: Transfer successfully
+        '400':
+          description: There is not any entry on the request body, or the source and destination account are the same
         '401': 
           description: Not logged in
+        '403':
+          description: The amount exceeds the account balance
         '404':
           description: Source or destination account not found
         '409':
           description: The ids don't match
-        '400':
-          description: The amount was not provided or it exceeds the balance
+        '500': 
+          description: 'Unexpected error'
+
+  /api/v1/transfer/{id}:
+    get:
+      summary: Get the transfer details
+      security:
+        - bearerAuth: []
+      tags:
+        - transfer
+      parameters:
+        - in: path
+          name: id
+          schema: 
+            type: number,
+            required: true,
+            description: the transfer id
+      responses:
+        '200':
+          description: Transfer details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransferDetails'
+        '401': 
+          description: Not logged in
+        '403':
+          description: Token with invalid payload
+        '404':
+          description: Transfer not found
         '500': 
           description: 'Unexpected error'
 
@@ -38,3 +70,18 @@ components:
           type: number
         type:
           type: string
+    TransferDetails:
+      type: object
+      properties:
+        type_transfer: 
+          type: string
+        amount:
+          type: number
+        status:
+          type: string
+        date_transaction:
+          type: string
+        to:
+          $ref: '#/components/schemas/To'
+        from:
+          $ref: '#/components/schemas/From'

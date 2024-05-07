@@ -184,13 +184,20 @@ export default class userController {
     next: NextFunction
   ): Promise<void> {
     try {
-      if (!req.user) {
-        throw new HttpError(
-          'Not logged in',
-          'Must be logged in',
-          HTTP_STATUS.UNAUTHORIZED
-        )
-      }
+      if (!req.user) throw new HttpError(
+        'Not logged in',
+        'Must be logged in',
+        HTTP_STATUS.UNAUTHORIZED
+      )
+      
+      const tokenPayload = req.user as ITokenPayload;
+
+      if (!tokenPayload || !tokenPayload.id) throw new HttpError(
+        'Token payload error',
+        'Token payload error',
+        HTTP_STATUS.FORBIDDEN
+      )
+
       const users = await userService.getAllUsers()
       res.status(200).json(users)
     } catch (error) {
@@ -232,7 +239,7 @@ export default class userController {
 
       if (!currentUser) {
         throw new HttpError(
-          'User not found',
+          'Current user not found',
           'The user does not exist',
           HTTP_STATUS.NOT_FOUND
         )

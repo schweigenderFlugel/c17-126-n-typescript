@@ -6,7 +6,7 @@ import { typeTransfer1, typeTransfer2, typeTransfer3 } from "./5-type-transfer";
 
 interface TransactionFixture extends Omit<ITransaction, 'id'> {}
 
-const transaction1: TransactionFixture = {
+export const transaction1: TransactionFixture = {
   source_account: bankAccount1.id,
   destination_account: bankAccount2.id,
   type_transfer: TYPETRANSFERS.DEFERRED,
@@ -15,7 +15,7 @@ const transaction1: TransactionFixture = {
   status: TRANSACTION_STATUS.PENDING,
 }
 
-const transaction2: TransactionFixture = {
+export const transaction2: TransactionFixture = {
   source_account: bankAccount2.id,
   destination_account: bankAccount1.id,
   type_transfer: TYPETRANSFERS.CREDIT,
@@ -24,7 +24,7 @@ const transaction2: TransactionFixture = {
   status: TRANSACTION_STATUS.FAILED,
 }
 
-const transaction3: TransactionFixture = {
+export const transaction3: TransactionFixture = {
   source_account: bankAccount1.id,
   destination_account: bankAccount2.id,
   type_transfer: TYPETRANSFERS.DEBIT,

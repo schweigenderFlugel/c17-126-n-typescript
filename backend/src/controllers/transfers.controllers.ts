@@ -4,11 +4,43 @@ import bankAccountService from '../services/bankAccount.services'
 import HttpError from '../utils/HttpError.utils'
 import { IDestinationAccountData, ISourceAccountData } from '../interfaces/bankAccount.interface'
 import transactionService from '../services/transaction.services'
-import { ITransaction } from '../interfaces/transaction.interface'
+import { ITransaction, ITransactionData } from '../interfaces/transaction.interface'
 import { IUserToken } from '../interfaces/user.interface'
 import apiSuccessResponse from '../utils/apiResponse.utils'
 
 export default class transfersController {
+  static async getTransferDetails(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const transactionId = req.params.id as unknown as number;
+      const requestingUser = req.user as IUserToken;
+    
+      if (!requestingUser || !requestingUser.id) throw new HttpError(
+        'Token payload error',
+        'Token payload error',
+        HTTP_STATUS.FORBIDDEN
+      )
+
+      const transactionFound = await transactionService.getTransactionById(transactionId);
+
+      if (!transactionFound) throw new HttpError(
+        'Transaction not found',
+        'Transaction not found',
+        HTTP_STATUS.NOT_FOUND
+      )
+
+      const transactionData: ITransactionData = 
+        transactionFound.dataValues as ITransactionData;
+
+      res.status(200).json(transactionData);
+    } catch (error) {
+      next(error)
+    }
+  }
+
   static async createTransfer(
     req: Request,
     res: Response,

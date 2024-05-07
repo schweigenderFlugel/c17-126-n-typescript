@@ -16,8 +16,12 @@ interface AuthContextInterface {
   setAccessToken: Dispatch<SetStateAction<string | null>>;
   userData: IUser | null;
   setUserData: Dispatch<SetStateAction<IUser | null>>;
-  loading: boolean;
-  setLoading: Dispatch<SetStateAction<boolean>>;
+  loadingPageRefresh: boolean;
+  setLoadingPageRefresh: Dispatch<SetStateAction<boolean>>;
+  loadingUser: boolean;
+  setLoadingUser: Dispatch<SetStateAction<boolean>>;
+  updateData: boolean;
+  setUpdateData: Dispatch<SetStateAction<boolean>>;
   darkMode: boolean;
   toggleDarkMode: Dispatch<SetStateAction<void>>;
 }
@@ -31,12 +35,14 @@ const defaultValues = {
   setAccessToken: () => {},
   userData: null,
   setUserData: () => {},
-  loading: false,
-  setLoading: () => {},
+  loadingPageRefresh: true,
+  setLoadingPageRefresh: () => {},
+  loadingUser: false,
+  setLoadingUser: () => {},
+  updateData: false,
+  setUpdateData: () => {},
   darkMode: false,
   toggleDarkMode: () => {},
-  userBalance: null,
-  setUserBalance: () => {},
 } as AuthContextInterface;
 
 export const AuthContext = createContext<AuthContextInterface>(defaultValues);
@@ -44,7 +50,9 @@ export const AuthContext = createContext<AuthContextInterface>(defaultValues);
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [userData, setUserData] = useState<IUser | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [updateData, setUpdateData] = useState<boolean>(false);
+  const [loadingPageRefresh, setLoadingPageRefresh] = useState<boolean>(true);
+  const [loadingUser, setLoadingUser] = useState<boolean>(false);
   const { darkMode, toggleDarkMode } = useLocalStorage();
   const navigate = useNavigate();
   const location = useLocation();
@@ -54,7 +62,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   setSession(accessToken);
 
   useRefresh({
-    onSuccess: () => navigate(from, { replace: true }),
+    onSuccess: () => { 
+      navigate(from, { replace: true }),
+      setLoadingPageRefresh(false);
+    },
+    onReject: () => {
+      setLoadingPageRefresh(false);
+    },
     setToken: (token: string | null) => setAccessToken(token),
   });
 
@@ -65,8 +79,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         setAccessToken,
         userData,
         setUserData,
-        loading,
-        setLoading,
+        loadingPageRefresh,
+        setLoadingPageRefresh,
+        loadingUser,
+        setLoadingUser,
+        updateData,
+        setUpdateData,
         darkMode,
         toggleDarkMode,
       }}

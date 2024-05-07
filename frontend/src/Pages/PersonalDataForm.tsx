@@ -27,18 +27,19 @@ const initialValue: ICreateUserPayload = {
 
 export const PersonalDataForm = () => {
   const [inputError, setInputError] = useState<boolean>(false);
-  const { setLoading } = useAuth();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { setLoadingUser } = useAuth();
+  
   const [formValues, setFormValues] =
     useState<ICreateUserPayload>(initialValue);
-  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
+      setLoadingUser(true);
       createUser(formValues);
-      setLoading(true);
       navigate('/dashboard', { replace: true })
     } catch (serverError) {
       console.log(serverError);

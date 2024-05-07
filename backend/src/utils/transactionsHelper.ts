@@ -3,7 +3,7 @@ import { IBankAccount } from '../interfaces/bankAccount.interface'
 import { ITransaction } from '../interfaces/transaction.interface'
 import { TransactionModel } from '../models/db/entity/transaction.entity'
 import transactionService from '../services/transaction.services'
-import HttpError from './HttpError.utils'
+import HttpError from './HttpError.utils';
 
 export default class transactionHelper {
   static async transactionsImprover(

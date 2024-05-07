@@ -17,6 +17,7 @@ import {
 import { adminUser, normalUser } from '../src/models/db/seeders/2-user';
 import { preference1, preference2 } from '../src/models/db/seeders/4-preferences';
 import { bankAccount1, bankAccount2 } from '../src/models/db/seeders/3-bank-account';
+import { transaction1, transaction2, transaction3 } from '../src/models/db/seeders/6-transaction';
 
 describe('Testing the user route', () => {
   let app;
@@ -59,16 +60,23 @@ describe('Testing the user route', () => {
       expect(body.bank_account.balance).toEqual(bankAccount1.balance);
       expect(body.bank_account.expenses).toEqual(bankAccount1.expenses);
       expect(body.bank_account.investments).toEqual(bankAccount1.investments);
-      body.bank_account.transactions_received.forEach((transaction: any) => {
-        expect(transaction.from.number_account).toMatch(bankAccount2.number_account);
-        expect(transaction.from.user.name).toMatch(normalUser.name)
-        expect(transaction.from.user.lastname).toMatch(normalUser.lastname)
-      });
-      body.bank_account.transactions_sent.forEach((transaction: any) => {
-        expect(transaction.to.number_account).toMatch(bankAccount2.number_account);
-        expect(transaction.to.user.name).toMatch(normalUser.name)
-        expect(transaction.to.user.lastname).toMatch(normalUser.lastname)
-      });
+      expect(body.bank_account.transactions_sent).toBeInstanceOf(Array);
+      expect(body.bank_account.transactions_received).toBeInstanceOf(Array);
+      expect(body.bank_account.transactions_received[0].id).toEqual(2);
+      expect(body.bank_account.transactions_received[0].status).toMatch(transaction2.status);
+      expect(body.bank_account.transactions_received[0].from.number_account).toMatch(bankAccount2.number_account);
+      expect(body.bank_account.transactions_received[0].from.user.name).toMatch(normalUser.name)
+      expect(body.bank_account.transactions_received[0].from.user.lastname).toMatch(normalUser.lastname);
+      expect(body.bank_account.transactions_sent[0].id).toEqual(1);
+      expect(body.bank_account.transactions_sent[0].status).toMatch(transaction1.status);
+      expect(body.bank_account.transactions_sent[0].to.number_account).toMatch(bankAccount2.number_account);
+      expect(body.bank_account.transactions_sent[0].to.user.name).toMatch(normalUser.name);
+      expect(body.bank_account.transactions_sent[0].to.user.lastname).toMatch(normalUser.lastname);
+      expect(body.bank_account.transactions_sent[1].id).toEqual(3);
+      expect(body.bank_account.transactions_sent[1].status).toMatch(transaction3.status);
+      expect(body.bank_account.transactions_sent[1].to.number_account).toMatch(bankAccount2.number_account);
+      expect(body.bank_account.transactions_sent[1].to.user.name).toMatch(normalUser.name);
+      expect(body.bank_account.transactions_sent[1].to.user.lastname).toMatch(normalUser.lastname);
     })
 
     it('Should get the normal user', async () => {
@@ -91,16 +99,21 @@ describe('Testing the user route', () => {
       expect(body.bank_account.investments).toEqual(bankAccount2.investments);
       expect(body.bank_account.transactions_sent).toBeInstanceOf(Array);
       expect(body.bank_account.transactions_received).toBeInstanceOf(Array);
-      body.bank_account.transactions_received.forEach((transaction: any) => {
-        expect(transaction.from.number_account).toMatch(bankAccount1.number_account);
-        expect(transaction.from.user.name).toMatch(adminUser.name);
-        expect(transaction.from.user.lastname).toMatch(adminUser.lastname);
-      });
-      body.bank_account.transactions_sent.forEach((transaction: any) => {
-        expect(transaction.to.number_account).toMatch(bankAccount1.number_account);
-        expect(transaction.to.user.name).toMatch(adminUser.name)
-        expect(transaction.to.user.lastname).toMatch(adminUser.lastname)
-      });
+      expect(body.bank_account.transactions_received[0].id).toEqual(3);
+      expect(body.bank_account.transactions_received[0].status).toMatch(transaction3.status);
+      expect(body.bank_account.transactions_received[0].from.number_account).toMatch(bankAccount1.number_account);
+      expect(body.bank_account.transactions_received[0].from.user.name).toMatch(adminUser.name)
+      expect(body.bank_account.transactions_received[0].from.user.lastname).toMatch(adminUser.lastname);
+      expect(body.bank_account.transactions_received[1].id).toEqual(1);
+      expect(body.bank_account.transactions_received[1].status).toMatch(transaction1.status);
+      expect(body.bank_account.transactions_received[1].from.number_account).toMatch(bankAccount1.number_account);
+      expect(body.bank_account.transactions_received[1].from.user.name).toMatch(adminUser.name);
+      expect(body.bank_account.transactions_received[1].from.user.lastname).toMatch(adminUser.lastname);
+      expect(body.bank_account.transactions_sent[0].id).toEqual(2);
+      expect(body.bank_account.transactions_sent[0].status).toMatch(transaction2.status);
+      expect(body.bank_account.transactions_sent[0].to.number_account).toMatch(bankAccount1.number_account);
+      expect(body.bank_account.transactions_sent[0].to.user.name).toMatch(adminUser.name);
+      expect(body.bank_account.transactions_sent[0].to.user.lastname).toMatch(adminUser.lastname);
     })
   })
 
@@ -110,14 +123,23 @@ describe('Testing the user route', () => {
       expect(statusCode).toBe(401);
     })
 
+    it('Should not access to the list of users because the payload from token is invalid', async () => {
+      const { statusCode } = await api.get('/api/v1/user/all')
+        .auth(tokenWithInvalidPayload, { type: 'bearer' });
+      expect(statusCode).toBe(403);
+    })
+
     it('Should not access to the list of users because your role is wrong', async () => {
-      const { statusCode } = await api.get('/api/v1/user/all').auth(normalUserToken, { type: 'bearer' });
-      expect(statusCode).toBe(401);
+      const { statusCode } = await api.get('/api/v1/user/all')
+        .auth(normalUserToken, { type: 'bearer' });
+      expect(statusCode).toBe(403);
     })
 
     it('Should access to the list of users', async () => {
-      const { statusCode } = await api.get('/api/v1/user/all').auth(adminUserToken, { type: 'bearer' });
+      const { statusCode, body } = await api.get('/api/v1/user/all')
+        .auth(adminUserToken, { type: 'bearer' });
       expect(statusCode).toBe(200);
+      expect(body).toBeInstanceOf(Array);
     })
   })
   
