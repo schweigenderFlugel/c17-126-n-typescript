@@ -7,6 +7,7 @@ import transactionService from '../services/transaction.services'
 import { ITransaction, ITransactionData } from '../interfaces/transaction.interface'
 import { IUserToken } from '../interfaces/user.interface'
 import apiSuccessResponse from '../utils/apiResponse.utils'
+import transactionHelper from '../utils/transactionsHelper'
 
 export default class transfersController {
   static async getTransferDetails(
@@ -105,7 +106,10 @@ export default class transfersController {
         )
       }
 
+      const operationNumber = await transactionHelper.generateOperationNumber();
+
       const transactionPayload: ITransaction = {
+        operation_number: operationNumber,
         source_account: sourceAccountData.id,
         destination_account: destinationAccountFound.id,
         amount,
@@ -133,6 +137,7 @@ export default class transfersController {
 
       res.status(HTTP_STATUS.CREATED).json(response)
     } catch (err) {
+      console.log(err)
       next(err)
     }
   }

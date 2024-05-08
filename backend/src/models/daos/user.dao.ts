@@ -104,10 +104,13 @@ export default class userDao {
           attributes: ['id', 'number_account', 'balance', 'expenses', 'investments'], 
           include: [{
             association: 'transactions_sent', 
+            attributes: ['id', 'source_account', 'destination_account', 'amount', 'date_transaction'],
             include: [{
               model: BankAccount,
               association: 'to', 
-              attributes: ['number_account'],
+              attributes: {
+                exclude: ['id', 'number_account', 'balance', 'expenses', 'investments']
+              },
               include: [{
                 model: User,
                 attributes: ['name', 'lastname']
@@ -116,10 +119,13 @@ export default class userDao {
           },
           {
             association: 'transactions_received',
+            attributes: ['id', 'source_account', 'destination_account', 'amount', 'date_transaction'],
             include: [{
               model: BankAccount,
               association: 'from',
-              attributes: ['number_account'],
+              attributes: {
+                exclude: ['id', 'number_account', 'balance', 'expenses', 'investments']
+              },
               include: [{
                 model: User,
                 attributes: ['name', 'lastname']

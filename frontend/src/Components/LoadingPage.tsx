@@ -1,4 +1,36 @@
+import { AxiosError } from "axios";
+import { useNavigate } from "react-router-dom";
+import { useUser } from "../Hooks/useUser";
+import { useAuth } from "../Hooks/useAuth";
+
 export const LoadingPage = () => {
+  const { setLoadingUser } = useAuth()
+  const navigate = useNavigate();
+
+  const onUserError = (error: AxiosError) => {
+    if (error.response?.status === 404) {
+      setLoadingUser(false);
+      navigate('/datos-personales', { replace: true });
+    } else if (error.response?.status === 401) {
+      setLoadingUser(false);
+      navigate('/login', { replace: true });
+    }
+  };
+
+  useUser({
+    onSuccess: () => {
+      setTimeout(() => {
+        setLoadingUser(false);
+        navigate('/dashboard', { replace: true });
+      }, 1000)
+    },
+    onReject: (error: AxiosError) => {
+      setTimeout(() => {
+        onUserError(error);
+      }, 1000)
+    }
+  });
+
   return (
     <div className="inline-flex justify-items-center space-x-5">
       <svg

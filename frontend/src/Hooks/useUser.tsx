@@ -10,7 +10,7 @@ type options = {
 };
 
 export const useUser = ({ onSuccess, onReject }: options) => {
-  const { accessToken, setUserData, updateData, setUpdateData } = useAuth();
+  const { accessToken, setUserData, userData, updateData, setUpdateData} = useAuth();
 
   useEffect(() => {
     if (accessToken) {
@@ -27,7 +27,8 @@ export const useUser = ({ onSuccess, onReject }: options) => {
         .finally(() => {
           setUpdateData(false);
         })
-       // eslint-disable-next-line react-hooks/exhaustive-deps
       }
     }, [accessToken, updateData]);
+    
+  return { userData }
 }

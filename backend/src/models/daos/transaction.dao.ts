@@ -45,6 +45,7 @@ export default class TransactionDao {
    */
   async getTransactionById(id: number): Promise<TransactionModel | null> {
     const transactionFound = await Transaction.findByPk(id, {
+      attributes: ['operation_number', 'type_transfer', 'amount', 'date_transaction', 'status'],
       include: [{
         association: 'to',
         attributes: ['number_account'],
@@ -62,6 +63,22 @@ export default class TransactionDao {
         }]
       }
     ]
+    })
+    return transactionFound;
+  }
+
+  /**
+   * Retrieves a transaction by its operation number
+   *
+   * @param {number} operationNumber - The operation number of the transaction to retrieve
+   * @return {Promise<TransactionModel | null>} The transaction operation number if found, otherwise null
+   */
+  async getTransactionByOperationNumber(
+    operationNumber: number
+  ): Promise<TransactionModel | null> {
+    const transactionFound = await Transaction.findOne({
+      where: { operation_number: operationNumber },
+      attributes: ['operation_number']
     })
     return transactionFound;
   }

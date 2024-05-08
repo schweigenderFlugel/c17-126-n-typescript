@@ -22,54 +22,74 @@ export interface ICreateUserPayload {
   phone: string;
 }
 
-export interface To {
-  number_account: string;
-  user: {
-    name: string;
-    lastname: string;
-  }
-}
-
-export interface From {
-  number_account: string;
-  user: {
-    name: string;
-    lastname: string;
-  }
-}
-
 export interface ITransactionsReceived {
   id: number;
   source_account: number;
   destination_account: number;
-  type_transfer: string;
   amount: number;
   date_transaction: string;
-  status: string;
-  from: From;
+  from: {
+    user: {
+      name: string;
+      lastname: string;
+    }
+  } 
 }
 
 export interface ITransactionsSent {
   id: number;
   source_account: number;
   destination_account: number;
-  type_transfer: string;
   amount: number;
   date_transaction: string;
-  status: string;
-  to: To;
+  to: {
+    user: {
+      name: string;
+      lastname: string;
+    }
+  }
 }
 
 export interface ITransactions {
   id: number;
   source_account: number;
   destination_account: number;
+  amount: number;
+  date_transaction: string;
+  to?: {
+    user: {
+      name: string;
+      lastname: string;
+    }
+  }
+  from?: {
+    user: {
+      name: string;
+      lastname: string;
+    }
+  }
+}
+
+export interface ITransactionDetails {
+  operation_number: number;
+  source_account: number;
+  destination_account: number;
   type_transfer: string;
   amount: number;
   date_transaction: string;
   status: string;
-  to?: To;
-  from?: From;
+  to?: {
+    user: {
+      name: string;
+      lastname: string;
+    }
+  }
+  from?: {
+    user: {
+      name: string;
+      lastname: string;
+    }
+  }
 }
 
 export interface IPreference {

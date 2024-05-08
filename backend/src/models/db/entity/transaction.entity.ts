@@ -14,6 +14,10 @@ const Transaction = sequelize.define<TransactionModel>('transaction', {
     autoIncrement: true,
     primaryKey: true,
   },
+  operation_number: {
+    type: INTEGER,
+    allowNull: false
+  },
   source_account: {
     type: INTEGER,
     allowNull: false,

@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { AxiosError } from 'axios';
 import { toast } from 'react-hot-toast';
 
@@ -28,19 +27,17 @@ const initialValue: ICreateUserPayload = {
 export const PersonalDataForm = () => {
   const [inputError, setInputError] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { setLoadingUser } = useAuth();
+  const { setLoadingUser, setUpdateData } = useAuth();
   
   const [formValues, setFormValues] =
     useState<ICreateUserPayload>(initialValue);
-
-  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       setLoadingUser(true);
       createUser(formValues);
-      navigate('/dashboard', { replace: true })
+      setUpdateData(true);
     } catch (serverError) {
       console.log(serverError);
       if (

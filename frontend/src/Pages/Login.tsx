@@ -16,7 +16,7 @@ export const Login = () => {
 
   const navigate = useNavigate();
 
-  const { accessToken } = useAuth();
+  const { accessToken, setLoadingUser } = useAuth();
 
   const onLoginError = (serverError: AxiosError) => {
     let error: string;
@@ -32,10 +32,10 @@ export const Login = () => {
 
   const { setLogin, isLoading, setIsLoading } = useLogin({
     onSuccess: () => {
-      navigate('/dashboard', { replace: true });
+      setLoadingUser(true);
       toast('Bienvenido', {
         icon: '👋',
-      });
+      })
     },
     onReject: error => {
       setIsLoading(false)

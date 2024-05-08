@@ -73,12 +73,20 @@ paths:
           description: 'Unexpected error'
 
   /api/v1/user/all-alias:
-    get:
+    post:
       summary: Get users alias
       security:
         - bearerAuth: []
       tags:
         - user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                alias:
+                  type: string
       responses:
         '200':
           description: Get the list of aliases that match with the request body
@@ -235,16 +243,20 @@ components:
           type: number
         destination_account:
           type: number
-        type_transfer: 
-          type: string
         amount: 
           type: number
         date_transaction:
           type: string
-        status: 
-          type: string
         to:
-          $ref: '#/components/schemas/To'
+          type: object
+          properties:
+            user:
+              type: object
+              properties:
+                name:
+                  type: string
+                lastname: 
+                  type: string
     TransactionsReceived:
       type: object
       properties: 
@@ -254,37 +266,17 @@ components:
           type: number
         destination_account:
           type: number
-        type_transfer: 
-          type: string
         amount: 
           type: number
         date_transaction:
           type: string
-        status: 
-          type: string
         from:
-          $ref: '#/components/schemas/From'
-    To:
-      type: object
-      properties:
-        bank_account:
-          type: string
-        user:
           type: object
           properties:
-            name:
-              type: string
-            lastname: 
-              type: string
-    From:
-      type: object
-      properties:
-        bank_account:
-          type: string
-        user:
-          type: object
-          properties:
-            name:
-              type: string
-            lastname: 
-              type: string
+            user:
+              type: object
+              properties:
+                name:
+                  type: string
+                lastname: 
+                  type: string

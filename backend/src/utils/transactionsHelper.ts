@@ -107,4 +107,16 @@ export default class transactionHelper {
 
     return transactionUpdated
   }
+
+  static async generateOperationNumber(): Promise<number> {
+    while (true) {
+      const operationNumber = Math.floor(Math.random() * 10**16);
+      const transactionFound =
+        await transactionService.getTransactionByOperationNumber(operationNumber)
+
+      if (!transactionFound) {
+        return operationNumber;
+      }
+    }
+  }
 }

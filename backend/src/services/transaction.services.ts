@@ -40,6 +40,21 @@ export default class transactionService {
   }
 
   /**
+   * Retrieves a transaction by its operation number
+   *
+   * @param {number} operationNumber - The operation number of the transaction to retrieve
+   * @return {Promise<TransactionModel | null>} The transaction operation number if found, otherwise null
+   */
+  static async getTransactionByOperationNumber(
+    operationNumber: number
+  ): Promise<TransactionModel | null> {
+    const transactionFound = await transactionDao
+      .getInstance()
+      .getTransactionByOperationNumber(operationNumber)
+    return transactionFound
+  }
+
+  /**
    * Retrieves all transactions from the database.
    *
    * @return {Promise<TransactionModel[]>} An array of transaction models.

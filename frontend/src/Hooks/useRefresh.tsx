@@ -10,21 +10,21 @@ type options = {
   };
 
 export const useRefresh = ({ onSuccess, onReject, setToken }: options) => {
-  const { setLoadingPageRefresh } = useAuth()
+  const { setQueryTime } = useAuth()
+  const startTime = Date.now();
 
   useEffect(() => {
     refreshSession()
       .then(({ accessToken }) => {
         setToken(accessToken);
+        const endTime = Date.now();
+        setQueryTime(endTime - startTime + 1000);
       })
       .then(() => {
         onSuccess?.();
       })
       .catch(() => {
         onReject?.();
-      })
-      .finally(() => {
-        setLoadingPageRefresh(false);
       })
         // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
