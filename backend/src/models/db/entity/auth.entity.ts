@@ -1,4 +1,4 @@
-import { DataTypes, Model, ModelOptions, NOW, Sequelize } from 'sequelize'
+import { DataTypes, Model, NOW } from 'sequelize'
 import { sequelize } from '../database.manager'
 import { IAuth } from '../../../interfaces/auth.interface'
 
