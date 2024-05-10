@@ -1,23 +1,23 @@
 import { Model, DataTypes } from "sequelize";
 import { sequelize } from "../database.manager";
-import { BankAccount } from "./bank-account.entity";
 import { IHistorial } from "../../../interfaces/historial.interface";
+import { AnualHistorial } from "./anual-historial.entity";
 
 export interface HistorialModel extends Model<IHistorial>, IHistorial {}
 
-export const Historial = sequelize.define<HistorialModel>('monthly-historial', {
+export const Historial = sequelize.define<HistorialModel>('historial', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true
   },
-  bank_account: {
+  anual_historial_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-        model: BankAccount.getTableName(),
-        key: 'id',
-      },
+      model: AnualHistorial.getTableName(),
+      key: 'id'
+    },
     onUpdate: 'CASCADE',
     onDelete: 'SET NULL'
   },

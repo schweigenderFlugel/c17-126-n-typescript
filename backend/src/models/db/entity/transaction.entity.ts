@@ -3,6 +3,7 @@ import { sequelize } from '../database.manager'
 import { TRANSACTION_STATUS, TYPETRANSFERS } from '../../../config/constants'
 import { ITransaction } from '../../../interfaces/transaction.interface'
 import { BankAccount } from './bank-account.entity'
+import { Historial } from './historial.entity'
 
 const { INTEGER, ENUM } = DataTypes
 
@@ -13,6 +14,16 @@ const Transaction = sequelize.define<TransactionModel>('transaction', {
     type: INTEGER,
     autoIncrement: true,
     primaryKey: true,
+  },
+  historial_id: {
+    type: INTEGER,
+    allowNull: false,
+    references: {
+      model: Historial.getTableName(),
+      key: 'id',
+    },
+    onUpdate: 'CASCADE',
+    onDelete: 'SET NULL'
   },
   operation_number: {
     type: INTEGER,

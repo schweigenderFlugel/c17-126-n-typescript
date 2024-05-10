@@ -1,6 +1,6 @@
 import { IAnualHistorial } from '../../interfaces/anualHistorial.interface' 
-import { AnualHistorial } from '../db/entity/monthly-historial.entity' 
-import { AnualHistorialModel } from '../db/entity/monthly-historial.entity' 
+import { AnualHistorial } from '../db/entity/anual-historial.entity' 
+import { AnualHistorialModel } from '../db/entity/anual-historial.entity' 
 
 export default class anualHistorialDao {
   private static intance: anualHistorialDao | null = null
@@ -56,5 +56,18 @@ export default class anualHistorialDao {
       returning: true,
     })
     return historialUpdated[1][0]
+  }
+
+  /**
+   * Delete a anual historial by their ID.
+   *
+   * @param {number} id - The ID of the anual historial to be deleted
+   * @return {Promise<number>} The number of anual historials deleted
+   */
+  async deleteAnualHistorial(id: number): Promise<number> {
+    const anualHistorialDeleted = await AnualHistorial.destroy({
+      where: { id },
+    })
+    return anualHistorialDeleted
   }
 }

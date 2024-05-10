@@ -4,6 +4,8 @@ import { ICreateUser, IUpdateUser, IUser } from '../../interfaces/user.interface
 import { UserModel } from '../db/entity/user.entity'
 import { BankAccount } from '../db/entity/bank-account.entity'
 import { Preferences } from '../db/entity/preference.entity'
+import { AnualHistorial } from '../db/entity/anual-historial.entity'
+import { Historial } from '../db/entity/historial.entity'
 
 export default class userDao {
   private static instance: userDao | null = null
@@ -103,33 +105,39 @@ export default class userDao {
           model: BankAccount,
           attributes: ['id', 'number_account', 'balance', 'expenses', 'investments'], 
           include: [{
-            association: 'transactions_sent', 
-            attributes: ['id', 'source_account', 'destination_account', 'amount', 'date_transaction'],
+            association: 'anual_historial',
             include: [{
-              model: BankAccount,
-              association: 'to', 
-              attributes: {
-                exclude: ['id', 'number_account', 'balance', 'expenses', 'investments']
-              },
+              association: 'months',
               include: [{
-                model: User,
-                attributes: ['name', 'lastname']
-              }]
-            }]
-          },
-          {
-            association: 'transactions_received',
-            attributes: ['id', 'source_account', 'destination_account', 'amount', 'date_transaction'],
-            include: [{
-              model: BankAccount,
-              association: 'from',
-              attributes: {
-                exclude: ['id', 'number_account', 'balance', 'expenses', 'investments']
+                association: 'transactions_sent',
+                attributes: ['id', 'source_account', 'destination_account', 'amount', 'date_transaction'],
+                include: [{
+                  association: 'to',
+                  attributes: {
+                    exclude: ['id', 'number_account', 'balance', 'expenses', 'investments'],
+                  },
+                  include: [{
+                    model: User,
+                    attributes: ['name', 'lastname']
+                  }]
+                }]
               },
-              include: [{
-                model: User,
-                attributes: ['name', 'lastname']
-              }]
+              {
+                association: 'transactions_received',
+                attributes: ['id', 'source_account', 'destination_account', 'amount', 'date_transaction'],
+                include: [{
+                  association: 'from',
+                  attributes: {
+                    exclude: ['id', 'number_account', 'balance', 'expenses', 'investments'],
+                  },
+                  include: [{
+                    model: User,
+                    attributes: ['name', 'lastname']
+                  }]
+                }]
+              }
+            
+            ]
             }]
           }]
         }

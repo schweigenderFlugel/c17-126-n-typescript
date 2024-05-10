@@ -154,7 +154,7 @@ export default class transactionService {
   }
 
   static async transferTransaction(
-    transactionPayload: ITransaction,
+    transactionPayload: Omit<ITransaction, 'historial_id'>,
     sourceAccountData: ISourceAccountData,
     destinationAccountPayload: IDestinationAccountData,
     amount: number
@@ -162,7 +162,7 @@ export default class transactionService {
     const sourceAccountUpdated = await transactionDao
       .getInstance()
       .transferTransaction(
-        transactionPayload, 
+        transactionPayload as ITransaction, 
         sourceAccountData, 
         destinationAccountPayload,
         amount

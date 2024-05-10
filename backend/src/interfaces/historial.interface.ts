@@ -1,6 +1,6 @@
 export interface IHistorial {
   id: number;
-  bank_account: number;
+  anual_historial_id: number;
   month: number;
   balance: number;
   expenses: number;

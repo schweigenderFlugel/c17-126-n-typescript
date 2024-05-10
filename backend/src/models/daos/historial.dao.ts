@@ -35,13 +35,26 @@ export default class historialDao {
    * @return {Promise<HistorialModel | null>} The updated historial model or null if not found.
    */
   async updateHistorial(
-    bank_account: number,
+    id: number,
     historialPayload: Partial<IHistorial>
   ): Promise<HistorialModel | null> {
     const historialUpdated = await Historial.update(historialPayload, {
-      where: { bank_account: bank_account },
+      where: { id: id },
       returning: true,
     })
     return historialUpdated[1][0]
+  }
+
+  /**
+   * Delete a historial by their ID.
+   *
+   * @param {number} id - The ID of the historial to be deleted
+   * @return {Promise<number>} The number of historials deleted
+   */
+  async deleteHistorial(id: number): Promise<number> {
+    const historialDeleted = await Historial.destroy({
+      where: { id },
+    })
+    return historialDeleted
   }
 }

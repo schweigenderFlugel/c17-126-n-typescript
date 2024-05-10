@@ -8,8 +8,12 @@ import bankAccountService from '../services/bankAccount.services'
 import { IGenerateBankAccount } from '../interfaces/bankAccount.interface'
 import bankAccountHelper from '../utils/bankAccountHelper'
 import preferenceService from '../services/preferences.services'
-import { ICreateUser, IUpdateUser } from '../interfaces/user.interface'
+import { IAllUserData, ICreateUser, IUpdateUser } from '../interfaces/user.interface'
 import { IPreferences } from '../interfaces/preference.interface'
+import { IAnualHistorial } from '../interfaces/anualHistorial.interface'
+import anualHistorialService from '../services/anualHistorial.services'
+import { IHistorial } from '../interfaces/historial.interface'
+import historialService from '../services/historial.services'
 
 
 export default class userController {
@@ -81,6 +85,23 @@ export default class userController {
         )
       }
 
+      const preferencesPayload = {
+        userId: userCreated.dataValues.id,
+        min_ammount_transfers: 10,
+        max_ammount_transfers: 999999,
+      }
+
+      const preferencesCreated =
+        await preferenceService.createPrefernce(preferencesPayload)
+
+      if (!preferencesCreated) {
+        throw new HttpError(
+          'Preferences not created',
+          'Preferences not created',
+          HTTP_STATUS.SERVER_ERROR
+        )
+      }
+
       const numberAccount =
         await bankAccountHelper.generateAccountNumber(accountType)
 
@@ -103,27 +124,46 @@ export default class userController {
         )
       }
 
-      const preferencesPayload = {
-        userId: userCreated.dataValues.id,
-        min_ammount_transfers: 10,
-        max_ammount_transfers: 999999,
+      const anualHistorialPayload: Omit<IAnualHistorial, 'id'> = {
+        bank_account: bankAccountCreated.id,
+        year: new Date().getFullYear(),
       }
 
-      const preferencesCreated =
-        await preferenceService.createPrefernce(preferencesPayload)
+      const anualHistorialCreated = 
+        await anualHistorialService.createAnualHistorial(anualHistorialPayload)
 
-      if (!preferencesCreated) {
+      if (!anualHistorialCreated) {
         throw new HttpError(
-          'Preferences not created',
-          'Preferences not created',
+          'Anual historial not created',
+          'Anual historial not created',
           HTTP_STATUS.SERVER_ERROR
         )
       }
 
+      const historialPayload: Omit<IHistorial, 'id'> = {
+        anual_historial_id: anualHistorialCreated.id,
+        month: new Date().getMonth() + 1,
+        balance: bankAccountCreated.balance,
+        expenses: bankAccountCreated.expenses,
+        investments: bankAccountCreated.expenses,
+      }
+
+      const historialCreated = 
+        await historialService.createHistorial(historialPayload)
+
+      if (!historialCreated) {
+        throw new HttpError(
+          'Historial not created',
+          'Historial not created',
+          HTTP_STATUS.SERVER_ERROR
+        )
+      }
       const response = apiSuccessResponse({
         userCreated,
-        bankAccountCreated,
         preferencesCreated,
+        bankAccountCreated,
+        anualHistorialCreated,
+        historialCreated,
       })
       res.status(200).json(response)
     } catch (err: any) {
@@ -156,7 +196,8 @@ export default class userController {
         'Token payload error',
         HTTP_STATUS.FORBIDDEN
       )
-      const userFound = await userService.getUserByAuthId(tokenPayload.id)
+      const userFound = await userService.getUserByAuthId(tokenPayload.id);
+      
       if (!userFound) {
         throw new HttpError(
           'User not found',
@@ -164,8 +205,32 @@ export default class userController {
           HTTP_STATUS.NOT_FOUND
         )
       }
+
+      const userData: IAllUserData = userFound.dataValues as unknown as IAllUserData;
+
+      // console.log(userData.bank_account.dataValues.anual_historial[0].dataValues.months[0].dataValues.transactions_received[0].dataValues.from.dataValues.user.dataValues.lastname);
+
+      let anual_historial: object = {}
+      let month: object = {};
+
+      userData.bank_account.dataValues.anual_historial.forEach(item => {
+        item.dataValues.year;
+      })
+
+      userData.bank_account.dataValues.anual_historial.forEach(item => {
+        item.dataValues.year;
+      })
+
+      const user = {
+        ...userFound.dataValues,
+        ...userData.auth.dataValues,
+        ...userData.preferences.dataValues,
+        ...userData.bank_account.dataValues,
+      }
+
       res.status(200).json(userFound)
     } catch (error) {
+      console.log(error)
       next(error)
     }
   }
