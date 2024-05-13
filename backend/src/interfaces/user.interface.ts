@@ -1,7 +1,8 @@
-import { IAuth, IUserAuthData } from './auth.interface'
-import { IBankAccount } from './bankAccount.interface'
+import { IAnualHistorialResponse } from './anualHistorial.interface'
+import { IUserAuthData } from './auth.interface'
+import { IUserBankAccount } from './bankAccount.interface'
 import { ICommon } from './common.interface'
-import { IPreferences, IUserPreferenceData } from './preference.interface'
+import { IUserPreferenceData } from './preference.interface'
 
 export type AccountType = 'personal' | 'enterprise'
 
@@ -28,70 +29,34 @@ export interface IAllUserData {
   address: string;
   phone: string
   alias: string;
+  auth: IUserAuthData,
+  preference: IUserPreferenceData,
+  bank_account: IUserBankAccount,
+}
+
+export interface IUserResponse {
+  id: number;
+  name: string;
+  lastname: string;
+  avatar: string;
+  address: string;
+  phone: string;        
+  alias: string;
   auth: {
-    dataValues: {
-      id: number;
-      email: string;
-    }
+    id: number,
+    email: string,
   },
-  preferences: IUserPreferenceData,
+  preferences: {
+    min_ammount_transfers: number;
+    max_ammount_transfers: number;
+  },
   bank_account: {
-    dataValues: {
-      number_account: string;
-      balance: number;
-      expenses: number;
-      investments: number;
-      anual_historial: [{
-        dataValues: {
-          year: number;
-          months: [{
-            dataValues: {
-              balance: number;
-              expenses: number;
-              investments: number;
-              transactions_sent: [{
-                dataValues: {
-                  id: number;
-                  source_account: number;
-                  destination_account: number;
-                  amount: number;
-                  to: {
-                    dataValues: {
-                      user: {
-                        dataValues: {
-                          name: string;
-                          lastname: string;
-                        }
-                      }
-                    }
-                  }
-                }
-              }]
-              transactions_received: [{
-                dataValues: {
-                  id: number;
-                  source_account: number;
-                  destination_account: number;
-                  amount: number;
-                  from: {
-                    dataValues: {
-                      user: {
-                        dataValues: {
-                          name: string;
-                          lastname: string;
-                        }
-                      }
-                    }
-                  }
-                }
-              }]
-            }
-          }]
-        }
-      }]
-    }
-  },
-  
+    number_account: string;
+    balance: number;
+    expenses: number;
+    investments: number;
+    anual_historial: Partial<IAnualHistorialResponse[]>,
+  }
 }
 
 export interface IUpdateUser extends Partial<IUser> {}

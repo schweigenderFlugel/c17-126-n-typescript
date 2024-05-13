@@ -7,16 +7,29 @@ interface AnualHistorialFixtutre extends IAnualHistorial {}
 export const anualHistorial1: AnualHistorialFixtutre = {
   id: 1,
   bank_account: bankAccount1.id,
-  year: new Date().getFullYear(),
+  year: 2023,
 }
 
 export const anualHistorial2: AnualHistorialFixtutre = {
   id: 2,
-  bank_account: bankAccount2.id,
-  year: new Date().getFullYear(),
+  bank_account: bankAccount1.id,
+  year: 2024
 }
 
-const anualHistorialFixtures = [anualHistorial1, anualHistorial2];
+export const anualHistorial3: AnualHistorialFixtutre = {
+  id: 3,
+  bank_account: bankAccount2.id,
+  year: 2023,
+}
+
+export const anualHistorial4: AnualHistorialFixtutre = {
+  id: 4,
+  bank_account: bankAccount2.id,
+  year: 2024,
+}
+
+
+const anualHistorialFixtures = [anualHistorial1, anualHistorial2, anualHistorial3, anualHistorial4];
 
 export function up({context}: any) {
   return context.bulkInsert(AnualHistorial.getTableName(), anualHistorialFixtures);

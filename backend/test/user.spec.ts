@@ -18,6 +18,7 @@ import { adminUser, normalUser } from '../src/models/db/seeders/2-user';
 import { preference1, preference2 } from '../src/models/db/seeders/4-preferences';
 import { bankAccount1, bankAccount2 } from '../src/models/db/seeders/3-bank-account';
 import { transaction1, transaction2, transaction3 } from '../src/models/db/seeders/7-transaction';
+import { IAllUserData, IUserResponse } from '../src/interfaces/user.interface';
 
 describe('Testing the user route', () => {
   let app;
@@ -43,7 +44,7 @@ describe('Testing the user route', () => {
     })
 
     it.only('Should get the admin user', async () => {
-      const { statusCode, body } = await api.get('/api/v1/user').auth(adminUserToken, { type: 'bearer' });
+      const { statusCode, body }: { statusCode: any, body: IUserResponse } = await api.get('/api/v1/user').auth(adminUserToken, { type: 'bearer' });
       expect(statusCode).toBe(200);
       expect(body.id).toEqual(adminUser.id);
       expect(body.name).toMatch(adminUser.name);
@@ -54,37 +55,34 @@ describe('Testing the user route', () => {
       expect(body.phone).toMatch(adminUser.phone);
       expect(body.auth.id).toEqual(adminAuth.id);
       expect(body.auth.email).toMatch(adminAuth.email);
-      expect(body.preference.min_ammount_transfers).toEqual(preference1.min_ammount_transfers);
-      expect(body.preference.max_ammount_transfers).toEqual(preference1.max_ammount_transfers);
+      expect(body.preferences.min_ammount_transfers).toEqual(preference1.min_ammount_transfers);
+      expect(body.preferences.max_ammount_transfers).toEqual(preference1.max_ammount_transfers);
       expect(body.bank_account.number_account).toMatch(bankAccount1.number_account);
       expect(body.bank_account.balance).toEqual(bankAccount1.balance);
       expect(body.bank_account.expenses).toEqual(bankAccount1.expenses);
       expect(body.bank_account.investments).toEqual(bankAccount1.investments);
       expect(body.bank_account.anual_historial).toBeInstanceOf(Array);
-      expect(body.bank_account.anual_historial[0].months).toBeInstanceOf(Array);
-      expect(body.bank_account.anual_historial[0].months[0].transactions_sent).toBeInstanceOf(Array);
-      expect(body.bank_account.anual_historial[0].months[0].transactions_received).toBeInstanceOf(Array);
-      expect(body.bank_account.anual_historial[0].months[0].transactions_received[0].id).toEqual(2);
-      expect(body.bank_account.anual_historial[0].months[0].transactions_received[0].source_account).toEqual(transaction2.source_account);
-      expect(body.bank_account.anual_historial[0].months[0].transactions_received[0].destination_account).toEqual(transaction2.destination_account);
-      expect(body.bank_account.anual_historial[0].months[0].transactions_received[0].amount).toEqual(transaction2.amount);
-      expect(body.bank_account.anual_historial[0].months[0].transactions_received[0].from.user.name).toMatch(normalUser.name)
-      expect(body.bank_account.anual_historial[0].months[0].transactions_received[0].from.user.lastname).toMatch(normalUser.lastname);
-      expect(body.bank_account.anual_historial[0].months[0].transactions_sent[0].id).toEqual(1);
-      expect(body.bank_account.anual_historial[0].months[0].transactions_sent[0].source_account).toEqual(transaction1.source_account);
-      expect(body.bank_account.anual_historial[0].months[0].transactions_sent[0].destination_account).toEqual(transaction1.destination_account);
-      expect(body.bank_account.anual_historial[0].months[0].transactions_sent[0].amount).toEqual(transaction1.amount);
-      expect(body.bank_account.anual_historial[0].months[0].transactions_sent[0].to.user.name).toMatch(normalUser.name);
-      expect(body.bank_account.anual_historial[0].months[0].transactions_sent[0].to.user.lastname).toMatch(normalUser.lastname);
-      expect(body.bank_account.anual_historial[0].months[0].transactions_sent[1].id).toEqual(3);
-      expect(body.bank_account.anual_historial[0].months[0].transactions_sent[1].source_account).toEqual(transaction3.source_account);
-      expect(body.bank_account.anual_historial[0].months[0].transactions_sent[1].destination_account).toEqual(transaction3.destination_account);
-      expect(body.bank_account.anual_historial[0].months[0].transactions_sent[1].amount).toEqual(transaction3.amount);
-      expect(body.bank_account.anual_historial[0].months[0].transactions_sent[1].to.user.name).toMatch(normalUser.name);
-      expect(body.bank_account.anual_historial[0].months[0].transactions_sent[1].to.user.lastname).toMatch(normalUser.lastname);
+      expect(body.bank_account.anual_historial[1]?.month.nov).toBeDefined();
+      expect(body.bank_account.anual_historial[1]?.month.dec).toBeDefined();
+      expect(body.bank_account.anual_historial[0]?.month.jan).toBeDefined();
+      expect(body.bank_account.anual_historial[0]?.month.feb).toBeDefined();
+      expect(body.bank_account.anual_historial[1]?.month.nov?.transactions_received).toBeInstanceOf(Array);
+      expect(body.bank_account.anual_historial[1]?.month.nov?.transactions_sent).toBeInstanceOf(Array);
+      expect(body.bank_account.anual_historial[1]?.month.nov?.transactions_received[0].id).toEqual(1);
+      expect(body.bank_account.anual_historial[1]?.month.nov?.transactions_received[0].source_account).toEqual(transaction2.source_account);
+      expect(body.bank_account.anual_historial[1]?.month.nov?.transactions_received[0].destination_account).toEqual(transaction2.destination_account);
+      expect(body.bank_account.anual_historial[1]?.month.nov?.transactions_received[0].amount).toEqual(transaction2.amount);
+      expect(body.bank_account.anual_historial[1]?.month.nov?.transactions_received[0].from.user.name).toMatch(normalUser.name)
+      expect(body.bank_account.anual_historial[1]?.month.nov?.transactions_received[0].from.user.lastname).toMatch(normalUser.lastname);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions_sent[0].id).toEqual(1);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions_sent[0].source_account).toEqual(transaction1.source_account);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions_sent[0].destination_account).toEqual(transaction1.destination_account);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions_sent[0].amount).toEqual(transaction1.amount);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions_sent[0].to.user.name).toMatch(normalUser.name);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions_sent[0].to.user.lastname).toMatch(normalUser.lastname);
     })
 
-    it.only('Should get the normal user', async () => {
+    it('Should get the normal user', async () => {
       const { statusCode, body } = await api.get('/api/v1/user').auth(normalUserToken, { type: 'bearer' });
       expect(statusCode).toBe(200);
       expect(body.id).toEqual(normalUser.id);

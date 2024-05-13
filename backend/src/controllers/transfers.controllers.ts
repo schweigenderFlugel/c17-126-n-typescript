@@ -68,7 +68,7 @@ export default class transfersController {
 
       const requestingUser = req.user as IUserToken
 
-      if (requestingUser.id !== sourceAccountData.user.dataValues.auth.id) {
+      if (requestingUser.id !== sourceAccountData.user.dataValues.auth.dataValues.id) {
         throw new HttpError(
           'You are not allowed to perform this action',
           'You are not allowed to perform this action',

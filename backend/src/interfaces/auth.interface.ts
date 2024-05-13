@@ -15,4 +15,9 @@ export interface IUpdateAuth extends Omit<Omit<Omit<IAuth, 'id'>, 'email'>, 'cre
   newPassword: string;
 }
 
-export interface IUserAuthData { id: number } 
+export interface IUserAuthData { 
+  dataValues: {
+    id: number;
+    email: string;
+  }
+} 

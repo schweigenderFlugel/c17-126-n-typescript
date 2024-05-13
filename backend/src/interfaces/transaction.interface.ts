@@ -22,3 +22,66 @@ export interface ITransactionData {
   to?: Partial<IDestinationAccountData>
 }
 
+export interface IUserTransactionSentData {
+  dataValues: {
+    id: number;
+    source_account: number;
+    destination_account: number;
+    amount: number;
+    to: {
+      dataValues: {
+        user: {
+          dataValues: {
+            name: string;
+            lastname: string;
+          }
+        }
+      }
+    }
+  }
+}
+
+export interface IUserTransactionSentDataResponse {
+  id: number;
+  source_account: number;
+  destination_account: number;
+  amount: number;
+  to: {
+    user: {
+      name: string;
+      lastname: string;
+    }
+  }
+}
+
+export interface IUserTransactionReceivedData {
+  dataValues: {
+    id: number;
+    source_account: number;
+    destination_account: number;
+    amount: number;
+    from: {
+      dataValues: {
+        user: {
+          dataValues: {
+            name: string;
+            lastname: string;
+          }
+        }
+      }
+    }
+  }
+}
+
+export interface IUserTransactionReceivedDataResponse {
+  id: number;
+  source_account: number;
+  destination_account: number;
+  amount: number;
+  from: {
+    user: {
+      name: string;
+      lastname: string;
+    }
+  }
+}

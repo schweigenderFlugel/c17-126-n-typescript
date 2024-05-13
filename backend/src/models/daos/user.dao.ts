@@ -109,6 +109,10 @@ export default class userDao {
             include: [{
               association: 'months',
               include: [{
+                association: 'year',
+                attributes: ['year'],
+              },
+              {
                 association: 'transactions_sent',
                 attributes: ['id', 'source_account', 'destination_account', 'amount', 'date_transaction'],
                 include: [{

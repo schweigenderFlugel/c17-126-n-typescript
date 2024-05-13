@@ -1,3 +1,5 @@
+
+import { IUserAnualHistorial } from './anualHistorial.interface'
 import { IUserData } from './user.interface'
 
 export interface IBankAccount {
@@ -7,6 +9,16 @@ export interface IBankAccount {
   balance: number
   expenses: number
   investments: number
+}
+
+export interface IUserBankAccount {
+  dataValues: {
+    number_account: string;
+    balance: number;
+    expenses: number;
+    investments: number;
+    anual_historial: IUserAnualHistorial[],
+  }
 }
 
 export interface IAccountData {

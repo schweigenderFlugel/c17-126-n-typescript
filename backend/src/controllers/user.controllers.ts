@@ -8,12 +8,13 @@ import bankAccountService from '../services/bankAccount.services'
 import { IGenerateBankAccount } from '../interfaces/bankAccount.interface'
 import bankAccountHelper from '../utils/bankAccountHelper'
 import preferenceService from '../services/preferences.services'
-import { IAllUserData, ICreateUser, IUpdateUser } from '../interfaces/user.interface'
+import { IAllUserData, ICreateUser, IUpdateUser, IUserResponse } from '../interfaces/user.interface'
 import { IPreferences } from '../interfaces/preference.interface'
-import { IAnualHistorial } from '../interfaces/anualHistorial.interface'
+import { IAnualHistorial, IAnualHistorialResponse } from '../interfaces/anualHistorial.interface'
 import anualHistorialService from '../services/anualHistorial.services'
-import { IHistorial } from '../interfaces/historial.interface'
+import { IHistorial, IMonths, IUserHistorial } from '../interfaces/historial.interface'
 import historialService from '../services/historial.services'
+import { number } from 'zod'
 
 
 export default class userController {
@@ -210,25 +211,128 @@ export default class userController {
 
       // console.log(userData.bank_account.dataValues.anual_historial[0].dataValues.months[0].dataValues.transactions_received[0].dataValues.from.dataValues.user.dataValues.lastname);
 
-      let anual_historial: object = {}
-      let month: object = {};
+      let anual_historials: Partial<IAnualHistorialResponse[]> = [];
 
       userData.bank_account.dataValues.anual_historial.forEach(item => {
-        item.dataValues.year;
+        anual_historials.push({ year: item.dataValues.year, month: {} });
+        item.dataValues.months.forEach(historial => {
+          switch (historial.dataValues.month) {
+            case 1:
+              anual_historials.forEach(anual_historial => {
+                if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
+                  anual_historial.month.jan = historial.dataValues;
+                }
+              })
+              break
+            case 2:
+              anual_historials.forEach(anual_historial => {
+                if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
+                  anual_historial.month.feb = historial.dataValues;
+                }
+              })
+              break
+            case 3:
+              anual_historials.forEach(anual_historial => {
+                if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
+                  anual_historial.month.mar = historial.dataValues;
+                }
+              })
+              break
+            case 4:
+              anual_historials.forEach(anual_historial => {
+                if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
+                  anual_historial.month.apr = historial.dataValues;
+                }
+              })
+              break
+            case 5:
+              anual_historials.forEach(anual_historial => {
+                if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
+                  anual_historial.month.may = historial.dataValues;
+                }
+              })
+              break
+            case 6:
+              anual_historials.forEach(anual_historial => {
+                if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
+                  anual_historial.month.jun = historial.dataValues;
+                }
+              })
+              break
+            case 7:
+              anual_historials.forEach(anual_historial => {
+                if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
+                  anual_historial.month.jul = historial.dataValues;
+                }
+              })
+              break
+            case 8:
+              anual_historials.forEach(anual_historial => {
+                if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
+                  anual_historial.month.aug = historial.dataValues;
+                }
+              })
+              break
+            case 9:
+              anual_historials.forEach(anual_historial => {
+                if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
+                  anual_historial.month.sep = historial.dataValues;
+                }
+              })
+              break
+            case 10:
+              anual_historials.forEach(anual_historial => {
+                if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
+                  anual_historial.month.oct = historial.dataValues;
+                }
+              })
+              break
+            case 11:
+              anual_historials.forEach(anual_historial => {
+                if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
+                  anual_historial.month.nov = historial.dataValues;
+                }
+              })
+              break
+            case 12:
+              anual_historials.forEach(anual_historial => {
+                if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
+                  anual_historial.month.dec = historial.dataValues;
+                }
+              })
+              break
+          }
+        });
       })
 
-      userData.bank_account.dataValues.anual_historial.forEach(item => {
-        item.dataValues.year;
-      })
-
-      const user = {
-        ...userFound.dataValues,
-        ...userData.auth.dataValues,
-        ...userData.preferences.dataValues,
-        ...userData.bank_account.dataValues,
+      const userDataResponse: IUserResponse = {
+        id: userData.id,
+        name: userData.name,
+        lastname: userData.lastname,
+        avatar: userData.avatar,
+        address: userData.address,
+        phone: userData.phone,        
+        alias: userData.alias,
+        auth: {
+          id: userData.auth.dataValues.id,
+          email: userData.auth.dataValues.email,
+        },
+        preferences: {
+          min_ammount_transfers: userData.preference.dataValues.min_ammount_transfers,
+          max_ammount_transfers: userData.preference.dataValues.max_ammount_transfers,
+        },
+        bank_account: {
+          number_account: userData.bank_account.dataValues.number_account,
+          balance: userData.bank_account.dataValues.balance,
+          expenses: userData.bank_account.dataValues.expenses,
+          investments: userData.bank_account.dataValues.investments,
+          anual_historial: anual_historials,
+        }
       }
 
-      res.status(200).json(userFound)
+      console.log(userDataResponse.bank_account.anual_historial[0]?.month.nov?.transactions_received[1].dataValues)
+
+      res.status(200).json(userDataResponse)
     } catch (error) {
       console.log(error)
       next(error)

@@ -33,6 +33,12 @@ AnualHistorial.hasMany(Historial, {
   foreignKey: 'anual_historial_id',
 })
 
+Historial.belongsTo(AnualHistorial, {
+  as: 'year',
+  foreignKey: 'anual_historial_id',
+})
+
+
 // RELATIONS FOR TRANSACTION
 Historial.hasMany(Transaction, {
   as: 'transactions_sent',
