@@ -71,15 +71,22 @@ export const historial7: HistorialFixtutre = {
 export const historial8: HistorialFixtutre = {
   id: 8,
   anual_historial_id: anualHistorial4.id,
-  month: 6,
+  month: 2,
   balance: bankAccount2.balance,
   expenses: bankAccount2.expenses,
   investments: bankAccount2.investments
 }
 
-
-
-const historialFixtures = [historial1, historial2, historial3, historial4, historial5, historial6];
+const historialFixtures = [
+  historial1, 
+  historial2, 
+  historial3, 
+  historial4, 
+  historial5, 
+  historial6, 
+  historial7, 
+  historial8,
+];
 
 export function up({context}: any) {
   return context.bulkInsert(Historial.getTableName(), historialFixtures);

@@ -10,11 +10,11 @@ import bankAccountHelper from '../utils/bankAccountHelper'
 import preferenceService from '../services/preferences.services'
 import { IAllUserData, ICreateUser, IUpdateUser, IUserResponse } from '../interfaces/user.interface'
 import { IPreferences } from '../interfaces/preference.interface'
-import { IAnualHistorial, IAnualHistorialResponse } from '../interfaces/anualHistorial.interface'
+import { IAnualHistorial, IAnualHistorialDataResponse } from '../interfaces/anualHistorial.interface'
 import anualHistorialService from '../services/anualHistorial.services'
-import { IHistorial, IMonths, IUserHistorial } from '../interfaces/historial.interface'
+import { IHistorial } from '../interfaces/historial.interface'
 import historialService from '../services/historial.services'
-import { number } from 'zod'
+import { IUserTransactionsResponse } from '../interfaces/transaction.interface'
 
 
 export default class userController {
@@ -211,7 +211,11 @@ export default class userController {
 
       // console.log(userData.bank_account.dataValues.anual_historial[0].dataValues.months[0].dataValues.transactions_received[0].dataValues.from.dataValues.user.dataValues.lastname);
 
-      let anual_historials: Partial<IAnualHistorialResponse[]> = [];
+      let anual_historials: Partial<IAnualHistorialDataResponse[]> = [];
+      let transactions: IUserTransactionsResponse = {
+        sent: [],
+        received: [],
+      };
 
       userData.bank_account.dataValues.anual_historial.forEach(item => {
         anual_historials.push({ year: item.dataValues.year, month: {} });
@@ -220,84 +224,708 @@ export default class userController {
             case 1:
               anual_historials.forEach(anual_historial => {
                 if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
-                  anual_historial.month.jan = historial.dataValues;
+                  historial.dataValues.transactions_sent.forEach(sent => {
+                    transactions.sent?.push({
+                      id: sent.dataValues.id,
+                      bank_account: sent.dataValues.month.dataValues.year.dataValues.bank_account,
+                      source_account: sent.dataValues.source_account,
+                      destination_account: sent.dataValues.destination_account,
+                      amount: sent.dataValues.amount,
+                      date_transaction: sent.dataValues.date_transaction,
+                      month: sent.dataValues.month.dataValues.month,
+                      year: sent.dataValues.month.dataValues.year.dataValues.year,
+                      to: {
+                        user: {
+                          name: sent.dataValues.to.dataValues.user.dataValues.name,
+                          lastname: sent.dataValues.to.dataValues.user.dataValues.lastname,
+                        }
+                      }
+                    });
+                  })
+                  historial.dataValues.transactions_received.forEach(received => {
+                    transactions.received?.push({
+                      id: received.dataValues.id,
+                      bank_account: received.dataValues.month.dataValues.year.dataValues.bank_account,
+                      source_account: received.dataValues.source_account,
+                      destination_account: received.dataValues.destination_account,
+                      amount: received.dataValues.amount,
+                      date_transaction: received.dataValues.date_transaction,
+                      month: received.dataValues.month.dataValues.month,
+                      year: received.dataValues.month.dataValues.year.dataValues.year,
+                      from: {
+                        user: {
+                          name: received.dataValues.from.dataValues.user.dataValues.name,
+                          lastname: received.dataValues.from.dataValues.user.dataValues.lastname,
+                        }
+                      }
+                    });
+                  })
+                  anual_historial.month.jan = {
+                    balance: historial.dataValues.balance,
+                    expenses: historial.dataValues.expenses,
+                    investments: historial.dataValues.investments,
+                    transactions: {
+                      sent: transactions.sent
+                        .filter(sent => sent?.bank_account === userData.bank_account.dataValues.id)
+                        .filter(sent => sent?.year === historial.dataValues.year.dataValues.year)
+                        .filter(sent => sent?.month === 1)
+                        .filter(sent => sent?.source_account === userData.bank_account.dataValues.id),
+                      received: transactions.received
+                        .filter(received => received?.bank_account === userData.bank_account.dataValues.id)
+                        .filter(sent => sent?.year === historial.dataValues.year.dataValues.year)
+                        .filter(sent => sent?.month === 1)
+                        .filter(received => received?.destination_account === userData.bank_account.dataValues.id),
+                    }
+                  };
                 }
               })
               break
             case 2:
               anual_historials.forEach(anual_historial => {
                 if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
-                  anual_historial.month.feb = historial.dataValues;
+                  historial.dataValues.transactions_sent.forEach(sent => {
+                    transactions.sent?.push({
+                      id: sent.dataValues.id,
+                      bank_account: sent.dataValues.month.dataValues.year.dataValues.bank_account,
+                      source_account: sent.dataValues.source_account,
+                      destination_account: sent.dataValues.destination_account,
+                      amount: sent.dataValues.amount,
+                      date_transaction: sent.dataValues.date_transaction,
+                      month: sent.dataValues.month.dataValues.month,
+                      year: sent.dataValues.month.dataValues.year.dataValues.year,
+                      to: {
+                        user: {
+                          name: sent.dataValues.to.dataValues.user.dataValues.name,
+                          lastname: sent.dataValues.to.dataValues.user.dataValues.lastname,
+                        }
+                      }
+                    });
+                  })
+                  historial.dataValues.transactions_received.forEach(received => {
+                    transactions.received?.push({
+                      id: received.dataValues.id,
+                      bank_account: received.dataValues.month.dataValues.year.dataValues.bank_account,
+                      source_account: received.dataValues.source_account,
+                      destination_account: received.dataValues.destination_account,
+                      amount: received.dataValues.amount,
+                      date_transaction: received.dataValues.date_transaction,
+                      month: received.dataValues.month.dataValues.month,
+                      year: received.dataValues.month.dataValues.year.dataValues.year,
+                      from: {
+                        user: {
+                          name: received.dataValues.from.dataValues.user.dataValues.name,
+                          lastname: received.dataValues.from.dataValues.user.dataValues.lastname,
+                        }
+                      }
+                    });
+                  })
+                  anual_historial.month.feb = {
+                    balance: historial.dataValues.balance,
+                    expenses: historial.dataValues.expenses,
+                    investments: historial.dataValues.investments,
+                    transactions: {
+                      sent: transactions.sent
+                        .filter(sent => sent?.bank_account === userData.bank_account.dataValues.id)
+                        .filter(sent => sent?.year === historial.dataValues.year.dataValues.year)
+                        .filter(sent => sent?.month === 2)
+                        .filter(sent => sent?.source_account === userData.bank_account.dataValues.id),
+                      received: transactions.received
+                        .filter(received => received?.bank_account === userData.bank_account.dataValues.id)
+                        .filter(sent => sent?.year === historial.dataValues.year.dataValues.year)
+                        .filter(sent => sent?.month === 2)
+                        .filter(received => received?.destination_account === userData.bank_account.dataValues.id),
+                    }
+                  };
                 }
               })
               break
             case 3:
               anual_historials.forEach(anual_historial => {
                 if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
-                  anual_historial.month.mar = historial.dataValues;
+                  historial.dataValues.transactions_sent.forEach(sent => {
+                    transactions.sent?.push({
+                      id: sent.dataValues.id,
+                      bank_account: sent.dataValues.month.dataValues.year.dataValues.bank_account,
+                      source_account: sent.dataValues.source_account,
+                      destination_account: sent.dataValues.destination_account,
+                      amount: sent.dataValues.amount,
+                      date_transaction: sent.dataValues.date_transaction,
+                      month: sent.dataValues.month.dataValues.month,
+                      year: sent.dataValues.month.dataValues.year.dataValues.year,
+                      to: {
+                        user: {
+                          name: sent.dataValues.to.dataValues.user.dataValues.name,
+                          lastname: sent.dataValues.to.dataValues.user.dataValues.lastname,
+                        }
+                      }
+                    });
+                  })
+                  historial.dataValues.transactions_received.forEach(received => {
+                    transactions.received?.push({
+                      id: received.dataValues.id,
+                      bank_account: received.dataValues.month.dataValues.year.dataValues.bank_account,
+                      source_account: received.dataValues.source_account,
+                      destination_account: received.dataValues.destination_account,
+                      amount: received.dataValues.amount,
+                      date_transaction: received.dataValues.date_transaction,
+                      month: received.dataValues.month.dataValues.month,
+                      year: received.dataValues.month.dataValues.year.dataValues.year,
+                      from: {
+                        user: {
+                          name: received.dataValues.from.dataValues.user.dataValues.name,
+                          lastname: received.dataValues.from.dataValues.user.dataValues.lastname,
+                        }
+                      }
+                    });
+                  })
+                  anual_historial.month.mar = {
+                    balance: historial.dataValues.balance,
+                    expenses: historial.dataValues.expenses,
+                    investments: historial.dataValues.investments,
+                    transactions: {
+                      sent: transactions.sent
+                        .filter(sent => sent?.bank_account === userData.bank_account.dataValues.id)
+                        .filter(sent => sent?.year === historial.dataValues.year.dataValues.year)
+                        .filter(sent => sent?.month === 3)
+                        .filter(sent => sent?.source_account === userData.bank_account.dataValues.id),
+                      received: transactions.received
+                        .filter(received => received?.bank_account === userData.bank_account.dataValues.id)
+                        .filter(sent => sent?.year === historial.dataValues.year.dataValues.year)
+                        .filter(sent => sent?.month === 3)
+                        .filter(received => received?.destination_account === userData.bank_account.dataValues.id),
+                    }
+                  };
                 }
               })
               break
             case 4:
               anual_historials.forEach(anual_historial => {
                 if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
-                  anual_historial.month.apr = historial.dataValues;
+                  historial.dataValues.transactions_sent.forEach(sent => {
+                    transactions.sent?.push({
+                      id: sent.dataValues.id,
+                      bank_account: sent.dataValues.month.dataValues.year.dataValues.bank_account,
+                      source_account: sent.dataValues.source_account,
+                      destination_account: sent.dataValues.destination_account,
+                      amount: sent.dataValues.amount,
+                      date_transaction: sent.dataValues.date_transaction,
+                      month: sent.dataValues.month.dataValues.month,
+                      year: sent.dataValues.month.dataValues.year.dataValues.year,
+                      to: {
+                        user: {
+                          name: sent.dataValues.to.dataValues.user.dataValues.name,
+                          lastname: sent.dataValues.to.dataValues.user.dataValues.lastname,
+                        }
+                      }
+                    });
+                  })
+                  historial.dataValues.transactions_received.forEach(received => {
+                    transactions.received?.push({
+                      id: received.dataValues.id,
+                      bank_account: received.dataValues.month.dataValues.year.dataValues.bank_account,
+                      source_account: received.dataValues.source_account,
+                      destination_account: received.dataValues.destination_account,
+                      amount: received.dataValues.amount,
+                      date_transaction: received.dataValues.date_transaction,
+                      month: received.dataValues.month.dataValues.month,
+                      year: received.dataValues.month.dataValues.year.dataValues.year,
+                      from: {
+                        user: {
+                          name: received.dataValues.from.dataValues.user.dataValues.name,
+                          lastname: received.dataValues.from.dataValues.user.dataValues.lastname,
+                        }
+                      }
+                    });
+                  })
+                  anual_historial.month.apr = {
+                    balance: historial.dataValues.balance,
+                    expenses: historial.dataValues.expenses,
+                    investments: historial.dataValues.investments,
+                    transactions: {
+                      sent: transactions.sent
+                        .filter(sent => sent?.bank_account === userData.bank_account.dataValues.id)
+                        .filter(sent => sent?.year === historial.dataValues.year.dataValues.year)
+                        .filter(sent => sent?.month === 4)
+                        .filter(sent => sent?.source_account === userData.bank_account.dataValues.id),
+                      received: transactions.received
+                        .filter(received => received?.bank_account === userData.bank_account.dataValues.id)
+                        .filter(sent => sent?.year === historial.dataValues.year.dataValues.year)
+                        .filter(sent => sent?.month === 4)
+                        .filter(received => received?.destination_account === userData.bank_account.dataValues.id),
+                    }
+                  };
                 }
               })
-              break
+              break 
             case 5:
               anual_historials.forEach(anual_historial => {
                 if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
-                  anual_historial.month.may = historial.dataValues;
+                  historial.dataValues.transactions_sent.forEach(sent => {
+                    transactions.sent?.push({
+                      id: sent.dataValues.id,
+                      bank_account: sent.dataValues.month.dataValues.year.dataValues.bank_account,
+                      source_account: sent.dataValues.source_account,
+                      destination_account: sent.dataValues.destination_account,
+                      amount: sent.dataValues.amount,
+                      date_transaction: sent.dataValues.date_transaction,
+                      month: sent.dataValues.month.dataValues.month,
+                      year: sent.dataValues.month.dataValues.year.dataValues.year,
+                      to: {
+                        user: {
+                          name: sent.dataValues.to.dataValues.user.dataValues.name,
+                          lastname: sent.dataValues.to.dataValues.user.dataValues.lastname,
+                        }
+                      }
+                    });
+                  })
+                  historial.dataValues.transactions_received.forEach(received => {
+                    transactions.received?.push({
+                      id: received.dataValues.id,
+                      bank_account: received.dataValues.month.dataValues.year.dataValues.bank_account,
+                      source_account: received.dataValues.source_account,
+                      destination_account: received.dataValues.destination_account,
+                      amount: received.dataValues.amount,
+                      date_transaction: received.dataValues.date_transaction,
+                      month: received.dataValues.month.dataValues.month,
+                      year: received.dataValues.month.dataValues.year.dataValues.year,
+                      from: {
+                        user: {
+                          name: received.dataValues.from.dataValues.user.dataValues.name,
+                          lastname: received.dataValues.from.dataValues.user.dataValues.lastname,
+                        }
+                      }
+                    });
+                  })
+                  anual_historial.month.may = {
+                    balance: historial.dataValues.balance,
+                    expenses: historial.dataValues.expenses,
+                    investments: historial.dataValues.investments,
+                    transactions: {
+                      sent: transactions.sent
+                        .filter(sent => sent?.bank_account === userData.bank_account.dataValues.id)
+                        .filter(sent => sent?.year === historial.dataValues.year.dataValues.year)
+                        .filter(sent => sent?.month === 5)
+                        .filter(sent => sent?.source_account === userData.bank_account.dataValues.id),
+                      received: transactions.received
+                        .filter(received => received?.bank_account === userData.bank_account.dataValues.id)
+                        .filter(sent => sent?.year === historial.dataValues.year.dataValues.year)
+                        .filter(sent => sent?.month === 5)
+                        .filter(received => received?.destination_account === userData.bank_account.dataValues.id),
+                    }
+                  };
                 }
               })
               break
             case 6:
               anual_historials.forEach(anual_historial => {
                 if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
-                  anual_historial.month.jun = historial.dataValues;
+                  historial.dataValues.transactions_sent.forEach(sent => {
+                    transactions.sent?.push({
+                      id: sent.dataValues.id,
+                      bank_account: sent.dataValues.month.dataValues.year.dataValues.bank_account,
+                      source_account: sent.dataValues.source_account,
+                      destination_account: sent.dataValues.destination_account,
+                      amount: sent.dataValues.amount,
+                      date_transaction: sent.dataValues.date_transaction,
+                      month: sent.dataValues.month.dataValues.month,
+                      year: sent.dataValues.month.dataValues.year.dataValues.year,
+                      to: {
+                        user: {
+                          name: sent.dataValues.to.dataValues.user.dataValues.name,
+                          lastname: sent.dataValues.to.dataValues.user.dataValues.lastname,
+                        }
+                      }
+                    });
+                  })
+                  historial.dataValues.transactions_received.forEach(received => {
+                    transactions.received?.push({
+                      id: received.dataValues.id,
+                      bank_account: received.dataValues.month.dataValues.year.dataValues.bank_account,
+                      source_account: received.dataValues.source_account,
+                      destination_account: received.dataValues.destination_account,
+                      amount: received.dataValues.amount,
+                      date_transaction: received.dataValues.date_transaction,
+                      month: received.dataValues.month.dataValues.month,
+                      year: received.dataValues.month.dataValues.year.dataValues.year,
+                      from: {
+                        user: {
+                          name: received.dataValues.from.dataValues.user.dataValues.name,
+                          lastname: received.dataValues.from.dataValues.user.dataValues.lastname,
+                        }
+                      }
+                    });
+                  })
+                  anual_historial.month.jun = {
+                    balance: historial.dataValues.balance,
+                    expenses: historial.dataValues.expenses,
+                    investments: historial.dataValues.investments,
+                    transactions: {
+                      sent: transactions.sent
+                        .filter(sent => sent?.bank_account === userData.bank_account.dataValues.id)
+                        .filter(sent => sent?.year === historial.dataValues.year.dataValues.year)
+                        .filter(sent => sent?.month === 6)
+                        .filter(sent => sent?.source_account === userData.bank_account.dataValues.id),
+                      received: transactions.received
+                        .filter(received => received?.bank_account === userData.bank_account.dataValues.id)
+                        .filter(sent => sent?.year === historial.dataValues.year.dataValues.year)
+                        .filter(sent => sent?.month === 6)
+                        .filter(received => received?.destination_account === userData.bank_account.dataValues.id),
+                    }
+                  };
                 }
               })
-              break
+              break 
             case 7:
               anual_historials.forEach(anual_historial => {
                 if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
-                  anual_historial.month.jul = historial.dataValues;
+                  historial.dataValues.transactions_sent.forEach(sent => {
+                    transactions.sent?.push({
+                      id: sent.dataValues.id,
+                      bank_account: sent.dataValues.month.dataValues.year.dataValues.bank_account,
+                      source_account: sent.dataValues.source_account,
+                      destination_account: sent.dataValues.destination_account,
+                      amount: sent.dataValues.amount,
+                      date_transaction: sent.dataValues.date_transaction,
+                      month: sent.dataValues.month.dataValues.month,
+                      year: sent.dataValues.month.dataValues.year.dataValues.year,
+                      to: {
+                        user: {
+                          name: sent.dataValues.to.dataValues.user.dataValues.name,
+                          lastname: sent.dataValues.to.dataValues.user.dataValues.lastname,
+                        }
+                      }
+                    });
+                  })
+                  historial.dataValues.transactions_received.forEach(received => {
+                    transactions.received?.push({
+                      id: received.dataValues.id,
+                      bank_account: received.dataValues.month.dataValues.year.dataValues.bank_account,
+                      source_account: received.dataValues.source_account,
+                      destination_account: received.dataValues.destination_account,
+                      amount: received.dataValues.amount,
+                      date_transaction: received.dataValues.date_transaction,
+                      month: received.dataValues.month.dataValues.month,
+                      year: received.dataValues.month.dataValues.year.dataValues.year,
+                      from: {
+                        user: {
+                          name: received.dataValues.from.dataValues.user.dataValues.name,
+                          lastname: received.dataValues.from.dataValues.user.dataValues.lastname,
+                        }
+                      }
+                    });
+                  })
+                  anual_historial.month.jul = {
+                    balance: historial.dataValues.balance,
+                    expenses: historial.dataValues.expenses,
+                    investments: historial.dataValues.investments,
+                    transactions: {
+                      sent: transactions.sent
+                        .filter(sent => sent?.bank_account === userData.bank_account.dataValues.id)
+                        .filter(sent => sent?.year === historial.dataValues.year.dataValues.year)
+                        .filter(sent => sent?.month === 7)
+                        .filter(sent => sent?.source_account === userData.bank_account.dataValues.id),
+                      received: transactions.received
+                        .filter(received => received?.bank_account === userData.bank_account.dataValues.id)
+                        .filter(sent => sent?.year === historial.dataValues.year.dataValues.year)
+                        .filter(sent => sent?.month === 7)
+                        .filter(received => received?.destination_account === userData.bank_account.dataValues.id),
+                    }
+                  };
                 }
               })
               break
             case 8:
               anual_historials.forEach(anual_historial => {
                 if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
-                  anual_historial.month.aug = historial.dataValues;
+                  historial.dataValues.transactions_sent.forEach(sent => {
+                    transactions.sent?.push({
+                      id: sent.dataValues.id,
+                      bank_account: sent.dataValues.month.dataValues.year.dataValues.bank_account,
+                      source_account: sent.dataValues.source_account,
+                      destination_account: sent.dataValues.destination_account,
+                      amount: sent.dataValues.amount,
+                      date_transaction: sent.dataValues.date_transaction,
+                      month: sent.dataValues.month.dataValues.month,
+                      year: sent.dataValues.month.dataValues.year.dataValues.year,
+                      to: {
+                        user: {
+                          name: sent.dataValues.to.dataValues.user.dataValues.name,
+                          lastname: sent.dataValues.to.dataValues.user.dataValues.lastname,
+                        }
+                      }
+                    });
+                  })
+                  historial.dataValues.transactions_received.forEach(received => {
+                    transactions.received?.push({
+                      id: received.dataValues.id,
+                      bank_account: received.dataValues.month.dataValues.year.dataValues.bank_account,
+                      source_account: received.dataValues.source_account,
+                      destination_account: received.dataValues.destination_account,
+                      amount: received.dataValues.amount,
+                      date_transaction: received.dataValues.date_transaction,
+                      month: received.dataValues.month.dataValues.month,
+                      year: received.dataValues.month.dataValues.year.dataValues.year,
+                      from: {
+                        user: {
+                          name: received.dataValues.from.dataValues.user.dataValues.name,
+                          lastname: received.dataValues.from.dataValues.user.dataValues.lastname,
+                        }
+                      }
+                    });
+                  })
+                  anual_historial.month.aug = {
+                    balance: historial.dataValues.balance,
+                    expenses: historial.dataValues.expenses,
+                    investments: historial.dataValues.investments,
+                    transactions: {
+                      sent: transactions.sent
+                        .filter(sent => sent?.bank_account === userData.bank_account.dataValues.id)
+                        .filter(sent => sent?.year === historial.dataValues.year.dataValues.year)
+                        .filter(sent => sent?.month === 8)
+                        .filter(sent => sent?.source_account === userData.bank_account.dataValues.id),
+                      received: transactions.received
+                        .filter(received => received?.bank_account === userData.bank_account.dataValues.id)
+                        .filter(sent => sent?.year === historial.dataValues.year.dataValues.year)
+                        .filter(sent => sent?.month === 8)
+                        .filter(received => received?.destination_account === userData.bank_account.dataValues.id),
+                    }
+                  };
                 }
               })
-              break
+              break 
             case 9:
               anual_historials.forEach(anual_historial => {
                 if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
-                  anual_historial.month.sep = historial.dataValues;
+                  historial.dataValues.transactions_sent.forEach(sent => {
+                    transactions.sent?.push({
+                      id: sent.dataValues.id,
+                      bank_account: sent.dataValues.month.dataValues.year.dataValues.bank_account,
+                      source_account: sent.dataValues.source_account,
+                      destination_account: sent.dataValues.destination_account,
+                      amount: sent.dataValues.amount,
+                      date_transaction: sent.dataValues.date_transaction,
+                      month: sent.dataValues.month.dataValues.month,
+                      year: sent.dataValues.month.dataValues.year.dataValues.year,
+                      to: {
+                        user: {
+                          name: sent.dataValues.to.dataValues.user.dataValues.name,
+                          lastname: sent.dataValues.to.dataValues.user.dataValues.lastname,
+                        }
+                      }
+                    });
+                  })
+                  historial.dataValues.transactions_received.forEach(received => {
+                    transactions.received?.push({
+                      id: received.dataValues.id,
+                      bank_account: received.dataValues.month.dataValues.year.dataValues.bank_account,
+                      source_account: received.dataValues.source_account,
+                      destination_account: received.dataValues.destination_account,
+                      amount: received.dataValues.amount,
+                      date_transaction: received.dataValues.date_transaction,
+                      month: received.dataValues.month.dataValues.month,
+                      year: received.dataValues.month.dataValues.year.dataValues.year,
+                      from: {
+                        user: {
+                          name: received.dataValues.from.dataValues.user.dataValues.name,
+                          lastname: received.dataValues.from.dataValues.user.dataValues.lastname,
+                        }
+                      }
+                    });
+                  })
+                  anual_historial.month.sep = {
+                    balance: historial.dataValues.balance,
+                    expenses: historial.dataValues.expenses,
+                    investments: historial.dataValues.investments,
+                    transactions: {
+                      sent: transactions.sent
+                        .filter(sent => sent?.bank_account === userData.bank_account.dataValues.id)
+                        .filter(sent => sent?.year === historial.dataValues.year.dataValues.year)
+                        .filter(sent => sent?.month === 9)
+                        .filter(sent => sent?.source_account === userData.bank_account.dataValues.id),
+                      received: transactions.received
+                        .filter(received => received?.bank_account === userData.bank_account.dataValues.id)
+                        .filter(sent => sent?.year === historial.dataValues.year.dataValues.year)
+                        .filter(sent => sent?.month === 9)
+                        .filter(received => received?.destination_account === userData.bank_account.dataValues.id),
+                    }
+                  };
                 }
               })
               break
             case 10:
               anual_historials.forEach(anual_historial => {
                 if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
-                  anual_historial.month.oct = historial.dataValues;
+                  historial.dataValues.transactions_sent.forEach(sent => {
+                    transactions.sent?.push({
+                      id: sent.dataValues.id,
+                      bank_account: sent.dataValues.month.dataValues.year.dataValues.bank_account,
+                      source_account: sent.dataValues.source_account,
+                      destination_account: sent.dataValues.destination_account,
+                      amount: sent.dataValues.amount,
+                      date_transaction: sent.dataValues.date_transaction,
+                      month: sent.dataValues.month.dataValues.month,
+                      year: sent.dataValues.month.dataValues.year.dataValues.year,
+                      to: {
+                        user: {
+                          name: sent.dataValues.to.dataValues.user.dataValues.name,
+                          lastname: sent.dataValues.to.dataValues.user.dataValues.lastname,
+                        }
+                      }
+                    });
+                  })
+                  historial.dataValues.transactions_received.forEach(received => {
+                    transactions.received?.push({
+                      id: received.dataValues.id,
+                      bank_account: received.dataValues.month.dataValues.year.dataValues.bank_account,
+                      source_account: received.dataValues.source_account,
+                      destination_account: received.dataValues.destination_account,
+                      amount: received.dataValues.amount,
+                      date_transaction: received.dataValues.date_transaction,
+                      month: received.dataValues.month.dataValues.month,
+                      year: received.dataValues.month.dataValues.year.dataValues.year,
+                      from: {
+                        user: {
+                          name: received.dataValues.from.dataValues.user.dataValues.name,
+                          lastname: received.dataValues.from.dataValues.user.dataValues.lastname,
+                        }
+                      }
+                    });
+                  })
+                  anual_historial.month.oct = {
+                    balance: historial.dataValues.balance,
+                    expenses: historial.dataValues.expenses,
+                    investments: historial.dataValues.investments,
+                    transactions: {
+                      sent: transactions.sent
+                        .filter(sent => sent?.bank_account === userData.bank_account.dataValues.id)
+                        .filter(sent => sent?.year === historial.dataValues.year.dataValues.year)
+                        .filter(sent => sent?.month === 10)
+                        .filter(sent => sent?.source_account === userData.bank_account.dataValues.id),
+                      received: transactions.received
+                        .filter(received => received?.bank_account === userData.bank_account.dataValues.id)
+                        .filter(received => received?.year === historial.dataValues.year.dataValues.year)
+                        .filter(received => received?.month === 10)
+                        .filter(received => received?.destination_account === userData.bank_account.dataValues.id),
+                    }
+                  };
                 }
               })
               break
             case 11:
               anual_historials.forEach(anual_historial => {
                 if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
-                  anual_historial.month.nov = historial.dataValues;
+                  historial.dataValues.transactions_sent.forEach(sent => {
+                    transactions.sent?.push({
+                      id: sent.dataValues.id,
+                      bank_account: sent.dataValues.month.dataValues.year.dataValues.bank_account,
+                      source_account: sent.dataValues.source_account,
+                      destination_account: sent.dataValues.destination_account,
+                      amount: sent.dataValues.amount,
+                      date_transaction: sent.dataValues.date_transaction,
+                      month: sent.dataValues.month.dataValues.month,
+                      year: sent.dataValues.month.dataValues.year.dataValues.year,
+                      to: {
+                        user: {
+                          name: sent.dataValues.to.dataValues.user.dataValues.name,
+                          lastname: sent.dataValues.to.dataValues.user.dataValues.lastname,
+                        }
+                      }
+                    });
+                  })
+                  historial.dataValues.transactions_received.forEach(received => {
+                    transactions.received?.push({
+                      id: received.dataValues.id,
+                      bank_account: received.dataValues.month.dataValues.year.dataValues.bank_account,
+                      source_account: received.dataValues.source_account,
+                      destination_account: received.dataValues.destination_account,
+                      amount: received.dataValues.amount,
+                      date_transaction: received.dataValues.date_transaction,
+                      month: received.dataValues.month.dataValues.month,
+                      year: received.dataValues.month.dataValues.year.dataValues.year,
+                      from: {
+                        user: {
+                          name: received.dataValues.from.dataValues.user.dataValues.name,
+                          lastname: received.dataValues.from.dataValues.user.dataValues.lastname,
+                        }
+                      }
+                    });
+                  })
+                  anual_historial.month.nov = {
+                    balance: historial.dataValues.balance,
+                    expenses: historial.dataValues.expenses,
+                    investments: historial.dataValues.investments,
+                    transactions: {
+                      sent: transactions.sent
+                        .filter(sent => sent?.bank_account === userData.bank_account.dataValues.id)
+                        .filter(sent => sent?.year === historial.dataValues.year.dataValues.year)
+                        .filter(sent => sent?.month === 11)
+                        .filter(sent => sent?.source_account === userData.bank_account.dataValues.id),
+                      received: transactions.received
+                        .filter(received => received?.bank_account === userData.bank_account.dataValues.id)
+                        .filter(received => received?.year === historial.dataValues.year.dataValues.year)
+                        .filter(received => received?.month === 11)
+                        .filter(received => received?.destination_account === userData.bank_account.dataValues.id),
+                    }
+                  };
                 }
               })
-              break
+              break 
             case 12:
               anual_historials.forEach(anual_historial => {
                 if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
-                  anual_historial.month.dec = historial.dataValues;
+                  historial.dataValues.transactions_sent.forEach(sent => {
+                    transactions.sent?.push({
+                      id: sent.dataValues.id,
+                      bank_account: sent.dataValues.month.dataValues.year.dataValues.bank_account,
+                      source_account: sent.dataValues.source_account,
+                      destination_account: sent.dataValues.destination_account,
+                      amount: sent.dataValues.amount,
+                      date_transaction: sent.dataValues.date_transaction,
+                      month: sent.dataValues.month.dataValues.month,
+                      year: sent.dataValues.month.dataValues.year.dataValues.year,
+                      to: {
+                        user: {
+                          name: sent.dataValues.to.dataValues.user.dataValues.name,
+                          lastname: sent.dataValues.to.dataValues.user.dataValues.lastname,
+                        }
+                      }
+                    });
+                  })
+                  historial.dataValues.transactions_received.forEach(received => {
+                    transactions.received?.push({
+                      id: received.dataValues.id,
+                      bank_account: received.dataValues.month.dataValues.year.dataValues.bank_account,
+                      source_account: received.dataValues.source_account,
+                      destination_account: received.dataValues.destination_account,
+                      amount: received.dataValues.amount,
+                      date_transaction: received.dataValues.date_transaction,
+                      month: received.dataValues.month.dataValues.month,
+                      year: received.dataValues.month.dataValues.year.dataValues.year,
+                      from: {
+                        user: {
+                          name: received.dataValues.from.dataValues.user.dataValues.name,
+                          lastname: received.dataValues.from.dataValues.user.dataValues.lastname,
+                        }
+                      }
+                    });
+                  })
+                  anual_historial.month.dec = {
+                    balance: historial.dataValues.balance,
+                    expenses: historial.dataValues.expenses,
+                    investments: historial.dataValues.investments,
+                    transactions: {
+                      sent: transactions.sent
+                        .filter(sent => sent?.bank_account === userData.bank_account.dataValues.id)
+                        .filter(sent => sent?.year === historial.dataValues.year.dataValues.year)
+                        .filter(sent => sent?.month === 12)
+                        .filter(sent => sent?.source_account === userData.bank_account.dataValues.id),
+                      received: transactions.received
+                        .filter(received => received?.bank_account === userData.bank_account.dataValues.id)
+                        .filter(received => received?.year === historial.dataValues.year.dataValues.year)
+                        .filter(received => received?.month === 12)
+                        .filter(received => received?.destination_account === userData.bank_account.dataValues.id),
+                    }
+                  };
                 }
               })
               break
@@ -326,12 +954,10 @@ export default class userController {
           balance: userData.bank_account.dataValues.balance,
           expenses: userData.bank_account.dataValues.expenses,
           investments: userData.bank_account.dataValues.investments,
-          anual_historial: anual_historials,
+          anual_historial: anual_historials
         }
       }
-
-      console.log(userDataResponse.bank_account.anual_historial[0]?.month.nov?.transactions_received[1].dataValues)
-
+      
       res.status(200).json(userDataResponse)
     } catch (error) {
       console.log(error)

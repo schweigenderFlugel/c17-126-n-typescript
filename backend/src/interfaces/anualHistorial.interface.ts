@@ -1,4 +1,4 @@
-import { IMonths, IUserHistorial } from "./historial.interface";
+import { IMonthsResponse, IUserHistorial } from "./historial.interface";
 
 export interface IAnualHistorial {
   id: number;
@@ -6,14 +6,14 @@ export interface IAnualHistorial {
   year: number;
 }
 
-export interface IUserAnualHistorial {
+export interface IUserAnualHistorialData {
   dataValues: {
     year: number;
     months: IUserHistorial[]
   }
 }
 
-export interface IAnualHistorialResponse {
+export interface IAnualHistorialDataResponse {
   year: number;
-  month: Partial<IMonths>;
+  month: Partial<IMonthsResponse>;
 }

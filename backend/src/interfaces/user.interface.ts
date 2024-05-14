@@ -1,6 +1,6 @@
-import { IAnualHistorialResponse } from './anualHistorial.interface'
+import { IAnualHistorial, IAnualHistorialDataResponse } from './anualHistorial.interface'
 import { IUserAuthData } from './auth.interface'
-import { IUserBankAccount } from './bankAccount.interface'
+import { IUserBankAccountData } from './bankAccount.interface'
 import { ICommon } from './common.interface'
 import { IUserPreferenceData } from './preference.interface'
 
@@ -31,7 +31,7 @@ export interface IAllUserData {
   alias: string;
   auth: IUserAuthData,
   preference: IUserPreferenceData,
-  bank_account: IUserBankAccount,
+  bank_account: IUserBankAccountData,
 }
 
 export interface IUserResponse {
@@ -55,7 +55,7 @@ export interface IUserResponse {
     balance: number;
     expenses: number;
     investments: number;
-    anual_historial: Partial<IAnualHistorialResponse[]>,
+    anual_historial: Partial<IAnualHistorialDataResponse[]>,
   }
 }
 

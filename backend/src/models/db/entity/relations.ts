@@ -50,6 +50,11 @@ Historial.hasMany(Transaction, {
   foreignKey: 'destination_account',
 })
 
+Transaction.belongsTo(Historial, {
+  as: 'month',
+  foreignKey: 'historial_id',
+})
+
 Transaction.belongsTo(BankAccount, {
   as: 'from',
   foreignKey: 'source_account'

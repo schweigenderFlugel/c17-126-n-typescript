@@ -4,7 +4,7 @@ import bankAccountService from '../services/bankAccount.services'
 import HttpError from '../utils/HttpError.utils'
 import { IDestinationAccountData, ISourceAccountData } from '../interfaces/bankAccount.interface'
 import transactionService from '../services/transaction.services'
-import { ITransaction, ITransactionData } from '../interfaces/transaction.interface'
+import { ITransaction, ITransactionDataDetails } from '../interfaces/transaction.interface'
 import { IUserToken } from '../interfaces/user.interface'
 import apiSuccessResponse from '../utils/apiResponse.utils'
 import transactionHelper from '../utils/transactionsHelper'
@@ -33,8 +33,8 @@ export default class transfersController {
         HTTP_STATUS.NOT_FOUND
       )
 
-      const transactionData: ITransactionData = 
-        transactionFound.dataValues as ITransactionData;
+      const transactionData: ITransactionDataDetails = 
+        transactionFound.dataValues as ITransactionDataDetails;
 
       res.status(200).json(transactionData);
     } catch (error) {

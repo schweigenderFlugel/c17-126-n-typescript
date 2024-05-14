@@ -12,7 +12,7 @@ export interface ITransaction {
   status: string
 }
 
-export interface ITransactionData {
+export interface ITransactionDataDetails {
   operation_number: number
   type_transfer: string
   amount: number
@@ -28,6 +28,18 @@ export interface IUserTransactionSentData {
     source_account: number;
     destination_account: number;
     amount: number;
+    date_transaction: string;
+    month: { 
+      dataValues: { 
+        month: number;
+        year: {
+          dataValues: {
+            year: number;
+            bank_account: number;
+          }
+        }
+      }
+    };
     to: {
       dataValues: {
         user: {
@@ -41,11 +53,15 @@ export interface IUserTransactionSentData {
   }
 }
 
-export interface IUserTransactionSentDataResponse {
+export interface IUserTransactionSentResponse {
   id: number;
+  bank_account: number;
   source_account: number;
   destination_account: number;
   amount: number;
+  date_transaction: string;
+  month: number;
+  year: number;
   to: {
     user: {
       name: string;
@@ -60,6 +76,18 @@ export interface IUserTransactionReceivedData {
     source_account: number;
     destination_account: number;
     amount: number;
+    date_transaction: string;
+    month: { 
+      dataValues: { 
+        month: number;
+        year: {
+          dataValues: {
+            year: number;
+            bank_account: number;
+          }
+        }
+      }
+    };
     from: {
       dataValues: {
         user: {
@@ -73,15 +101,24 @@ export interface IUserTransactionReceivedData {
   }
 }
 
-export interface IUserTransactionReceivedDataResponse {
+export interface IUserTransactionReceivedResponse {
   id: number;
+  bank_account: number;
   source_account: number;
   destination_account: number;
   amount: number;
+  date_transaction: string;
+  month: number;
+  year: number;
   from: {
     user: {
       name: string;
       lastname: string;
     }
   }
+}
+
+export interface IUserTransactionsResponse {
+  sent: Partial<IUserTransactionSentResponse[]>;
+  received: Partial<IUserTransactionReceivedResponse[]>;
 }
