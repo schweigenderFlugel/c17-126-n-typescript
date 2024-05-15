@@ -17,9 +17,10 @@ import {
 import { adminUser, normalUser } from '../src/models/db/seeders/2-user';
 import { preference1, preference2 } from '../src/models/db/seeders/4-preferences';
 import { bankAccount1, bankAccount2 } from '../src/models/db/seeders/3-bank-account';
-import { transaction1, transaction2, transaction3, transaction4 } from '../src/models/db/seeders/7-transaction';
-import { IAllUserData, IUserResponse } from '../src/interfaces/user.interface';
+import { transaction1, transaction2, transaction3, transaction4, transaction5, transaction6, transaction7, transaction8 } from '../src/models/db/seeders/7-transaction';
+import { IUserResponse } from '../src/interfaces/user.interface';
 import { anualHistorial1, anualHistorial2, anualHistorial3, anualHistorial4 } from '../src/models/db/seeders/5-anual-historial';
+import { historial1, historial3, historial5, historial7 } from '../src/models/db/seeders/6-historial';
 
 describe('Testing the user route', () => {
   let app;
@@ -47,7 +48,6 @@ describe('Testing the user route', () => {
     it('Should get the admin user', async () => {
       const { statusCode, body }: { statusCode: any, body: IUserResponse } = await api.get('/api/v1/user').auth(adminUserToken, { type: 'bearer' });
       expect(statusCode).toBe(200);
-      // console.log(body.bank_account.anual_historial[1]?.month.jan?.transactions)
       expect(body.id).toEqual(adminUser.id);
       expect(body.name).toMatch(adminUser.name);
       expect(body.lastname).toMatch(adminUser.lastname);
@@ -70,38 +70,78 @@ describe('Testing the user route', () => {
       expect(body.bank_account.anual_historial[0]?.month.dec).toBeDefined();
       expect(body.bank_account.anual_historial[1]?.month.jan).toBeDefined();
       expect(body.bank_account.anual_historial[1]?.month.feb).toBeDefined();
-      expect(body.bank_account.anual_historial[0]?.month.nov?.balance).toEqual(bankAccount1.balance);
-      expect(body.bank_account.anual_historial[0]?.month.nov?.expenses).toEqual(bankAccount1.expenses);
-      expect(body.bank_account.anual_historial[0]?.month.nov?.investments).toEqual(bankAccount1.investments);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.balance).toEqual(historial1.balance);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.expenses).toEqual(historial1.expenses);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.investments).toEqual(historial1.investments);
       expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.received).toBeInstanceOf(Array);
       expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.sent).toBeInstanceOf(Array);
       expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.received[0]?.id).toEqual(2);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.received[0]?.year).toEqual(anualHistorial1.year);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.received[0]?.month).toEqual(historial1.month);
       expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.received[0]?.source_account).toEqual(transaction2.source_account);
       expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.received[0]?.destination_account).toEqual(transaction2.destination_account);
       expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.received[0]?.amount).toEqual(transaction2.amount);
       expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.received[0]?.from.user.name).toMatch(normalUser.name)
       expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.received[0]?.from.user.lastname).toMatch(normalUser.lastname);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.received[1]?.id).toEqual(6);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.received[1]?.year).toEqual(anualHistorial1.year);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.received[1]?.month).toEqual(historial1.month);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.received[1]?.source_account).toEqual(transaction6.source_account);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.received[1]?.destination_account).toEqual(transaction6.destination_account);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.received[1]?.amount).toEqual(transaction6.amount);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.received[1]?.from.user.name).toMatch(normalUser.name)
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.received[1]?.from.user.lastname).toMatch(normalUser.lastname);
       expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.received[0]?.id).toEqual(4);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.received[0]?.year).toEqual(anualHistorial2.year);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.received[0]?.month).toEqual(historial3.month);
       expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.received[0]?.source_account).toEqual(transaction4.source_account);
       expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.received[0]?.destination_account).toEqual(transaction4.destination_account);
       expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.received[0]?.amount).toEqual(transaction4.amount);
       expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.received[0]?.from.user.name).toMatch(normalUser.name)
       expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.received[0]?.from.user.lastname).toMatch(normalUser.lastname);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.received[1]?.id).toEqual(8);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.received[1]?.year).toEqual(anualHistorial2.year);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.received[1]?.month).toEqual(historial3.month);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.received[1]?.source_account).toEqual(transaction8.source_account);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.received[1]?.destination_account).toEqual(transaction8.destination_account);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.received[1]?.amount).toEqual(transaction8.amount);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.received[1]?.from.user.name).toMatch(normalUser.name)
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.received[1]?.from.user.lastname).toMatch(normalUser.lastname);
       expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.sent[0]?.id).toEqual(1);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.sent[0]?.year).toEqual(anualHistorial1.year);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.sent[0]?.month).toEqual(historial1.month);
       expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.sent[0]?.source_account).toEqual(transaction1.source_account);
       expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.sent[0]?.destination_account).toEqual(transaction1.destination_account);
       expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.sent[0]?.amount).toEqual(transaction1.amount);
       expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.sent[0]?.to.user.name).toMatch(normalUser.name);
       expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.sent[0]?.to.user.lastname).toMatch(normalUser.lastname);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.sent[1]?.id).toEqual(5);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.sent[1]?.year).toEqual(anualHistorial1.year);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.sent[1]?.month).toEqual(historial1.month);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.sent[1]?.source_account).toEqual(transaction5.source_account);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.sent[1]?.destination_account).toEqual(transaction5.destination_account);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.sent[1]?.amount).toEqual(transaction5.amount);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.sent[1]?.to.user.name).toMatch(normalUser.name);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.sent[1]?.to.user.lastname).toMatch(normalUser.lastname);
       expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[0]?.id).toEqual(3);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[0]?.year).toEqual(anualHistorial2.year);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[0]?.month).toEqual(historial3.month);
       expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[0]?.source_account).toEqual(transaction3.source_account);
       expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[0]?.destination_account).toEqual(transaction3.destination_account);
       expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[0]?.amount).toEqual(transaction3.amount);
       expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[0]?.to.user.name).toMatch(normalUser.name);
       expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[0]?.to.user.lastname).toMatch(normalUser.lastname);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[1]?.id).toEqual(7);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[1]?.year).toEqual(anualHistorial2.year);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[1]?.month).toEqual(historial7.month);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[1]?.source_account).toEqual(transaction7.source_account);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[1]?.destination_account).toEqual(transaction7.destination_account);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[1]?.amount).toEqual(transaction7.amount);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[1]?.to.user.name).toMatch(normalUser.name);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[1]?.to.user.lastname).toMatch(normalUser.lastname);
     })
 
-    it.only('Should get the normal user', async () => {
+    it('Should get the normal user', async () => {
       const { statusCode, body }: { statusCode: any, body: IUserResponse } = await api.get('/api/v1/user').auth(normalUserToken, { type: 'bearer' });
       expect(statusCode).toBe(200);
       expect(body.id).toEqual(normalUser.id);
@@ -126,35 +166,75 @@ describe('Testing the user route', () => {
       expect(body.bank_account.anual_historial[0]?.month.dec).toBeDefined();
       expect(body.bank_account.anual_historial[1]?.month.jan).toBeDefined();
       expect(body.bank_account.anual_historial[1]?.month.feb).toBeDefined();
-      expect(body.bank_account.anual_historial[0]?.month.nov?.balance).toEqual(bankAccount2.balance);
-      expect(body.bank_account.anual_historial[0]?.month.nov?.expenses).toEqual(bankAccount2.expenses);
-      expect(body.bank_account.anual_historial[0]?.month.nov?.investments).toEqual(bankAccount2.investments);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.balance).toEqual(historial5.balance);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.expenses).toEqual(historial5.expenses);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.investments).toEqual(historial5.investments);
       expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.received).toBeInstanceOf(Array);
       expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.sent).toBeInstanceOf(Array);
       expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.received[0]?.id).toEqual(1);
-      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.received[0]?.source_account).toEqual(transaction3.source_account);
-      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.received[0]?.destination_account).toEqual(transaction3.destination_account);
-      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.received[0]?.amount).toEqual(transaction3.amount);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.received[0]?.year).toEqual(anualHistorial3.year);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.received[0]?.month).toEqual(historial1.month);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.received[0]?.source_account).toEqual(transaction1.source_account);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.received[0]?.destination_account).toEqual(transaction1.destination_account);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.received[0]?.amount).toEqual(transaction1.amount);
       expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.received[0]?.from.user.name).toMatch(adminUser.name)
       expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.received[0]?.from.user.lastname).toMatch(adminUser.lastname);
-      expect(body.bank_account.anual_historial[1]?.month.nov?.transactions.received[0]?.id).toEqual(3);
-      expect(body.bank_account.anual_historial[1]?.month.nov?.transactions.received[0]?.source_account).toEqual(transaction3.source_account);
-      expect(body.bank_account.anual_historial[1]?.month.nov?.transactions.received[0]?.destination_account).toEqual(transaction3.destination_account);
-      expect(body.bank_account.anual_historial[1]?.month.nov?.transactions.received[0]?.amount).toEqual(transaction3.amount);
-      expect(body.bank_account.anual_historial[1]?.month.nov?.transactions.received[0]?.from.user.name).toMatch(adminUser.name)
-      expect(body.bank_account.anual_historial[1]?.month.nov?.transactions.received[0]?.from.user.lastname).toMatch(adminUser.lastname);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.received[1]?.id).toEqual(5);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.received[1]?.year).toEqual(anualHistorial3.year);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.received[1]?.month).toEqual(historial5.month);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.received[1]?.source_account).toEqual(transaction5.source_account);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.received[1]?.destination_account).toEqual(transaction5.destination_account);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.received[1]?.amount).toEqual(transaction5.amount);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.received[1]?.from.user.name).toMatch(adminUser.name)
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.received[1]?.from.user.lastname).toMatch(adminUser.lastname);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.received[0]?.id).toEqual(3);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.received[0]?.year).toEqual(anualHistorial4.year);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.received[0]?.month).toEqual(historial3.month);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.received[0]?.source_account).toEqual(transaction3.source_account);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.received[0]?.destination_account).toEqual(transaction3.destination_account);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.received[0]?.amount).toEqual(transaction3.amount);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.received[0]?.from.user.name).toMatch(adminUser.name)
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.received[0]?.from.user.lastname).toMatch(adminUser.lastname);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.received[1]?.id).toEqual(7);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.received[1]?.year).toEqual(anualHistorial4.year);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.received[1]?.month).toEqual(historial7.month);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.received[1]?.source_account).toEqual(transaction7.source_account);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.received[1]?.destination_account).toEqual(transaction7.destination_account);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.received[1]?.amount).toEqual(transaction7.amount);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.received[1]?.from.user.name).toMatch(adminUser.name)
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.received[1]?.from.user.lastname).toMatch(adminUser.lastname);
       expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.sent[0]?.id).toEqual(2);
-      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.sent[0]?.source_account).toEqual(transaction4.source_account);
-      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.sent[0]?.destination_account).toEqual(transaction4.destination_account);
-      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.sent[0]?.amount).toEqual(transaction4.amount);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.sent[0]?.year).toEqual(anualHistorial3.year);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.sent[0]?.month).toEqual(historial1.month);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.sent[0]?.source_account).toEqual(transaction2.source_account);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.sent[0]?.destination_account).toEqual(transaction2.destination_account);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.sent[0]?.amount).toEqual(transaction2.amount);
       expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.sent[0]?.to.user.name).toMatch(adminUser.name);
       expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.sent[0]?.to.user.lastname).toMatch(adminUser.lastname);
-      expect(body.bank_account.anual_historial[1]?.month.nov?.transactions.sent[0]?.id).toEqual(2);
-      expect(body.bank_account.anual_historial[1]?.month.nov?.transactions.sent[0]?.source_account).toEqual(transaction4.source_account);
-      expect(body.bank_account.anual_historial[1]?.month.nov?.transactions.sent[0]?.destination_account).toEqual(transaction4.destination_account);
-      expect(body.bank_account.anual_historial[1]?.month.nov?.transactions.sent[0]?.amount).toEqual(transaction4.amount);
-      expect(body.bank_account.anual_historial[1]?.month.nov?.transactions.sent[0]?.to.user.name).toMatch(adminUser.name);
-      expect(body.bank_account.anual_historial[1]?.month.nov?.transactions.sent[0]?.to.user.lastname).toMatch(adminUser.lastname);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.sent[1]?.id).toEqual(6);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.sent[1]?.year).toEqual(anualHistorial3.year);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.sent[1]?.month).toEqual(historial5.month);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.sent[1]?.source_account).toEqual(transaction6.source_account);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.sent[1]?.destination_account).toEqual(transaction6.destination_account);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.sent[1]?.amount).toEqual(transaction6.amount);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.sent[1]?.to.user.name).toMatch(adminUser.name);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.sent[1]?.to.user.lastname).toMatch(adminUser.lastname);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[0]?.id).toEqual(4);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[0]?.year).toEqual(anualHistorial4.year);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[0]?.month).toEqual(historial3.month);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[0]?.source_account).toEqual(transaction4.source_account);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[0]?.destination_account).toEqual(transaction4.destination_account);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[0]?.amount).toEqual(transaction4.amount);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[0]?.to.user.name).toMatch(adminUser.name);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[0]?.to.user.lastname).toMatch(adminUser.lastname);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[1]?.id).toEqual(8);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[1]?.year).toEqual(anualHistorial4.year);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[1]?.month).toEqual(historial7.month);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[1]?.source_account).toEqual(transaction8.source_account);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[1]?.destination_account).toEqual(transaction8.destination_account);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[1]?.amount).toEqual(transaction8.amount);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[1]?.to.user.name).toMatch(adminUser.name);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[1]?.to.user.lastname).toMatch(adminUser.lastname);
     })
   })
 

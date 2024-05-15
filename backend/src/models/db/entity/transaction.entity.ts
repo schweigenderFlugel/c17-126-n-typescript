@@ -60,6 +60,7 @@ const Transaction = sequelize.define<TransactionModel>('transaction', {
     allowNull: false,
   },
   date_transaction: {
+    allowNull: false,
     type: DataTypes.DATE,
   },
   status: {

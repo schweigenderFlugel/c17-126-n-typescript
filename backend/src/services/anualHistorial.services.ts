@@ -4,6 +4,21 @@ import { AnualHistorialModel } from '../models/db/entity/anual-historial.entity'
   
   export default class anualHistorialService {
     /**
+     * Get the historial with the given id.
+     *
+     * @param {number} id - The id of the historial.
+     * @return {Promise<HistorialModel>} The monthly historial.
+     */
+    static async getAnualHistorialsByBankAccount(
+      id: number
+    ): Promise<AnualHistorialModel[] | null> {
+      const anualHistorialCreated = await anualHistorialDao
+        .getInstance()
+        .getAnualHistorialByBankAccountId(id);
+      return anualHistorialCreated;
+    }
+
+    /**
      * Creates the anual historial with the given bank account.
      *
      * @param {IAnualHistorial} anualHistorialPayload - The payload for creating the anual historial.

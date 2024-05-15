@@ -38,14 +38,13 @@ Historial.belongsTo(AnualHistorial, {
   foreignKey: 'anual_historial_id',
 })
 
-
 // RELATIONS FOR TRANSACTION
-Historial.hasMany(Transaction, {
+BankAccount.hasMany(Transaction, {
   as: 'transactions_sent',
   foreignKey: 'source_account',
 })
 
-Historial.hasMany(Transaction, {
+BankAccount.hasMany(Transaction, {
   as: 'transactions_received',
   foreignKey: 'destination_account',
 })

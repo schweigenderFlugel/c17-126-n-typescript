@@ -90,7 +90,7 @@ export default class bankAccountDao {
           },]
         }],
     })
-    return bankAccountFound as Model<Omit<Omit<IBankAccount, 'expenses'>, 'investments'>>
+    return bankAccountFound;
   }
 
   async getBankAccountByUserId(userId: number) {

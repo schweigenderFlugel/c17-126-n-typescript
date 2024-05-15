@@ -35,7 +35,6 @@ export interface IUserTransactionSentData {
         year: {
           dataValues: {
             year: number;
-            bank_account: number;
           }
         }
       }
@@ -55,7 +54,6 @@ export interface IUserTransactionSentData {
 
 export interface IUserTransactionSentResponse {
   id: number;
-  bank_account: number;
   source_account: number;
   destination_account: number;
   amount: number;
@@ -83,7 +81,6 @@ export interface IUserTransactionReceivedData {
         year: {
           dataValues: {
             year: number;
-            bank_account: number;
           }
         }
       }
@@ -103,7 +100,6 @@ export interface IUserTransactionReceivedData {
 
 export interface IUserTransactionReceivedResponse {
   id: number;
-  bank_account: number;
   source_account: number;
   destination_account: number;
   amount: number;

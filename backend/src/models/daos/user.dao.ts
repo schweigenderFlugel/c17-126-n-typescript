@@ -104,60 +104,76 @@ export default class userDao {
         {
           model: BankAccount,
           attributes: ['id', 'number_account', 'balance', 'expenses', 'investments'], 
-          include: [{
-            association: 'anual_historial',
-            include: [{
-              association: 'months',
-              include: [{
-                association: 'year',
-                attributes: ['year'],
-              },
-              {
-                association: 'transactions_sent',
-                attributes: ['id', 'source_account', 'destination_account', 'amount', 'date_transaction'],
-                include: [{
+          include: [
+            {
+              association: 'transactions_sent',
+              attributes: ['id', 'source_account', 'destination_account', 'amount', 'date_transaction'],
+              include: [
+                {
                   association: 'month',
                   attributes: ['month'],
-                  include: [{
-                    association: 'year',
-                  }]
+                  include: [
+                    {
+                      association: 'year',
+                    }
+                  ]
                 },
                 {
                   association: 'to',
                   attributes: {
                     exclude: ['id', 'number_account', 'balance', 'expenses', 'investments'],
                   },
-                  include: [{
-                    model: User,
-                    attributes: ['name', 'lastname']
-                  }]
-                }]
-              },
-              {
-                association: 'transactions_received',
-                attributes: ['id', 'source_account', 'destination_account', 'amount', 'date_transaction'],
-                include: [{
+                  include: [
+                    {
+                      model: User,
+                      attributes: ['name', 'lastname']
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              association: 'transactions_received',
+              attributes: ['id', 'source_account', 'destination_account', 'amount', 'date_transaction'],
+              include: [
+                {
                   association: 'month',
                   attributes: ['month'],
-                  include: [{
-                    association: 'year',
-                  }]
+                  include: [
+                    {
+                      association: 'year',
+                    }
+                  ]
                 },
                 {
                   association: 'from',
                   attributes: {
                     exclude: ['id', 'number_account', 'balance', 'expenses', 'investments'],
                   },
-                  include: [{
-                    model: User,
-                    attributes: ['name', 'lastname']
-                  }]
-                }]
-              }
-            
-            ]
-            }]
-          }]
+                  include: [
+                    {
+                      model: User,
+                      attributes: ['name', 'lastname']
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              association: 'anual_historial',
+              include: [
+                {
+                  association: 'months',
+                  include: [
+                    {
+                      association: 'year',
+                      attributes: ['year'],
+                    },
+                  ]
+                }
+              ]
+            }
+          ]
         }
        ]
     })

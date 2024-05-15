@@ -9,71 +9,71 @@ export const historial1: HistorialFixtutre = {
   id: 1,
   anual_historial_id: anualHistorial1.id,
   month: 11,
-  balance: bankAccount1.balance,
-  expenses: bankAccount1.expenses,
-  investments: bankAccount1.investments
+  balance: 1000,
+  expenses: 500,
+  investments: 750
 }
 
 export const historial2: HistorialFixtutre = {
   id: 2,
   anual_historial_id: anualHistorial1.id,
   month: 12,
-  balance: bankAccount1.balance,
-  expenses: bankAccount1.expenses,
-  investments: bankAccount1.investments
+  balance: 1200,
+  expenses: 400,
+  investments: 800
 }
 
 export const historial3: HistorialFixtutre = {
   id: 3,
   anual_historial_id: anualHistorial2.id,
   month: 1,
-  balance: bankAccount1.balance,
-  expenses: bankAccount1.expenses,
-  investments: bankAccount1.investments
+  balance: 200,
+  expenses: 1500,
+  investments: 750
 }
 
 export const historial4: HistorialFixtutre = {
   id: 4,
   anual_historial_id: anualHistorial2.id,
   month: 2,
-  balance: bankAccount1.balance,
-  expenses: bankAccount1.expenses,
-  investments: bankAccount1.investments
+  balance: 2000,
+  expenses: 100,
+  investments: 500
 }
 
 export const historial5: HistorialFixtutre = {
   id: 5,
   anual_historial_id: anualHistorial3.id,
   month: 11,
-  balance: bankAccount2.balance,
-  expenses: bankAccount2.expenses,
-  investments: bankAccount2.investments
+  balance: 1200,
+  expenses: 600,
+  investments: 450
 }
 
 export const historial6: HistorialFixtutre = {
   id: 6,
   anual_historial_id: anualHistorial3.id,
   month: 12,
-  balance: bankAccount2.balance,
-  expenses: bankAccount2.expenses,
-  investments: bankAccount2.investments
+  balance: 1250,
+  expenses: 700,
+  investments: 600
 }
 
 export const historial7: HistorialFixtutre = {
   id: 7,
   anual_historial_id: anualHistorial4.id,
   month: 1,
-  balance: bankAccount2.balance,
-  expenses: bankAccount2.expenses,
-  investments: bankAccount2.investments
+  balance: 2000,
+  expenses: 1500,
+  investments: 200
 }
 
 export const historial8: HistorialFixtutre = {
   id: 8,
   anual_historial_id: anualHistorial4.id,
   month: 2,
-  balance: bankAccount2.balance,
-  expenses: bankAccount2.expenses,
+  balance: 1500,
+  expenses: 850,
   investments: bankAccount2.investments
 }
 

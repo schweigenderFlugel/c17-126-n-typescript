@@ -4,6 +4,19 @@ import { HistorialModel } from '../models/db/entity/historial.entity';
   
   export default class historialService {
     /**
+     * Get the historial with the given id.
+     *
+     * @param {number} id - The id of the historial.
+     * @return {Promise<HistorialModel>} The monthly historial.
+     */
+    static async getHistorial(
+      anualHistorial: number
+    ): Promise<HistorialModel | null> {
+      const anualHistorialCreated = await historialDao.getInstance().getHistorial(anualHistorial);
+      return anualHistorialCreated;
+    }
+
+    /**
      * Creates the historial with the given bank account.
      *
      * @param {IHistorial} historialPayload - The payload for creating the historial.

@@ -21,8 +21,8 @@ export default class anualHistorialDao {
    * @param {IHistorial} bank_account - The ID of bank account to retrieve the anual historial.
    * @return {Promise<HistorialModel>} The created anual historial.
    */
-  async getAnualHistorial(bank_account: number): Promise<AnualHistorialModel | null> {
-    const bankAccountCreated: AnualHistorialModel | null = await AnualHistorial.findOne({
+  async getAnualHistorialByBankAccountId(bank_account: number): Promise<AnualHistorialModel[] | null> {
+    const bankAccountCreated: AnualHistorialModel[] | null = await AnualHistorial.findAll({
         where: { bank_account: bank_account }
     })
     return bankAccountCreated

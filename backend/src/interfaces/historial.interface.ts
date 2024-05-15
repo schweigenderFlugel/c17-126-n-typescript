@@ -21,8 +21,6 @@ export interface IUserHistorial {
     expenses: number;
     investments: number;
     year: { dataValues: { year: number }};
-    transactions_sent: IUserTransactionSentData[],
-    transactions_received: IUserTransactionReceivedData[],
   }
 }
 

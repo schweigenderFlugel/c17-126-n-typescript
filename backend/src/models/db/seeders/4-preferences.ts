@@ -16,8 +16,8 @@ export const preference1: IPrefrerenceFixture = {
 export const preference2: IPrefrerenceFixture = {
   id: 2,
   user_id: normalUser.id,
-  min_ammount_transfers: 10,
-  max_ammount_transfers: 10000
+  min_ammount_transfers: 25,
+  max_ammount_transfers: 5000
 }
 
 const preferenceFixtures = [preference1, preference2];

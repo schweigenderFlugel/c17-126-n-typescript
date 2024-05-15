@@ -8,6 +8,7 @@ import transactionService from '../services/transaction.services'
 import transactionHelper from '../utils/transactionsHelper'
 import { ITokenPayload } from '../interfaces/token.interface'
 import { IAccountData } from '../interfaces/bankAccount.interface'
+import HistorialUtils from '../utils/historial.utils'
 
 export default class bankAccountController {
   /**
@@ -74,10 +75,16 @@ export default class bankAccountController {
         accountFound.dataValues
       )
 
-      const response = apiSuccessResponse(accountUpdated)
+      const historialUpdated = await HistorialUtils.updateHistorials(accountFound);
+      
+      const response = apiSuccessResponse({
+        accountUpdated,
+        historialUpdated,
+      })
 
       res.status(HTTP_STATUS.OK).json(response)
     } catch (err) {
+      console.log(err)
       next(err)
     }
   }

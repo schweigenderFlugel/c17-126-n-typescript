@@ -226,14 +226,64 @@ components:
           type: number
         investments:
           type: number
-        transactions_sent: 
+        anual_historial:
           type: array
-          items:
-            $ref: '#/components/schemas/TransactionsSent'
-        transactions_received: 
-          type: array
-          items:
-            $ref: '#/components/schemas/TransactionsReceived'
+          items: 
+            $ref: '#/components/schemas/AnualHistorial'
+    AnualHistorial:
+      type: object
+      properties: 
+        year:
+          type: number
+        month:
+          $ref: '#/components/schemas/Month'
+    Month:
+      type: object
+      properties:
+        jan:
+          $ref: '#/components/schemas/Historial'
+        feb:
+          $ref: '#/components/schemas/Historial'
+        mar:
+          $ref: '#/components/schemas/Historial'
+        apr:
+          $ref: '#/components/schemas/Historial'
+        may:
+          $ref: '#/components/schemas/Historial'
+        jun:
+          $ref: '#/components/schemas/Historial'
+        jul:
+          $ref: '#/components/schemas/Historial'
+        aug:
+          $ref: '#/components/schemas/Historial'
+        sep:
+          $ref: '#/components/schemas/Historial'
+        oct:
+          $ref: '#/components/schemas/Historial'
+        nov:
+          $ref: '#/components/schemas/Historial'
+        dec:
+          $ref: '#/components/schemas/Historial'
+    Historial:
+      type: object
+      properties:
+        balance:
+          type: number
+        expenses:
+          type: number
+        investments:
+          type: number
+        transactions:
+          type: object
+          properties:
+            sent:
+              type: array
+              items:
+                $ref: '#/components/schemas/TransactionsSent'
+            received:
+              type: array
+              items:
+                $ref: '#/components/schemas/TransactionsReceived'
     TransactionsSent:
       type: object
       properties: 
