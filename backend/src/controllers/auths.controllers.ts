@@ -1,17 +1,18 @@
 import { NextFunction, Request, Response } from 'express'
 import { UniqueConstraintError } from 'sequelize'
 import { TokenExpiredError } from 'jsonwebtoken'
-import { ISign, IUpdateAuth } from '../interfaces/auth.interface'
+import { INewAuthResponse, ISign, IUpdateAuth } from '../interfaces/auth.interface'
 import { ITokenPayload } from '../interfaces/token.interface'
 import { createHash, isValidPassword } from '../utils/bcrypt.utils'
 import authService from '../services/auth.services'
 import apiSuccessResponse from '../utils/apiResponse.utils'
 import { HTTP_STATUS, envs } from '../config/constants'
 import HttpError from '../utils/HttpError.utils'
-
-import SessionUtils from '../utils/session.util';
 import CookiesUtils from '../utils/cookies.utils';
+import JwtUtils from '../utils/jwt.utils'
 import { ENVIROMENTS } from '../../enviroments';
+import sessionService from '../services/session.service'
+import { ISession } from '../interfaces/session.interface'
 
 const { NODE_ENV, HTTPONLY_COOKIE_NAME, DB_URL } = envs
 
@@ -35,8 +36,13 @@ export default class authsController {
     try {
       const payload: ISign = req.body
       payload.password = createHash(payload.password)
-      const newAuth = await authService.createAuth(payload)
-      const response = apiSuccessResponse(newAuth)
+      const newAuth = await authService.createAuth(payload);
+      const newAuthResponse: INewAuthResponse = {
+        email: newAuth.email,
+        role: newAuth.role,
+        status: newAuth.status,
+      }
+      const response = apiSuccessResponse(newAuthResponse)
       res.status(HTTP_STATUS.CREATED).json(response)
     } catch (err: any) {
       if (err instanceof UniqueConstraintError) {
@@ -68,6 +74,7 @@ export default class authsController {
   ): Promise<void> {
     try {
       const jwtCookie = req.cookies[cookieName]
+      const userAgent = req.headers['user-agent'] ?? 'unknown';
       if (jwtCookie) throw new HttpError(
         'Session open', 
         'Cookie is still existing', 
@@ -93,8 +100,22 @@ export default class authsController {
         id: authFound.id,
         role: authFound.role,
       }
-      const accessToken = await SessionUtils.generateToken(tokenPayload);
-      const refreshToken = await SessionUtils.generateRefreshToken(tokenPayload);
+      const accessToken = await JwtUtils.generateToken(tokenPayload);
+      const refreshToken = await JwtUtils.generateRefreshToken(tokenPayload);
+      const sessionsFound = await sessionService.getSessionsByAuthId(authFound.id);
+      const sessionFiltered = sessionsFound.find(session => session.userAgent === userAgent);
+      const updateSessionPayload: Partial<ISession> = {
+        refreshToken: refreshToken,
+        lastEntry: new Date(),
+      }
+      const newSessionPayload: Omit<ISession, 'id'> = {
+        authId: authFound.id,
+        refreshToken: refreshToken,
+        userAgent: userAgent,
+        lastEntry: new Date(),
+      }
+      if (sessionFiltered) sessionService.updateSession(sessionFiltered.id, updateSessionPayload)
+      else sessionService.createSession(newSessionPayload);
       await CookiesUtils.setJwtCookie(cookieName, res, refreshToken)
       res.status(HTTP_STATUS.OK).json({ accessToken })
     } catch (err: any) {
@@ -117,13 +138,13 @@ export default class authsController {
   ): Promise<void> {
     try {
       const jwtCookie = req.cookies[cookieName];
+      const userAgent = req.headers['user-agent'] ?? 'unknown';
       if (!jwtCookie) throw new HttpError(
         'Refresh token not found', 
         'Refresh token should exist to refresh', 
         HTTP_STATUS.NOT_FOUND
       )
-      await CookiesUtils.removeJwtCookie(cookieName, res)
-      const verified = await SessionUtils.verifyRefreshToken(jwtCookie)
+      const verified = await JwtUtils.verifyRefreshToken(jwtCookie);
       const authFound = await authService.getAuthById(verified.id);
       if (!authFound) {
         await CookiesUtils.removeJwtCookie(cookieName, res);
@@ -133,10 +154,28 @@ export default class authsController {
           HTTP_STATUS.NOT_FOUND,
         )
       }
+      const sessionsFound = await sessionService.getSessionsByAuthId(authFound.id);
+      const sessionFiltered = sessionsFound.find(session => 
+        session.refreshToken === jwtCookie && session.userAgent === userAgent
+      )
+      await CookiesUtils.removeJwtCookie(cookieName, res)
       const payload: ITokenPayload = { id: authFound.id, role: authFound.role }
-      const newAccessToken = await SessionUtils.generateToken(payload)
-      const newRefreshToken = await SessionUtils.generateRefreshToken(payload)
+      const newAccessToken = await JwtUtils.generateToken(payload)
+      const newRefreshToken = await JwtUtils.generateRefreshToken(payload)
       await CookiesUtils.setJwtCookie(cookieName, res, newRefreshToken)
+      const updateSessionPayload: Partial<ISession> = {
+        refreshToken: newRefreshToken
+      }
+      const newSessionPayload: Omit<ISession, 'id'> = {
+        authId: authFound.id,
+        refreshToken: newRefreshToken,
+        userAgent: userAgent,
+        lastEntry: new Date(),
+      }
+
+      if (sessionFiltered) sessionService.updateSession(sessionFiltered.id, updateSessionPayload)
+      else sessionService.createSession(newSessionPayload);
+
       res.status(HTTP_STATUS.OK).json({ accessToken: newAccessToken })
     } catch (err: any) {
       if (err instanceof TokenExpiredError) {
@@ -229,7 +268,7 @@ export default class authsController {
       const payloadToken: Omit<ITokenPayload, 'role'> = {
         id: authFound.id,
       }
-      const recoveryToken = await SessionUtils.generateRecoveryToken(payloadToken);
+      const recoveryToken = await JwtUtils.generateRecoveryToken(payloadToken);
       res.status(HTTP_STATUS.OK).json({ link: `${DB_URL}/restablecer-contrasena/${recoveryToken}`})
     } catch (error) {
       next(error);
@@ -251,11 +290,22 @@ export default class authsController {
   ): Promise<void> {
     try {
       const jwtCookie = req.cookies[cookieName]
+      const userAgent = req.headers['user-agent'] ?? 'unknown';
       if (!jwtCookie) throw new HttpError(
         'Cookie not found',
         'Cookie should exist to logout',
         HTTP_STATUS.NOT_FOUND
       )
+      const verified = await JwtUtils.verifyRefreshToken(jwtCookie);
+      const authFound = await authService.getAuthById(verified.id);
+      const sessionsFound = await sessionService.getSessionsByAuthId(authFound.id);
+      const sessionFiltered = sessionsFound.find(session => 
+        session.userAgent === userAgent
+      )
+      const updateSessionPayload: Partial<ISession> = {
+        refreshToken: null
+      }
+      await sessionService.updateSession(sessionFiltered?.id as number, updateSessionPayload)
       await CookiesUtils.removeJwtCookie(cookieName, res)
       res.status(HTTP_STATUS.OK).json({ message: 'logout succesfully' })
     } catch (err: any) {

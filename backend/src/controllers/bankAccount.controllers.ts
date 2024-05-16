@@ -75,7 +75,7 @@ export default class bankAccountController {
         accountFound.dataValues
       )
 
-      const historialUpdated = await HistorialUtils.updateHistorials(accountFound);
+      const historialUpdated = await HistorialUtils.updateHistorials(accountFound, null);
       
       const response = apiSuccessResponse({
         accountUpdated,

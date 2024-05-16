@@ -20,7 +20,7 @@ const recoverySecret = NODE_ENV === ENVIROMENTS.PRODUCTION
   : 'bankme';
 
 
-export default class SessionUtils {
+export default class JwtUtils {
   static async generateToken(payload: ITokenPayload): Promise<string> {
     const token: string = sign(payload, accessSecret, { expiresIn: '10m' })
     return token

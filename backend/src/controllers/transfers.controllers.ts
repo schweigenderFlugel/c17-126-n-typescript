@@ -109,7 +109,7 @@ export default class transfersController {
 
       const operationNumber = await transactionHelper.generateOperationNumber();
 
-      const { historialData } = await HistorialUtils.updateHistorials(sourceAccountFound);
+      const { historialData } = await HistorialUtils.updateHistorials(sourceAccountFound, destinationAccountData);
 
       const transactionPayload: ITransaction = {
         historial_id: historialData.id,

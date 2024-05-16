@@ -4,7 +4,6 @@ import { IBankAccount } from "../interfaces/bankAccount.interface";
 import { IHistorial } from "../interfaces/historial.interface";
 import { IUserTransactionsResponse } from "../interfaces/transaction.interface";
 import { IAllUserData } from "../interfaces/user.interface";
-import { HistorialModel } from "../models/db/entity/historial.entity";
 import anualHistorialService from "../services/anualHistorial.services";
 import historialService from "../services/historial.services";
 import HttpError from "./HttpError.utils";
@@ -314,28 +313,30 @@ export default class HistorialUtils {
     return anual_historials;
   }
 
-  static async updateHistorials(account: Partial<IBankAccount>) {
+  static async updateHistorials(
+    sourceAccount: Partial<IBankAccount>, destinationAccount: Partial<IBankAccount> | null
+  ) {
     const currentYear = new Date().getFullYear();
     const currentMonth = new Date().getMonth() + 1;
 
     const anualHistorialsFound = await anualHistorialService
-      .getAnualHistorialsByBankAccount(account.id as number);
+      .getAnualHistorialsByBankAccount(sourceAccount.id as number);
 
     const currentAnualHistorial = anualHistorialsFound?.find(
       anual_historial => anual_historial.year === currentYear
     );
 
     const historialPayload: Partial<IHistorial> = {
-      balance: account.balance,
-      expenses: account.expenses,
-      investments: account.investments,
+      balance: sourceAccount.balance,
+      expenses: sourceAccount.expenses,
+      investments: sourceAccount.investments,
     }
 
     const newHistorialPayload: Omit<Omit<IHistorial, 'id'>, 'anual_historial_id'> = {
       month: new Date().getMonth() + 1,
-      balance: account.balance as number,
-      expenses: account.expenses as number,
-      investments: account.investments as number,
+      balance: sourceAccount.balance as number,
+      expenses: sourceAccount.expenses as number,
+      investments: sourceAccount.investments as number,
     }
 
     let historialData: IHistorial = {
@@ -349,7 +350,7 @@ export default class HistorialUtils {
     
     if (!currentAnualHistorial) {
       const { historialCreated } = await this
-        .createNewAnualHistorial(account.id as number, newHistorialPayload)
+        .createNewAnualHistorial(sourceAccount.id as number, newHistorialPayload)
       historialData = { ...historialCreated.dataValues };
     } else {
       const historialsFound = await historialService.getHistorials(currentAnualHistorial.id);
@@ -368,8 +369,53 @@ export default class HistorialUtils {
         historialData = { ...historialCreated.dataValues }
       }
     }
-      
+
+    if (destinationAccount) await this.updateDestinationAccount(destinationAccount);
+
     return { historialData };
+  }
+
+  static async updateDestinationAccount(destinationAccount: Partial<IBankAccount>) {
+    const currentYear = new Date().getFullYear();
+    const currentMonth = new Date().getMonth() + 1;
+
+    const anualHistorialsFound = await anualHistorialService
+      .getAnualHistorialsByBankAccount(destinationAccount.id as number);
+
+    const currentAnualHistorial = anualHistorialsFound?.find(
+      anual_historial => anual_historial.year === currentYear
+    );
+
+    const historialPayload: Partial<IHistorial> = {
+      balance: destinationAccount.balance,
+      expenses: destinationAccount.expenses,
+      investments: destinationAccount.investments,
+    }
+
+    const newHistorialPayload: Omit<Omit<IHistorial, 'id'>, 'anual_historial_id'> = {
+      month: new Date().getMonth() + 1,
+      balance: destinationAccount.balance as number,
+      expenses: destinationAccount.expenses as number,
+      investments: destinationAccount.investments as number,
+    }
+
+    if (!currentAnualHistorial) {
+      await this.createNewAnualHistorial(destinationAccount.id as number, newHistorialPayload);
+    } else {
+      const historialsFound = await historialService.getHistorials(currentAnualHistorial.id);
+      const currentHistorial = historialsFound?.find(historial => historial.month === currentMonth);
+      if (currentHistorial) {
+        await historialService.updateHistorial(
+          currentHistorial.dataValues.id, 
+          historialPayload
+        )
+      } else {
+        await historialService.createHistorial({
+          anual_historial_id: currentAnualHistorial.dataValues.id,
+          ...newHistorialPayload
+        })
+      }
+    }
   }
 
   static async createNewAnualHistorial(

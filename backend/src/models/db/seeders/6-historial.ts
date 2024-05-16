@@ -1,6 +1,6 @@
 import { IHistorial } from "../../../interfaces/historial.interface"; 
 import { Historial } from "../entity/historial.entity";
-import { bankAccount1, bankAccount2 } from "./3-bank-account";
+import { bankAccount2 } from "./4-bank-account";
 import { anualHistorial1, anualHistorial2, anualHistorial3, anualHistorial4 } from "./5-anual-historial";
 
 interface HistorialFixtutre extends IHistorial {}

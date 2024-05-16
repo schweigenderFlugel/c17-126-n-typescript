@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
-import SessionUtils from '../utils/session.util'
+import Jwt from '../utils/jwt.utils'
 
 const userAuth = (req: Request, res: Response, next: NextFunction): void => {
   const authorization = req.get('authorization');
@@ -8,7 +8,7 @@ const userAuth = (req: Request, res: Response, next: NextFunction): void => {
     token = authorization.substring(7)
   }
 
-  SessionUtils.verifyToken(token, req, res, next)
+  Jwt.verifyToken(token, req, res, next)
 }
 
 export default userAuth;

@@ -9,7 +9,8 @@ export const Session = sequelize.define<SessionModel>('session', {
   id: {
     type: INTEGER,
     allowNull: false,
-    autoIncrement: true
+    autoIncrement: true,
+    primaryKey: true,
   },
   authId: {
     type: INTEGER,
@@ -22,16 +23,23 @@ export const Session = sequelize.define<SessionModel>('session', {
     onUpdate: 'CASCADE',
     onDelete: 'SET NULL'
   },
+  userAgent: {
+    type: STRING,
+    field: 'user_agent',
+    allowNull: true,
+    defaultValue: null,
+  },
   refreshToken: {
     type: STRING,
     field: 'refresh_token',
     allowNull: true,
+    defaultValue: null
   },
   lastEntry: {
     type: DATE,
     field: 'last_entry',
     allowNull: true, 
-    defaultValue: NOW,
+    defaultValue: null,
   },
 },
 {

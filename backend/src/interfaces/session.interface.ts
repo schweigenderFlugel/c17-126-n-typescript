@@ -1,6 +1,7 @@
 export interface ISession {
   id: number;
   authId: number;
-  refreshToken: string;
-  lastEntry: Date;
+  userAgent: string | undefined;
+  refreshToken: string | null;
+  lastEntry: Date | null;
 }

@@ -6,10 +6,10 @@ import createExpressApp from '../src/config/createApp';
 import { sequelize } from '../src/models/db/database.manager';
 import { upSeed } from './utils/umzug';
 import { adminUserToken, normalUserToken, tokenWithInvalidPayload } from '../src/models/db/seeders/1-auth';
-import { bankAccount1, bankAccount2 } from '../src/models/db/seeders/3-bank-account';
-import { adminUser, normalUser } from '../src/models/db/seeders/2-user';
+import { bankAccount1, bankAccount2 } from '../src/models/db/seeders/5-bank-account';
+import { adminUser, normalUser } from '../src/models/db/seeders/3-user';
 import { TYPETRANSFERS } from '../src/config/constants';
-import { transaction1 } from '../src/models/db/seeders/7-transaction';
+import { transaction1 } from '../src/models/db/seeders/8-transaction';
 
 describe('Testing the auth route', () => {
   let app;

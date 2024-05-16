@@ -14,13 +14,22 @@ import {
   normalAuth, 
   tokenWithInvalidPayload 
 } from '../src/models/db/seeders/1-auth';
-import { adminUser, normalUser } from '../src/models/db/seeders/2-user';
+import { adminUser, normalUser } from '../src/models/db/seeders/3-user';
 import { preference1, preference2 } from '../src/models/db/seeders/4-preferences';
-import { bankAccount1, bankAccount2 } from '../src/models/db/seeders/3-bank-account';
-import { transaction1, transaction2, transaction3, transaction4, transaction5, transaction6, transaction7, transaction8 } from '../src/models/db/seeders/7-transaction';
+import { bankAccount1, bankAccount2 } from '../src/models/db/seeders/5-bank-account';
+import { 
+  transaction1, 
+  transaction2, 
+  transaction3, 
+  transaction4, 
+  transaction5, 
+  transaction6, 
+  transaction7, 
+  transaction8 
+} from '../src/models/db/seeders/8-transaction';
 import { IUserCreatedData, IUserResponse } from '../src/interfaces/user.interface';
-import { anualHistorial1, anualHistorial2, anualHistorial3, anualHistorial4 } from '../src/models/db/seeders/5-anual-historial';
-import { historial1, historial3, historial5, historial7 } from '../src/models/db/seeders/6-historial';
+import { anualHistorial1, anualHistorial2, anualHistorial3, anualHistorial4 } from '../src/models/db/seeders/6-anual-historial';
+import { historial1, historial3, historial5, historial7 } from '../src/models/db/seeders/7-historial';
 import { IMonthsResponse } from '../src/interfaces/historial.interface';
 
 describe('Testing the user route', () => {
