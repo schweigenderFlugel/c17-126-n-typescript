@@ -5,7 +5,7 @@ import { toast } from 'react-hot-toast';
 import { AuthFormContainer } from '../Components/AuthFormContainer';
 import { AuthFormRow } from '../Components/AuthFormRow';
 import { ButtonAuthForm } from '../Components/ButtonAuthForm';
-import { ICreateUserPayload } from '../Interfaces/interfaces';
+import { ICreateUserPayload } from '../Interfaces/auth.interface'; 
 import { AuthFormSelect } from '../Components/AuthFormSelect';
 import { createUser } from '../Services/user';
 import { useAuth } from '../Hooks/useAuth';

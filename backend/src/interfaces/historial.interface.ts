@@ -25,6 +25,7 @@ export interface IUserHistorial {
 }
 
 export interface IUserHistorialResponse {
+  month?: number;
   balance: number;
   expenses: number;
   investments: number;

@@ -9,7 +9,7 @@ import { setSession } from '../Services/user';
 import { useLocalStorage } from './useLocalStorage';
 import { useRefresh } from '../Hooks/useRefresh';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { IUser } from '../Interfaces/interfaces';
+import { IUser } from '../Interfaces/user.interface';
 
 interface AuthContextInterface {
   accessToken: string | null;

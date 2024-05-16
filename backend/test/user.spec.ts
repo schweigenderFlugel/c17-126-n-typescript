@@ -18,9 +18,10 @@ import { adminUser, normalUser } from '../src/models/db/seeders/2-user';
 import { preference1, preference2 } from '../src/models/db/seeders/4-preferences';
 import { bankAccount1, bankAccount2 } from '../src/models/db/seeders/3-bank-account';
 import { transaction1, transaction2, transaction3, transaction4, transaction5, transaction6, transaction7, transaction8 } from '../src/models/db/seeders/7-transaction';
-import { IUserResponse } from '../src/interfaces/user.interface';
+import { IUserCreatedData, IUserResponse } from '../src/interfaces/user.interface';
 import { anualHistorial1, anualHistorial2, anualHistorial3, anualHistorial4 } from '../src/models/db/seeders/5-anual-historial';
 import { historial1, historial3, historial5, historial7 } from '../src/models/db/seeders/6-historial';
+import { IMonthsResponse } from '../src/interfaces/historial.interface';
 
 describe('Testing the user route', () => {
   let app;
@@ -51,6 +52,7 @@ describe('Testing the user route', () => {
       expect(body.id).toEqual(adminUser.id);
       expect(body.name).toMatch(adminUser.name);
       expect(body.lastname).toMatch(adminUser.lastname);
+      expect(body.accountType).toMatch(adminUser.account_type);
       expect(body.avatar).toMatch(adminUser.avatar);
       expect(body.alias).toMatch(adminUser.alias);
       expect(body.address).toMatch(adminUser.address);
@@ -133,7 +135,7 @@ describe('Testing the user route', () => {
       expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[0]?.to.user.lastname).toMatch(normalUser.lastname);
       expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[1]?.id).toEqual(7);
       expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[1]?.year).toEqual(anualHistorial2.year);
-      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[1]?.month).toEqual(historial7.month);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[1]?.month).toEqual(historial3.month);
       expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[1]?.source_account).toEqual(transaction7.source_account);
       expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[1]?.destination_account).toEqual(transaction7.destination_account);
       expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[1]?.amount).toEqual(transaction7.amount);
@@ -147,6 +149,7 @@ describe('Testing the user route', () => {
       expect(body.id).toEqual(normalUser.id);
       expect(body.name).toMatch(normalUser.name);
       expect(body.lastname).toMatch(normalUser.lastname);
+      expect(body.accountType).toMatch(normalUser.account_type);
       expect(body.avatar).toMatch(normalUser.avatar);
       expect(body.alias).toMatch(normalUser.alias);
       expect(body.address).toMatch(normalUser.address);
@@ -173,7 +176,7 @@ describe('Testing the user route', () => {
       expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.sent).toBeInstanceOf(Array);
       expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.received[0]?.id).toEqual(1);
       expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.received[0]?.year).toEqual(anualHistorial3.year);
-      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.received[0]?.month).toEqual(historial1.month);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.received[0]?.month).toEqual(historial5.month);
       expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.received[0]?.source_account).toEqual(transaction1.source_account);
       expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.received[0]?.destination_account).toEqual(transaction1.destination_account);
       expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.received[0]?.amount).toEqual(transaction1.amount);
@@ -189,7 +192,7 @@ describe('Testing the user route', () => {
       expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.received[1]?.from.user.lastname).toMatch(adminUser.lastname);
       expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.received[0]?.id).toEqual(3);
       expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.received[0]?.year).toEqual(anualHistorial4.year);
-      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.received[0]?.month).toEqual(historial3.month);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.received[0]?.month).toEqual(historial7.month);
       expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.received[0]?.source_account).toEqual(transaction3.source_account);
       expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.received[0]?.destination_account).toEqual(transaction3.destination_account);
       expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.received[0]?.amount).toEqual(transaction3.amount);
@@ -205,7 +208,7 @@ describe('Testing the user route', () => {
       expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.received[1]?.from.user.lastname).toMatch(adminUser.lastname);
       expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.sent[0]?.id).toEqual(2);
       expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.sent[0]?.year).toEqual(anualHistorial3.year);
-      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.sent[0]?.month).toEqual(historial1.month);
+      expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.sent[0]?.month).toEqual(historial5.month);
       expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.sent[0]?.source_account).toEqual(transaction2.source_account);
       expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.sent[0]?.destination_account).toEqual(transaction2.destination_account);
       expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.sent[0]?.amount).toEqual(transaction2.amount);
@@ -221,7 +224,7 @@ describe('Testing the user route', () => {
       expect(body.bank_account.anual_historial[0]?.month.nov?.transactions.sent[1]?.to.user.lastname).toMatch(adminUser.lastname);
       expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[0]?.id).toEqual(4);
       expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[0]?.year).toEqual(anualHistorial4.year);
-      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[0]?.month).toEqual(historial3.month);
+      expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[0]?.month).toEqual(historial7.month);
       expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[0]?.source_account).toEqual(transaction4.source_account);
       expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[0]?.destination_account).toEqual(transaction4.destination_account);
       expect(body.bank_account.anual_historial[1]?.month.jan?.transactions.sent[0]?.amount).toEqual(transaction4.amount);
@@ -360,6 +363,9 @@ describe('Testing the user route', () => {
     })
 
     it('Should create a new bank account', async () => {
+      const currentYear = new Date().getFullYear();
+      const currentMonth = new Date().getMonth() + 1;
+      const month: Partial<IMonthsResponse> = {};
       const payload = {
         name: 'nonuser',
         lastname: 'nonuser',
@@ -368,10 +374,39 @@ describe('Testing the user route', () => {
         address: 'fake street 123',
         phone: "(000)-000-0000",
       }
-      const { statusCode } = await api.post('/api/v1/user')
+      const { statusCode, body }: { statusCode: any, body: IUserCreatedData } = await api.post('/api/v1/user')
         .auth(nonUserToken, { type: 'bearer' })
         .send(payload);
       expect(statusCode).toBe(200);
+      expect(body.payload.userCreatedResponse.name).toMatch(payload.name);
+      expect(body.payload.userCreatedResponse.lastname).toMatch(payload.lastname);
+      expect(body.payload.userCreatedResponse.accountType).toMatch(payload.accountType);
+      expect(body.payload.userCreatedResponse.alias).toMatch(payload.alias);
+      expect(body.payload.userCreatedResponse.address).toMatch(payload.address);
+      expect(body.payload.userCreatedResponse.phone).toMatch(payload.phone);
+      expect(body.payload.userCreatedResponse.preferences.min_ammount_transfers).toEqual(10);
+      expect(body.payload.userCreatedResponse.preferences.max_ammount_transfers).toEqual(999999);
+      expect(body.payload.userCreatedResponse.bank_account.balance).toEqual(0);
+      expect(body.payload.userCreatedResponse.bank_account.expenses).toEqual(0);
+      expect(body.payload.userCreatedResponse.bank_account.investments).toEqual(0);
+      expect(body.payload.userCreatedResponse.bank_account.anual_historial[0]?.year).toEqual(currentYear);
+      month.jan = currentMonth === 1 ? body.payload.userCreatedResponse.bank_account.anual_historial[0]?.month.jan : undefined
+      month.feb = currentMonth === 2 ? body.payload.userCreatedResponse.bank_account.anual_historial[0]?.month.feb : undefined
+      month.mar = currentMonth === 3 ? body.payload.userCreatedResponse.bank_account.anual_historial[0]?.month.mar : undefined
+      month.apr = currentMonth === 4 ? body.payload.userCreatedResponse.bank_account.anual_historial[0]?.month.apr : undefined
+      month.may = currentMonth === 5 ? body.payload.userCreatedResponse.bank_account.anual_historial[0]?.month.may : undefined
+      month.jun = currentMonth === 6 ? body.payload.userCreatedResponse.bank_account.anual_historial[0]?.month.jun : undefined
+      month.jul = currentMonth === 7 ? body.payload.userCreatedResponse.bank_account.anual_historial[0]?.month.jul : undefined
+      month.aug = currentMonth === 8 ? body.payload.userCreatedResponse.bank_account.anual_historial[0]?.month.aug : undefined
+      month.sep = currentMonth === 9 ? body.payload.userCreatedResponse.bank_account.anual_historial[0]?.month.sep : undefined
+      month.oct = currentMonth === 10 ? body.payload.userCreatedResponse.bank_account.anual_historial[0]?.month.oct : undefined
+      month.nov = currentMonth === 11 ? body.payload.userCreatedResponse.bank_account.anual_historial[0]?.month.nov : undefined
+      month.dec = currentMonth === 12 ? body.payload.userCreatedResponse.bank_account.anual_historial[0]?.month.dec : undefined
+      const monthHistorials = Object.values(month);
+      const currentMonthHistorial = monthHistorials.find(historial => historial != undefined);
+      expect(currentMonthHistorial?.month).toEqual(currentMonth);
+      expect(currentMonthHistorial?.transactions.sent).toBeInstanceOf(Array);
+      expect(currentMonthHistorial?.transactions.received).toBeInstanceOf(Array);
     })
   })
 

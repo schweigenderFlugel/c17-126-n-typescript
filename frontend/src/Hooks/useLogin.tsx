@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { AxiosError } from 'axios';
 import { login } from '../Services/user';
-import { ILoginPayload } from '../Interfaces/interfaces';
+import { ILoginPayload } from '../Interfaces/auth.interface'; 
 import { useAuth } from './useAuth';
 
 type options = {

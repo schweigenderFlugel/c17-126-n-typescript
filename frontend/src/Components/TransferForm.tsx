@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { TransferTypeSelect } from './TransferTypeSelect';
 import { createTransaction } from '../Services/transfers';
-import { IBankAccount, ICreateTransaction } from '../Interfaces/interfaces';
+import { IBankAccount } from '../Interfaces/user.interface'; 
+import { ICreateTransaction } from '../Interfaces/transactions.interface';
 import { HiOutlineCurrencyDollar } from 'react-icons/hi2';
 import { getAliases } from '../Services/user';
 import { useAuth } from '../Hooks/useAuth';
+
 
 export enum TYPETRANSFERS {
   INMEDIATE = 'inmediate',

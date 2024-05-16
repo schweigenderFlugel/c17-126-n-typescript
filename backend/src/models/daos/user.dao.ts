@@ -4,8 +4,6 @@ import { ICreateUser, IUpdateUser, IUser } from '../../interfaces/user.interface
 import { UserModel } from '../db/entity/user.entity'
 import { BankAccount } from '../db/entity/bank-account.entity'
 import { Preferences } from '../db/entity/preference.entity'
-import { AnualHistorial } from '../db/entity/anual-historial.entity'
-import { Historial } from '../db/entity/historial.entity'
 
 export default class userDao {
   private static instance: userDao | null = null
@@ -115,6 +113,7 @@ export default class userDao {
                   include: [
                     {
                       association: 'year',
+                      attributes: ['year'],
                     }
                   ]
                 },
@@ -142,6 +141,7 @@ export default class userDao {
                   include: [
                     {
                       association: 'year',
+                      attributes: ['year'],
                     }
                   ]
                 },

@@ -4,7 +4,7 @@ import { HiOutlineEye, HiOutlineEyeSlash } from 'react-icons/hi2';
 import { Modal } from './Modal';
 import { TransferForm } from './TransferForm';
 import { DepositForm } from './DepositForm';
-import { IUser } from '../Interfaces/interfaces';
+import { IUser } from '../Interfaces/user.interface';
 
 export const WalletCard = ({ user }: { user: IUser | undefined }) => {
   const [showBalance, setShowBalance] = useState(true);

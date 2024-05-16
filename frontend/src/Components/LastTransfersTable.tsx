@@ -1,9 +1,9 @@
-import { IBankAccount, ITransactionsReceived, ITransactionsSent } from '../Interfaces/interfaces';
 import { TransferTable } from './TransferTable';
+import { IBankAccount } from '../Interfaces/user.interface';
+import { transactions } from '../data/transactions';
 
 export const LastTransfersTable = ({ bank_account }: { bank_account: IBankAccount | undefined }) => {
-  const sent = bank_account?.transactions_sent as ITransactionsSent[];
-  const received = bank_account?.transactions_received as ITransactionsReceived[];
+  const { sent, received } = transactions(bank_account)
 
   return (
     <section className="col-span-12 row-span-6 dark:text-white">

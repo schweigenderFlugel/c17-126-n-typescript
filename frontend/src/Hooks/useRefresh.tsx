@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { refreshSession } from "../Services/user";
-import { useAuth } from "./useAuth";
 
 type options = {
     onSuccess?: () => void;
@@ -10,15 +9,10 @@ type options = {
   };
 
 export const useRefresh = ({ onSuccess, onReject, setToken }: options) => {
-  const { setQueryTime } = useAuth()
-  const startTime = Date.now();
-
   useEffect(() => {
     refreshSession()
       .then(({ accessToken }) => {
         setToken(accessToken);
-        const endTime = Date.now();
-        setQueryTime(endTime - startTime + 1000);
       })
       .then(() => {
         onSuccess?.();

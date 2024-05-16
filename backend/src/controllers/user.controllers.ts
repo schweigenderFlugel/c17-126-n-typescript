@@ -12,9 +12,10 @@ import { IAllUserData, ICreateUser, IUpdateUser, IUserResponse } from '../interf
 import { IPreferences } from '../interfaces/preference.interface'
 import { IAnualHistorial } from '../interfaces/anualHistorial.interface'
 import anualHistorialService from '../services/anualHistorial.services'
-import { IHistorial } from '../interfaces/historial.interface'
+import { IHistorial, IMonthsResponse, IUserHistorialResponse } from '../interfaces/historial.interface'
 import historialService from '../services/historial.services'
 import HistorialUtils from '../utils/historial.utils'
+import { IUserTransactionsResponse } from '../interfaces/transaction.interface'
 
 
 export default class userController {
@@ -135,12 +136,51 @@ export default class userController {
       const { anualHistorialCreated, historialCreated } = 
         await HistorialUtils.createNewAnualHistorial(bankAccountCreated.id, historialPayload)
 
+      const month: Partial<IMonthsResponse> = {}
+
+      const transactions = {
+        sent: [],
+        received: [],
+      }
+      
+      month.jan = historialCreated.month === 1 ? { ...historialCreated.dataValues, transactions } : undefined
+      month.feb = historialCreated.month === 2 ? { ...historialCreated.dataValues, transactions } : undefined
+      month.mar = historialCreated.month === 3 ? { ...historialCreated.dataValues, transactions } : undefined
+      month.apr = historialCreated.month === 4 ? { ...historialCreated.dataValues, transactions } : undefined
+      month.may = historialCreated.month === 5 ? { ...historialCreated.dataValues, transactions } : undefined
+      month.jun = historialCreated.month === 6 ? { ...historialCreated.dataValues, transactions } : undefined
+      month.jul = historialCreated.month === 7 ? { ...historialCreated.dataValues, transactions } : undefined
+      month.aug = historialCreated.month === 8 ? { ...historialCreated.dataValues, transactions } : undefined
+      month.sep = historialCreated.month === 9 ? { ...historialCreated.dataValues, transactions } : undefined
+      month.oct = historialCreated.month === 10 ? { ...historialCreated.dataValues, transactions } : undefined
+      month.nov = historialCreated.month === 11 ? { ...historialCreated.dataValues, transactions } : undefined
+      month.dec = historialCreated.month === 12 ? { ...historialCreated.dataValues, transactions } : undefined
+
+      const userCreatedResponse = {
+        name: userCreated.dataValues.name,
+        lastname: userCreated.dataValues.lastname,
+        accountType: userCreated.dataValues.accountType,
+        alias: userCreated.dataValues.alias,
+        address: userCreated.dataValues.address,
+        phone: userCreated.dataValues.phone,
+        preferences: {
+          min_ammount_transfers: preferencesCreated.min_ammount_transfers,
+          max_ammount_transfers: preferencesCreated.max_ammount_transfers,
+        },
+        bank_account: {
+          number_account: bankAccountCreated.dataValues.number_account,
+          balance: bankAccountCreated.dataValues.balance,
+          expenses: bankAccountCreated.dataValues.expenses,
+          investments: bankAccountCreated.dataValues.investments,
+          anual_historial: [{
+            year: anualHistorialCreated.dataValues.year,
+            month: month
+          }]
+        }
+      }
+
       const response = apiSuccessResponse({
-        userCreated,
-        preferencesCreated,
-        bankAccountCreated,
-        anualHistorialCreated,
-        historialCreated,
+        userCreatedResponse
       })
       
       res.status(200).json(response)
@@ -193,6 +233,7 @@ export default class userController {
         id: userData.id,
         name: userData.name,
         lastname: userData.lastname,
+        accountType: userData.accountType,
         avatar: userData.avatar,
         address: userData.address,
         phone: userData.phone,        

@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { getUser } from '../Services/user';
 import { useAuth } from './useAuth';
 import { AxiosError } from 'axios';
-import { IUser } from '../Interfaces/interfaces';
+import { IUser } from '../Interfaces/user.interface'; 
 
 type options = {
   onSuccess?: () => void;

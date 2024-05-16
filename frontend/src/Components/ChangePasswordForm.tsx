@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { IChangePassword, IUser  } from '../Interfaces/interfaces';
+import { IChangePassword } from '../Interfaces/auth.interface'; 
 import { changePassword } from '../Services/user';
+import { IUser } from '../Interfaces/user.interface';
 
 const initialValue: IChangePassword = {
   currentPassword: '',

@@ -15,7 +15,7 @@ import { SidebarMobileMenu } from './SidebarMobileMenu';
 import { Modal } from './Modal';
 import { useState } from 'react';
 import { TransferForm } from './TransferForm';
-import { IUser } from '../Interfaces/interfaces';
+import { IUser } from '../Interfaces/user.interface';
 
 export const SidebarDashboard = ({ user }: { user: IUser | null }) => {
   const [ openModal, setOpenModal ] = useState(false);

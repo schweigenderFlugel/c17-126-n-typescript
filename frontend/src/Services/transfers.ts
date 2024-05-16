@@ -1,7 +1,6 @@
 import { Axios } from './axios';
-import { ICreateTransaction } from '../Interfaces/interfaces';
-import { IDeposit } from '../Interfaces/interfaces';
-
+import { ICreateTransaction } from '../Interfaces/transactions.interface'; 
+import { IDeposit } from '../Interfaces/transactions.interface'; 
 const controller = new AbortController();
 
 export const createTransaction = async (data: ICreateTransaction): Promise<void> => {

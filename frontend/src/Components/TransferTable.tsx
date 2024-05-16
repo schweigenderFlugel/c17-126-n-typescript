@@ -1,41 +1,31 @@
 import { HiChevronLeft, HiChevronRight } from 'react-icons/hi2';
-import { IBankAccount, ITransactions, ITransactionsReceived, ITransactionsSent } from '../Interfaces/interfaces';
-
 import { TableRow } from './TransferRow';
-
-enum MONTHS {
-  JANUARY = '1',
-  FEBRUARY = '2',
-  MARCH = 'marzo',
-  APRIL = 'abril',
-  MAY = 'mayo',
-  JUNE = 'junio',
-  JULY = 'julio',
-  AUGUST = 'agosto',
-  SEPTEMBER = 'septiembre',
-  OCTOBER = 'octubre',
-  NOVEMBER = 'noviembre',
-  DECEMBER = 'diciembre',
-}
+import { 
+  IBankAccount, 
+  ITransactionReceived, 
+  ITransactionSent, 
+  ITransactionsTable 
+} from '../Interfaces/user.interface';
+import { MONTHS } from '../data/enums';
 
 export const TransferTable = ({ 
   sent,
   received,
   bank_account 
 }: { 
-  sent: ITransactionsSent[]
-  received: ITransactionsReceived[],
+  sent: ITransactionSent[]
+  received: ITransactionReceived[],
   bank_account: IBankAccount | undefined
 }) => {
 
-  let transactions: ITransactions[] = [];
+  let transactionsTable: ITransactionsTable[] = [];
   
-  sent.forEach((item: ITransactionsSent) => {
-    transactions.push(item);
+  sent.forEach((item: ITransactionSent) => {
+    transactionsTable.push(item)
   })
   
-  received.forEach((item: ITransactionsReceived) => {
-    transactions.push(item);
+  received.forEach((item: ITransactionReceived) => {
+    transactionsTable.push(item);
   })
 
 
@@ -47,7 +37,7 @@ export const TransferTable = ({
         <div className="max-[800px]:justify-self-end">Cantidad</div>
         <div className="max-[800px]:hidden">Fecha</div>
       </TableRow>
-      {transactions?.map(
+      {transactionsTable?.map(
         ({ destination_account, id, amount, from, to, date_transaction }) => {
           const isReceived = destination_account === bank_account?.id;
           const year = parseInt(date_transaction.substring(0, 4));
@@ -123,7 +113,7 @@ export const TransferTable = ({
         <div className="flex justify-between col-span-full">
           <div>
             Mostrando del <span className="font-bold">1</span> al{' '}
-            <span className="font-bold">{transactions.length}</span> de{' '}
+            <span className="font-bold">{transactionsTable.length}</span> de{' '}
             <span className="font-bold">10</span> transferencias
           </div>
           <div className="flex gap-2">

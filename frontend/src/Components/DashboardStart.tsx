@@ -1,5 +1,6 @@
 import { useAuth } from '../Hooks/useAuth';
-import { IUser } from '../Interfaces/interfaces';
+import { IUser } from '../Interfaces/user.interface';
+
 import { BalanceCard } from './BalanceCard';
 import { DashboardNavbar } from './DashboardNavbar';
 import { LastTransfersTable } from './LastTransfersTable';

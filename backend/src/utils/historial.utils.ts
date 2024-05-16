@@ -4,7 +4,6 @@ import { IBankAccount } from "../interfaces/bankAccount.interface";
 import { IHistorial } from "../interfaces/historial.interface";
 import { IUserTransactionsResponse } from "../interfaces/transaction.interface";
 import { IAllUserData } from "../interfaces/user.interface";
-import { AnualHistorialModel } from "../models/db/entity/anual-historial.entity";
 import { HistorialModel } from "../models/db/entity/historial.entity";
 import anualHistorialService from "../services/anualHistorial.services";
 import historialService from "../services/historial.services";
@@ -18,6 +17,41 @@ export default class HistorialUtils {
       received: [],
     };
 
+    userData.bank_account.dataValues.transactions_sent.forEach(sent => {
+      transactions.sent?.push({
+        id: sent.dataValues.id,
+        source_account: sent.dataValues.source_account,
+        destination_account: sent.dataValues.destination_account,
+        amount: sent.dataValues.amount,
+        date_transaction: sent.dataValues.date_transaction,
+        month: sent.dataValues.month.dataValues.month,
+        year: sent.dataValues.month.dataValues.year.dataValues.year,
+        to: {
+          user: {
+            name: sent.dataValues.to.dataValues.user.dataValues.name,
+            lastname: sent.dataValues.to.dataValues.user.dataValues.lastname,
+          }
+        }
+      });
+    })
+    userData.bank_account.dataValues.transactions_received.forEach(received => {
+      transactions.received?.push({
+        id: received.dataValues.id,
+        source_account: received.dataValues.source_account,
+        destination_account: received.dataValues.destination_account,
+        amount: received.dataValues.amount,
+        date_transaction: received.dataValues.date_transaction,
+        month: received.dataValues.month.dataValues.month,
+        year: received.dataValues.month.dataValues.year.dataValues.year,
+        from: {
+          user: {
+            name: received.dataValues.from.dataValues.user.dataValues.name,
+            lastname: received.dataValues.from.dataValues.user.dataValues.lastname,
+          }
+        }
+      });
+    })
+
     userData.bank_account.dataValues.anual_historial.forEach(item => {
         anual_historials.push({ year: item.dataValues.year, month: {} });
         item.dataValues.months.forEach(historial => {
@@ -25,40 +59,6 @@ export default class HistorialUtils {
             case 1:
               anual_historials.forEach(anual_historial => {
                 if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
-                  userData.bank_account.dataValues.transactions_sent.forEach(sent => {
-                    transactions.sent?.push({
-                      id: sent.dataValues.id,
-                      source_account: sent.dataValues.source_account,
-                      destination_account: sent.dataValues.destination_account,
-                      amount: sent.dataValues.amount,
-                      date_transaction: sent.dataValues.date_transaction,
-                      month: sent.dataValues.month.dataValues.month,
-                      year: sent.dataValues.month.dataValues.year.dataValues.year,
-                      to: {
-                        user: {
-                          name: sent.dataValues.to.dataValues.user.dataValues.name,
-                          lastname: sent.dataValues.to.dataValues.user.dataValues.lastname,
-                        }
-                      }
-                    });
-                  })
-                  userData.bank_account.dataValues.transactions_received.forEach(received => {
-                    transactions.received?.push({
-                      id: received.dataValues.id,
-                      source_account: received.dataValues.source_account,
-                      destination_account: received.dataValues.destination_account,
-                      amount: received.dataValues.amount,
-                      date_transaction: received.dataValues.date_transaction,
-                      month: received.dataValues.month.dataValues.month,
-                      year: received.dataValues.month.dataValues.year.dataValues.year,
-                      from: {
-                        user: {
-                          name: received.dataValues.from.dataValues.user.dataValues.name,
-                          lastname: received.dataValues.from.dataValues.user.dataValues.lastname,
-                        }
-                      }
-                    });
-                  })
                   anual_historial.month.jan = {
                     balance: historial.dataValues.balance,
                     expenses: historial.dataValues.expenses,
@@ -80,40 +80,6 @@ export default class HistorialUtils {
             case 2:
               anual_historials.forEach(anual_historial => {
                 if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
-                  userData.bank_account.dataValues.transactions_sent.forEach(sent => {
-                    transactions.sent?.push({
-                      id: sent.dataValues.id,
-                      source_account: sent.dataValues.source_account,
-                      destination_account: sent.dataValues.destination_account,
-                      amount: sent.dataValues.amount,
-                      date_transaction: sent.dataValues.date_transaction,
-                      month: sent.dataValues.month.dataValues.month,
-                      year: sent.dataValues.month.dataValues.year.dataValues.year,
-                      to: {
-                        user: {
-                          name: sent.dataValues.to.dataValues.user.dataValues.name,
-                          lastname: sent.dataValues.to.dataValues.user.dataValues.lastname,
-                        }
-                      }
-                    });
-                  })
-                  userData.bank_account.dataValues.transactions_received.forEach(received => {
-                    transactions.received?.push({
-                      id: received.dataValues.id,
-                      source_account: received.dataValues.source_account,
-                      destination_account: received.dataValues.destination_account,
-                      amount: received.dataValues.amount,
-                      date_transaction: received.dataValues.date_transaction,
-                      month: received.dataValues.month.dataValues.month,
-                      year: received.dataValues.month.dataValues.year.dataValues.year,
-                      from: {
-                        user: {
-                          name: received.dataValues.from.dataValues.user.dataValues.name,
-                          lastname: received.dataValues.from.dataValues.user.dataValues.lastname,
-                        }
-                      }
-                    });
-                  })
                   anual_historial.month.feb = {
                     balance: historial.dataValues.balance,
                     expenses: historial.dataValues.expenses,
@@ -135,40 +101,6 @@ export default class HistorialUtils {
             case 3:
               anual_historials.forEach(anual_historial => {
                 if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
-                  userData.bank_account.dataValues.transactions_sent.forEach(sent => {
-                    transactions.sent?.push({
-                      id: sent.dataValues.id,
-                      source_account: sent.dataValues.source_account,
-                      destination_account: sent.dataValues.destination_account,
-                      amount: sent.dataValues.amount,
-                      date_transaction: sent.dataValues.date_transaction,
-                      month: sent.dataValues.month.dataValues.month,
-                      year: sent.dataValues.month.dataValues.year.dataValues.year,
-                      to: {
-                        user: {
-                          name: sent.dataValues.to.dataValues.user.dataValues.name,
-                          lastname: sent.dataValues.to.dataValues.user.dataValues.lastname,
-                        }
-                      }
-                    });
-                  })
-                  userData.bank_account.dataValues.transactions_received.forEach(received => {
-                    transactions.received?.push({
-                      id: received.dataValues.id,
-                      source_account: received.dataValues.source_account,
-                      destination_account: received.dataValues.destination_account,
-                      amount: received.dataValues.amount,
-                      date_transaction: received.dataValues.date_transaction,
-                      month: received.dataValues.month.dataValues.month,
-                      year: received.dataValues.month.dataValues.year.dataValues.year,
-                      from: {
-                        user: {
-                          name: received.dataValues.from.dataValues.user.dataValues.name,
-                          lastname: received.dataValues.from.dataValues.user.dataValues.lastname,
-                        }
-                      }
-                    });
-                  })
                   anual_historial.month.mar = {
                     balance: historial.dataValues.balance,
                     expenses: historial.dataValues.expenses,
@@ -190,40 +122,6 @@ export default class HistorialUtils {
             case 4:
               anual_historials.forEach(anual_historial => {
                 if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
-                  userData.bank_account.dataValues.transactions_sent.forEach(sent => {
-                    transactions.sent?.push({
-                      id: sent.dataValues.id,
-                      source_account: sent.dataValues.source_account,
-                      destination_account: sent.dataValues.destination_account,
-                      amount: sent.dataValues.amount,
-                      date_transaction: sent.dataValues.date_transaction,
-                      month: sent.dataValues.month.dataValues.month,
-                      year: sent.dataValues.month.dataValues.year.dataValues.year,
-                      to: {
-                        user: {
-                          name: sent.dataValues.to.dataValues.user.dataValues.name,
-                          lastname: sent.dataValues.to.dataValues.user.dataValues.lastname,
-                        }
-                      }
-                    });
-                  })
-                  userData.bank_account.dataValues.transactions_received.forEach(received => {
-                    transactions.received?.push({
-                      id: received.dataValues.id,
-                      source_account: received.dataValues.source_account,
-                      destination_account: received.dataValues.destination_account,
-                      amount: received.dataValues.amount,
-                      date_transaction: received.dataValues.date_transaction,
-                      month: received.dataValues.month.dataValues.month,
-                      year: received.dataValues.month.dataValues.year.dataValues.year,
-                      from: {
-                        user: {
-                          name: received.dataValues.from.dataValues.user.dataValues.name,
-                          lastname: received.dataValues.from.dataValues.user.dataValues.lastname,
-                        }
-                      }
-                    });
-                  })
                   anual_historial.month.apr = {
                     balance: historial.dataValues.balance,
                     expenses: historial.dataValues.expenses,
@@ -245,40 +143,6 @@ export default class HistorialUtils {
             case 5:
               anual_historials.forEach(anual_historial => {
                 if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
-                  userData.bank_account.dataValues.transactions_sent.forEach(sent => {
-                    transactions.sent?.push({
-                      id: sent.dataValues.id,
-                      source_account: sent.dataValues.source_account,
-                      destination_account: sent.dataValues.destination_account,
-                      amount: sent.dataValues.amount,
-                      date_transaction: sent.dataValues.date_transaction,
-                      month: sent.dataValues.month.dataValues.month,
-                      year: sent.dataValues.month.dataValues.year.dataValues.year,
-                      to: {
-                        user: {
-                          name: sent.dataValues.to.dataValues.user.dataValues.name,
-                          lastname: sent.dataValues.to.dataValues.user.dataValues.lastname,
-                        }
-                      }
-                    });
-                  })
-                  userData.bank_account.dataValues.transactions_received.forEach(received => {
-                    transactions.received?.push({
-                      id: received.dataValues.id,
-                      source_account: received.dataValues.source_account,
-                      destination_account: received.dataValues.destination_account,
-                      amount: received.dataValues.amount,
-                      date_transaction: received.dataValues.date_transaction,
-                      month: received.dataValues.month.dataValues.month,
-                      year: received.dataValues.month.dataValues.year.dataValues.year,
-                      from: {
-                        user: {
-                          name: received.dataValues.from.dataValues.user.dataValues.name,
-                          lastname: received.dataValues.from.dataValues.user.dataValues.lastname,
-                        }
-                      }
-                    });
-                  })
                   anual_historial.month.may = {
                     balance: historial.dataValues.balance,
                     expenses: historial.dataValues.expenses,
@@ -300,40 +164,6 @@ export default class HistorialUtils {
             case 6:
               anual_historials.forEach(anual_historial => {
                 if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
-                  userData.bank_account.dataValues.transactions_sent.forEach(sent => {
-                    transactions.sent?.push({
-                      id: sent.dataValues.id,
-                      source_account: sent.dataValues.source_account,
-                      destination_account: sent.dataValues.destination_account,
-                      amount: sent.dataValues.amount,
-                      date_transaction: sent.dataValues.date_transaction,
-                      month: sent.dataValues.month.dataValues.month,
-                      year: sent.dataValues.month.dataValues.year.dataValues.year,
-                      to: {
-                        user: {
-                          name: sent.dataValues.to.dataValues.user.dataValues.name,
-                          lastname: sent.dataValues.to.dataValues.user.dataValues.lastname,
-                        }
-                      }
-                    });
-                  })
-                  userData.bank_account.dataValues.transactions_received.forEach(received => {
-                    transactions.received?.push({
-                      id: received.dataValues.id,
-                      source_account: received.dataValues.source_account,
-                      destination_account: received.dataValues.destination_account,
-                      amount: received.dataValues.amount,
-                      date_transaction: received.dataValues.date_transaction,
-                      month: received.dataValues.month.dataValues.month,
-                      year: received.dataValues.month.dataValues.year.dataValues.year,
-                      from: {
-                        user: {
-                          name: received.dataValues.from.dataValues.user.dataValues.name,
-                          lastname: received.dataValues.from.dataValues.user.dataValues.lastname,
-                        }
-                      }
-                    });
-                  })
                   anual_historial.month.jun = {
                     balance: historial.dataValues.balance,
                     expenses: historial.dataValues.expenses,
@@ -355,40 +185,6 @@ export default class HistorialUtils {
             case 7:
               anual_historials.forEach(anual_historial => {
                 if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
-                  userData.bank_account.dataValues.transactions_sent.forEach(sent => {
-                    transactions.sent?.push({
-                      id: sent.dataValues.id,
-                      source_account: sent.dataValues.source_account,
-                      destination_account: sent.dataValues.destination_account,
-                      amount: sent.dataValues.amount,
-                      date_transaction: sent.dataValues.date_transaction,
-                      month: sent.dataValues.month.dataValues.month,
-                      year: sent.dataValues.month.dataValues.year.dataValues.year,
-                      to: {
-                        user: {
-                          name: sent.dataValues.to.dataValues.user.dataValues.name,
-                          lastname: sent.dataValues.to.dataValues.user.dataValues.lastname,
-                        }
-                      }
-                    });
-                  })
-                  userData.bank_account.dataValues.transactions_received.forEach(received => {
-                    transactions.received?.push({
-                      id: received.dataValues.id,
-                      source_account: received.dataValues.source_account,
-                      destination_account: received.dataValues.destination_account,
-                      amount: received.dataValues.amount,
-                      date_transaction: received.dataValues.date_transaction,
-                      month: received.dataValues.month.dataValues.month,
-                      year: received.dataValues.month.dataValues.year.dataValues.year,
-                      from: {
-                        user: {
-                          name: received.dataValues.from.dataValues.user.dataValues.name,
-                          lastname: received.dataValues.from.dataValues.user.dataValues.lastname,
-                        }
-                      }
-                    });
-                  })
                   anual_historial.month.jul = {
                     balance: historial.dataValues.balance,
                     expenses: historial.dataValues.expenses,
@@ -410,40 +206,6 @@ export default class HistorialUtils {
             case 8:
               anual_historials.forEach(anual_historial => {
                 if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
-                  userData.bank_account.dataValues.transactions_sent.forEach(sent => {
-                    transactions.sent?.push({
-                      id: sent.dataValues.id,
-                      source_account: sent.dataValues.source_account,
-                      destination_account: sent.dataValues.destination_account,
-                      amount: sent.dataValues.amount,
-                      date_transaction: sent.dataValues.date_transaction,
-                      month: sent.dataValues.month.dataValues.month,
-                      year: sent.dataValues.month.dataValues.year.dataValues.year,
-                      to: {
-                        user: {
-                          name: sent.dataValues.to.dataValues.user.dataValues.name,
-                          lastname: sent.dataValues.to.dataValues.user.dataValues.lastname,
-                        }
-                      }
-                    });
-                  })
-                  userData.bank_account.dataValues.transactions_received.forEach(received => {
-                    transactions.received?.push({
-                      id: received.dataValues.id,
-                      source_account: received.dataValues.source_account,
-                      destination_account: received.dataValues.destination_account,
-                      amount: received.dataValues.amount,
-                      date_transaction: received.dataValues.date_transaction,
-                      month: received.dataValues.month.dataValues.month,
-                      year: received.dataValues.month.dataValues.year.dataValues.year,
-                      from: {
-                        user: {
-                          name: received.dataValues.from.dataValues.user.dataValues.name,
-                          lastname: received.dataValues.from.dataValues.user.dataValues.lastname,
-                        }
-                      }
-                    });
-                  })
                   anual_historial.month.aug = {
                     balance: historial.dataValues.balance,
                     expenses: historial.dataValues.expenses,
@@ -465,40 +227,6 @@ export default class HistorialUtils {
             case 9:
               anual_historials.forEach(anual_historial => {
                 if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
-                  userData.bank_account.dataValues.transactions_sent.forEach(sent => {
-                    transactions.sent?.push({
-                      id: sent.dataValues.id,
-                      source_account: sent.dataValues.source_account,
-                      destination_account: sent.dataValues.destination_account,
-                      amount: sent.dataValues.amount,
-                      date_transaction: sent.dataValues.date_transaction,
-                      month: sent.dataValues.month.dataValues.month,
-                      year: sent.dataValues.month.dataValues.year.dataValues.year,
-                      to: {
-                        user: {
-                          name: sent.dataValues.to.dataValues.user.dataValues.name,
-                          lastname: sent.dataValues.to.dataValues.user.dataValues.lastname,
-                        }
-                      }
-                    });
-                  })
-                  userData.bank_account.dataValues.transactions_received.forEach(received => {
-                    transactions.received?.push({
-                      id: received.dataValues.id,
-                      source_account: received.dataValues.source_account,
-                      destination_account: received.dataValues.destination_account,
-                      amount: received.dataValues.amount,
-                      date_transaction: received.dataValues.date_transaction,
-                      month: received.dataValues.month.dataValues.month,
-                      year: received.dataValues.month.dataValues.year.dataValues.year,
-                      from: {
-                        user: {
-                          name: received.dataValues.from.dataValues.user.dataValues.name,
-                          lastname: received.dataValues.from.dataValues.user.dataValues.lastname,
-                        }
-                      }
-                    });
-                  })
                   anual_historial.month.sep = {
                     balance: historial.dataValues.balance,
                     expenses: historial.dataValues.expenses,
@@ -520,40 +248,6 @@ export default class HistorialUtils {
             case 10:
               anual_historials.forEach(anual_historial => {
                 if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
-                  userData.bank_account.dataValues.transactions_sent.forEach(sent => {
-                    transactions.sent?.push({
-                      id: sent.dataValues.id,
-                      source_account: sent.dataValues.source_account,
-                      destination_account: sent.dataValues.destination_account,
-                      amount: sent.dataValues.amount,
-                      date_transaction: sent.dataValues.date_transaction,
-                      month: sent.dataValues.month.dataValues.month,
-                      year: sent.dataValues.month.dataValues.year.dataValues.year,
-                      to: {
-                        user: {
-                          name: sent.dataValues.to.dataValues.user.dataValues.name,
-                          lastname: sent.dataValues.to.dataValues.user.dataValues.lastname,
-                        }
-                      }
-                    });
-                  })
-                  userData.bank_account.dataValues.transactions_received.forEach(received => {
-                    transactions.received?.push({
-                      id: received.dataValues.id,
-                      source_account: received.dataValues.source_account,
-                      destination_account: received.dataValues.destination_account,
-                      amount: received.dataValues.amount,
-                      date_transaction: received.dataValues.date_transaction,
-                      month: received.dataValues.month.dataValues.month,
-                      year: received.dataValues.month.dataValues.year.dataValues.year,
-                      from: {
-                        user: {
-                          name: received.dataValues.from.dataValues.user.dataValues.name,
-                          lastname: received.dataValues.from.dataValues.user.dataValues.lastname,
-                        }
-                      }
-                    });
-                  })
                   anual_historial.month.oct = {
                     balance: historial.dataValues.balance,
                     expenses: historial.dataValues.expenses,
@@ -575,40 +269,6 @@ export default class HistorialUtils {
             case 11:
               anual_historials.forEach(anual_historial => {
                 if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
-                  userData.bank_account.dataValues.transactions_sent.forEach(sent => {
-                    transactions.sent?.push({
-                      id: sent.dataValues.id,
-                      source_account: sent.dataValues.source_account,
-                      destination_account: sent.dataValues.destination_account,
-                      amount: sent.dataValues.amount,
-                      date_transaction: sent.dataValues.date_transaction,
-                      month: sent.dataValues.month.dataValues.month,
-                      year: sent.dataValues.month.dataValues.year.dataValues.year,
-                      to: {
-                        user: {
-                          name: sent.dataValues.to.dataValues.user.dataValues.name,
-                          lastname: sent.dataValues.to.dataValues.user.dataValues.lastname,
-                        }
-                      }
-                    });
-                  })
-                  userData.bank_account.dataValues.transactions_received.forEach(received => {
-                    transactions.received?.push({
-                      id: received.dataValues.id,
-                      source_account: received.dataValues.source_account,
-                      destination_account: received.dataValues.destination_account,
-                      amount: received.dataValues.amount,
-                      date_transaction: received.dataValues.date_transaction,
-                      month: received.dataValues.month.dataValues.month,
-                      year: received.dataValues.month.dataValues.year.dataValues.year,
-                      from: {
-                        user: {
-                          name: received.dataValues.from.dataValues.user.dataValues.name,
-                          lastname: received.dataValues.from.dataValues.user.dataValues.lastname,
-                        }
-                      }
-                    });
-                  })
                   anual_historial.month.nov = {
                     balance: historial.dataValues.balance,
                     expenses: historial.dataValues.expenses,
@@ -630,40 +290,6 @@ export default class HistorialUtils {
             case 12:
               anual_historials.forEach(anual_historial => {
                 if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
-                  userData.bank_account.dataValues.transactions_sent.forEach(sent => {
-                    transactions.sent?.push({
-                      id: sent.dataValues.id,
-                      source_account: sent.dataValues.source_account,
-                      destination_account: sent.dataValues.destination_account,
-                      amount: sent.dataValues.amount,
-                      date_transaction: sent.dataValues.date_transaction,
-                      month: sent.dataValues.month.dataValues.month,
-                      year: sent.dataValues.month.dataValues.year.dataValues.year,
-                      to: {
-                        user: {
-                          name: sent.dataValues.to.dataValues.user.dataValues.name,
-                          lastname: sent.dataValues.to.dataValues.user.dataValues.lastname,
-                        }
-                      }
-                    });
-                  })
-                  userData.bank_account.dataValues.transactions_received.forEach(received => {
-                    transactions.received?.push({
-                      id: received.dataValues.id,
-                      source_account: received.dataValues.source_account,
-                      destination_account: received.dataValues.destination_account,
-                      amount: received.dataValues.amount,
-                      date_transaction: received.dataValues.date_transaction,
-                      month: received.dataValues.month.dataValues.month,
-                      year: received.dataValues.month.dataValues.year.dataValues.year,
-                      from: {
-                        user: {
-                          name: received.dataValues.from.dataValues.user.dataValues.name,
-                          lastname: received.dataValues.from.dataValues.user.dataValues.lastname,
-                        }
-                      }
-                    });
-                  })
                   anual_historial.month.dec = {
                     balance: historial.dataValues.balance,
                     expenses: historial.dataValues.expenses,
@@ -692,10 +318,10 @@ export default class HistorialUtils {
     const currentYear = new Date().getFullYear();
     const currentMonth = new Date().getMonth() + 1;
 
-    const anualHistorialFound = await anualHistorialService
+    const anualHistorialsFound = await anualHistorialService
       .getAnualHistorialsByBankAccount(account.id as number);
 
-    const anual_historial = anualHistorialFound?.find(
+    const currentAnualHistorial = anualHistorialsFound?.find(
       anual_historial => anual_historial.year === currentYear
     );
 
@@ -712,28 +338,38 @@ export default class HistorialUtils {
       investments: account.investments as number,
     }
 
-    let historialData: Partial<HistorialModel> = {};
-    let newAnualHistorialData: Partial<HistorialModel> = {};
-    let newHistorialData: Partial<HistorialModel> = {};
+    let historialData: IHistorial = {
+      id: 0,
+      anual_historial_id: 0,
+      month: 0,
+      balance: 0,
+      expenses: 0,
+      investments: 0
+    };
     
-    if (!anual_historial) {
-      newAnualHistorialData === await this.createNewAnualHistorial(account.id as number, newHistorialPayload)
+    if (!currentAnualHistorial) {
+      const { historialCreated } = await this
+        .createNewAnualHistorial(account.id as number, newHistorialPayload)
+      historialData = { ...historialCreated.dataValues };
     } else {
-      const historialFound = await historialService.getHistorial(anual_historial.id);
-      if (historialFound?.dataValues.month === currentMonth) {
-        historialData === await historialService.updateHistorial(
-          historialFound.dataValues.id, 
+      const historialsFound = await historialService.getHistorials(currentAnualHistorial.id);
+      const currentHistorial = historialsFound?.find(historial => historial.month === currentMonth);
+      if (currentHistorial) {
+        historialData = { ...currentHistorial.dataValues }
+        await historialService.updateHistorial(
+          currentHistorial.dataValues.id, 
           historialPayload
         )
       } else {
-        newHistorialData === await historialService.createHistorial({
-          anual_historial_id: anual_historial?.dataValues.id as number,
+        const historialCreated = await historialService.createHistorial({
+          anual_historial_id: currentAnualHistorial.dataValues.id,
           ...newHistorialPayload
         })
+        historialData = { ...historialCreated.dataValues }
       }
     }
       
-    return { historialData, newHistorialData, newAnualHistorialData };
+    return { historialData };
   }
 
   static async createNewAnualHistorial(

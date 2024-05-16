@@ -9,10 +9,10 @@ import { HistorialModel } from '../models/db/entity/historial.entity';
      * @param {number} id - The id of the historial.
      * @return {Promise<HistorialModel>} The monthly historial.
      */
-    static async getHistorial(
+    static async getHistorials(
       anualHistorial: number
-    ): Promise<HistorialModel | null> {
-      const anualHistorialCreated = await historialDao.getInstance().getHistorial(anualHistorial);
+    ): Promise<HistorialModel[] | null> {
+      const anualHistorialCreated = await historialDao.getInstance().getHistorials(anualHistorial);
       return anualHistorialCreated;
     }
 

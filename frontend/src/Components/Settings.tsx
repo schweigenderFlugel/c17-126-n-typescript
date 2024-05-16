@@ -4,7 +4,7 @@ import { HiLockClosed } from 'react-icons/hi2';
 import { FormRow } from './FormRow';
 import { useAuth } from '../Hooks/useAuth';
 import { updateUser } from '../Services/user';
-import { UserSettingsType } from '../Interfaces/interfaces';
+import { UserSettingsType } from '../Interfaces/auth.interface'; 
 import { AxiosError } from 'axios';
 import toast from 'react-hot-toast';
 import { Modal } from './Modal';

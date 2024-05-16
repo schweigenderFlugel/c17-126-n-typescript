@@ -21,10 +21,10 @@ export default class historialDao {
    * @param {number} id The id of the historial.
    * @return {Promise<HistorialModel>} The monthly historial.
    */
-  async getHistorial(
+  async getHistorials(
     id: number
-  ): Promise<HistorialModel | null> {
-    const historialFound: HistorialModel | null = await Historial.findOne({
+  ): Promise<HistorialModel[] | null> {
+    const historialFound: HistorialModel[] | null = await Historial.findAll({
       where: { anual_historial_id: id }
     })
     return historialFound;

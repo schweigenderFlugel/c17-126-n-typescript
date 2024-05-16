@@ -8,10 +8,6 @@ import { ITransaction, ITransactionDataDetails } from '../interfaces/transaction
 import { IUserToken } from '../interfaces/user.interface'
 import apiSuccessResponse from '../utils/apiResponse.utils'
 import transactionHelper from '../utils/transactionsHelper'
-import anualHistorialService from '../services/anualHistorial.services'
-import historialService from '../services/historial.services'
-import { IAnualHistorial } from '../interfaces/anualHistorial.interface'
-import { IHistorial } from '../interfaces/historial.interface'
 import HistorialUtils from '../utils/historial.utils'
 
 export default class transfersController {
@@ -113,14 +109,10 @@ export default class transfersController {
 
       const operationNumber = await transactionHelper.generateOperationNumber();
 
-      const { historialData, newHistorialData, newAnualHistorialData } = await HistorialUtils.updateHistorials(sourceAccountFound);
-      const historial_id = 
-        historialData.dataValues?.id || 
-        newHistorialData.dataValues?.id ||
-        newAnualHistorialData.dataValues?.id
+      const { historialData } = await HistorialUtils.updateHistorials(sourceAccountFound);
 
       const transactionPayload: ITransaction = {
-        historial_id: historial_id as number,
+        historial_id: historialData.id,
         operation_number: operationNumber,
         source_account: sourceAccountData.id,
         destination_account: destinationAccountFound.id,
@@ -149,7 +141,6 @@ export default class transfersController {
 
       res.status(HTTP_STATUS.CREATED).json(response)
     } catch (err) {
-      console.log(err)
       next(err)
     }
   }

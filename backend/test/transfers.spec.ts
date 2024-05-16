@@ -9,7 +9,7 @@ import { adminUserToken, normalUserToken, tokenWithInvalidPayload } from '../src
 import { bankAccount1, bankAccount2 } from '../src/models/db/seeders/3-bank-account';
 import { adminUser, normalUser } from '../src/models/db/seeders/2-user';
 import { TYPETRANSFERS } from '../src/config/constants';
-import { transaction1 } from '../src/models/db/seeders/6-transaction';
+import { transaction1 } from '../src/models/db/seeders/7-transaction';
 
 describe('Testing the auth route', () => {
   let app;

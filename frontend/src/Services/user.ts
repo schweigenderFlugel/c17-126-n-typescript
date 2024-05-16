@@ -1,6 +1,7 @@
 import { AxiosResponse } from 'axios'
-import { ILoginPayload, ISignUpPayload, ICreateUserPayload, IUser, UserSettingsType, IChangePassword } from '../Interfaces/interfaces'
 import { Axios, AxiosAuth } from './axios'
+import { IChangePassword, ICreateUserPayload, ILoginPayload, ISignUpPayload, UserSettingsType } from '../Interfaces/auth.interface'
+import { IUser } from '../Interfaces/user.interface'
 
 const controller = new AbortController()
 

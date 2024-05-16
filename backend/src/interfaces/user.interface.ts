@@ -25,6 +25,7 @@ export interface IAllUserData {
   id: number;
   name: string;
   lastname: string;
+  accountType: string;
   avatar: string;
   address: string;
   phone: string
@@ -38,6 +39,7 @@ export interface IUserResponse {
   id: number;
   name: string;
   lastname: string;
+  accountType: string;
   avatar: string;
   address: string;
   phone: string;        
@@ -56,6 +58,13 @@ export interface IUserResponse {
     expenses: number;
     investments: number;
     anual_historial: Partial<IAnualHistorialDataResponse[]>,
+  }
+}
+
+export interface IUserCreatedData {
+  success: boolean,
+  payload: {
+    userCreatedResponse: IUserResponse
   }
 }
 

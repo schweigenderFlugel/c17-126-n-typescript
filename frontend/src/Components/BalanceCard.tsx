@@ -1,4 +1,4 @@
-import { IBankAccount } from '../Interfaces/interfaces';
+import { IBankAccount } from '../Interfaces/user.interface'; 
 import { HistoryGraph } from './HistoryGraph';
 
 export const BalanceCard = ( { bank_account }: { bank_account: IBankAccount | undefined }) => {

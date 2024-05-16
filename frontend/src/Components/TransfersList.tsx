@@ -1,14 +1,13 @@
 import { useAuth } from '../Hooks/useAuth';
-import { IBankAccount, ITransactionsReceived, ITransactionsSent } from '../Interfaces/interfaces';
+import { IBankAccount } from '../Interfaces/user.interface';
+import { transactions } from '../data/transactions';
 import { DashboardNavbar } from './DashboardNavbar';
 import { TransferTable } from './TransferTable';
 
 export const TransfersList = () => {
   const { userData } = useAuth();
-
   const bank_account = userData?.bank_account as IBankAccount;
-  const sent = userData?.bank_account.transactions_sent as ITransactionsSent[];
-  const received = userData?.bank_account.transactions_received as ITransactionsReceived[];
+  const { sent, received } = transactions(bank_account);
 
   return (
     <main className="flex flex-col bg-transparent w-full h-full dark:text-white">
