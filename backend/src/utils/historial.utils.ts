@@ -59,6 +59,7 @@ export default class HistorialUtils {
               anual_historials.forEach(anual_historial => {
                 if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
                   anual_historial.month.jan = {
+                    month: historial.dataValues.month,
                     balance: historial.dataValues.balance,
                     expenses: historial.dataValues.expenses,
                     investments: historial.dataValues.investments,
@@ -80,6 +81,7 @@ export default class HistorialUtils {
               anual_historials.forEach(anual_historial => {
                 if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
                   anual_historial.month.feb = {
+                    month: historial.dataValues.month,
                     balance: historial.dataValues.balance,
                     expenses: historial.dataValues.expenses,
                     investments: historial.dataValues.investments,
@@ -101,6 +103,7 @@ export default class HistorialUtils {
               anual_historials.forEach(anual_historial => {
                 if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
                   anual_historial.month.mar = {
+                    month: historial.dataValues.month,
                     balance: historial.dataValues.balance,
                     expenses: historial.dataValues.expenses,
                     investments: historial.dataValues.investments,
@@ -122,6 +125,7 @@ export default class HistorialUtils {
               anual_historials.forEach(anual_historial => {
                 if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
                   anual_historial.month.apr = {
+                    month: historial.dataValues.month,
                     balance: historial.dataValues.balance,
                     expenses: historial.dataValues.expenses,
                     investments: historial.dataValues.investments,
@@ -143,6 +147,7 @@ export default class HistorialUtils {
               anual_historials.forEach(anual_historial => {
                 if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
                   anual_historial.month.may = {
+                    month: historial.dataValues.month,
                     balance: historial.dataValues.balance,
                     expenses: historial.dataValues.expenses,
                     investments: historial.dataValues.investments,
@@ -164,6 +169,7 @@ export default class HistorialUtils {
               anual_historials.forEach(anual_historial => {
                 if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
                   anual_historial.month.jun = {
+                    month: historial.dataValues.month,
                     balance: historial.dataValues.balance,
                     expenses: historial.dataValues.expenses,
                     investments: historial.dataValues.investments,
@@ -185,6 +191,7 @@ export default class HistorialUtils {
               anual_historials.forEach(anual_historial => {
                 if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
                   anual_historial.month.jul = {
+                    month: historial.dataValues.month,
                     balance: historial.dataValues.balance,
                     expenses: historial.dataValues.expenses,
                     investments: historial.dataValues.investments,
@@ -206,6 +213,7 @@ export default class HistorialUtils {
               anual_historials.forEach(anual_historial => {
                 if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
                   anual_historial.month.aug = {
+                    month: historial.dataValues.month,
                     balance: historial.dataValues.balance,
                     expenses: historial.dataValues.expenses,
                     investments: historial.dataValues.investments,
@@ -227,6 +235,7 @@ export default class HistorialUtils {
               anual_historials.forEach(anual_historial => {
                 if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
                   anual_historial.month.sep = {
+                    month: historial.dataValues.month,
                     balance: historial.dataValues.balance,
                     expenses: historial.dataValues.expenses,
                     investments: historial.dataValues.investments,
@@ -248,6 +257,7 @@ export default class HistorialUtils {
               anual_historials.forEach(anual_historial => {
                 if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
                   anual_historial.month.oct = {
+                    month: historial.dataValues.month,
                     balance: historial.dataValues.balance,
                     expenses: historial.dataValues.expenses,
                     investments: historial.dataValues.investments,
@@ -269,6 +279,7 @@ export default class HistorialUtils {
               anual_historials.forEach(anual_historial => {
                 if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
                   anual_historial.month.nov = {
+                    month: historial.dataValues.month,
                     balance: historial.dataValues.balance,
                     expenses: historial.dataValues.expenses,
                     investments: historial.dataValues.investments,
@@ -290,6 +301,7 @@ export default class HistorialUtils {
               anual_historials.forEach(anual_historial => {
                 if (anual_historial?.year === historial.dataValues.year.dataValues.year) {
                   anual_historial.month.dec = {
+                    month: historial.dataValues.month,
                     balance: historial.dataValues.balance,
                     expenses: historial.dataValues.expenses,
                     investments: historial.dataValues.investments,
@@ -334,45 +346,43 @@ export default class HistorialUtils {
 
     const newHistorialPayload: Omit<Omit<IHistorial, 'id'>, 'anual_historial_id'> = {
       month: new Date().getMonth() + 1,
-      balance: sourceAccount.balance as number,
-      expenses: sourceAccount.expenses as number,
-      investments: sourceAccount.investments as number,
+      balance: sourceAccount.balance ?? 0,
+      expenses: sourceAccount.expenses ?? 0,
+      investments: sourceAccount.investments ?? 0,
     }
 
-    let historialData: IHistorial = {
-      id: 0,
-      anual_historial_id: 0,
-      month: 0,
-      balance: 0,
-      expenses: 0,
-      investments: 0
-    };
+    let historialId: IHistorial['id'] = 0;
+    let historialUpdatedData: IHistorial | Partial<IHistorial> = {};
     
     if (!currentAnualHistorial) {
       const { historialCreated } = await this
         .createNewAnualHistorial(sourceAccount.id as number, newHistorialPayload)
-      historialData = { ...historialCreated.dataValues };
+      historialId = historialCreated.dataValues.id;
+      historialUpdatedData = { ...historialCreated.dataValues }
     } else {
       const historialsFound = await historialService.getHistorials(currentAnualHistorial.id);
       const currentHistorial = historialsFound?.find(historial => historial.month === currentMonth);
       if (currentHistorial) {
-        historialData = { ...currentHistorial.dataValues }
+        historialId = currentHistorial.dataValues.id;
         await historialService.updateHistorial(
-          currentHistorial.dataValues.id, 
+          historialId, 
           historialPayload
         )
+        const historialUpdated = await historialService.getHistorial(historialId)
+        historialUpdatedData = { ...historialUpdated?.dataValues }
       } else {
         const historialCreated = await historialService.createHistorial({
           anual_historial_id: currentAnualHistorial.dataValues.id,
           ...newHistorialPayload
         })
-        historialData = { ...historialCreated.dataValues }
+        historialId = historialCreated.dataValues.id;
+        historialUpdatedData = { ...historialCreated.dataValues }
       }
     }
 
     if (destinationAccount) await this.updateDestinationAccount(destinationAccount);
 
-    return { historialData };
+    return { historialId, historialUpdatedData };
   }
 
   static async updateDestinationAccount(destinationAccount: Partial<IBankAccount>) {

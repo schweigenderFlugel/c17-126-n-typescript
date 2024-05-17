@@ -1,8 +1,8 @@
 import { TRANSACTION_STATUS, TYPETRANSFERS } from "../../../config/constants";
 import { ITransaction } from "../../../interfaces/transaction.interface";
 import { Transaction } from "../entity/transaction.entity";
-import { bankAccount1, bankAccount2 } from "./4-bank-account";
-import { historial1, historial3, historial5, historial7 } from "./6-historial";
+import { bankAccount1, bankAccount2 } from "./5-bank-account";
+import { historial1, historial3, historial5, historial7 } from "./7-historial";
 
 export const transaction1: ITransaction = {
   id: 1,

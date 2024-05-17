@@ -1,11 +1,9 @@
 import { ICommon } from "./common.interface";
-import { ISession } from "./session.interface";
 
 export interface IAuth extends ICommon {
   email: string;
   password: string;
   role: string;
-  refreshToken: string | null;
   status: boolean;
 }
 

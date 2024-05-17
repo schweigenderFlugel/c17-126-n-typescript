@@ -4,16 +4,29 @@ import { HistorialModel } from '../models/db/entity/historial.entity';
   
   export default class historialService {
     /**
+     * Get all the historials with the given anual historial id.
+     *
+     * @param {number} anual_historial_id - The id of the anual historial.
+     * @return {Promise<HistorialModel>} All the monthly historials.
+     */
+    static async getHistorials(
+      anual_historial_id: number
+    ): Promise<HistorialModel[] | null> {
+      const historialsFound = await historialDao.getInstance().getHistorials(anual_historial_id);
+      return historialsFound;
+    }
+
+    /**
      * Get the historial with the given id.
      *
      * @param {number} id - The id of the historial.
      * @return {Promise<HistorialModel>} The monthly historial.
      */
-    static async getHistorials(
-      anualHistorial: number
-    ): Promise<HistorialModel[] | null> {
-      const anualHistorialCreated = await historialDao.getInstance().getHistorials(anualHistorial);
-      return anualHistorialCreated;
+    static async getHistorial(
+      id: number
+    ): Promise<HistorialModel | null> {
+      const historialFound = await historialDao.getInstance().getHistorial(id);
+      return historialFound;
     }
 
     /**
@@ -35,17 +48,17 @@ import { HistorialModel } from '../models/db/entity/historial.entity';
      * Updates the historial by its ID with the provided historial payload.
      *
      * @param {number} id - The ID of the historial to update.
-     * @param {IHistorial} bankAccountPayload - The payload containing the updated historial information.
+     * @param {IHistorial} historialPayload - The payload containing the updated historial information.
      * @return {Promise<HistorialModel | null>} The updated historial model or null if not found.
      */
     static async updateHistorial(
       id: number,
-      bankAccountPayload: Partial<IHistorial>
+      historialPayload: Partial<IHistorial>
     ): Promise<HistorialModel | null> {
-      const bankAccountUpdated = await historialDao
+      const historialUpdated = await historialDao
         .getInstance()
-        .updateHistorial(id, bankAccountPayload)
-      return bankAccountUpdated
+        .updateHistorial(id, historialPayload)
+      return historialUpdated
     }
   
     /**
@@ -55,10 +68,10 @@ import { HistorialModel } from '../models/db/entity/historial.entity';
      * @return {Promise<number>} The number of historials deleted.
      */
     static async deleteHistorial(id: number): Promise<number> {
-      const anualHistorialDeleted = await historialDao
+      const historialDeleted = await historialDao
         .getInstance()
         .deleteHistorial(id)
-      return anualHistorialDeleted
+      return historialDeleted
     }
   }
   

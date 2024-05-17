@@ -4,11 +4,13 @@ import bankAccountService from '../services/bankAccount.services'
 import HttpError from '../utils/HttpError.utils'
 import { IDestinationAccountData, ISourceAccountData } from '../interfaces/bankAccount.interface'
 import transactionService from '../services/transaction.services'
-import { ITransaction, ITransactionDataDetails } from '../interfaces/transaction.interface'
+import { ITransaction, ITransactionCreatedResponse, ITransactionDataDetails } from '../interfaces/transaction.interface'
 import { IUserToken } from '../interfaces/user.interface'
 import apiSuccessResponse from '../utils/apiResponse.utils'
 import transactionHelper from '../utils/transactionsHelper'
 import HistorialUtils from '../utils/historial.utils'
+import { TransactionModel } from '../models/db/entity/transaction.entity'
+import { IHistorial } from '../interfaces/historial.interface'
 
 export default class transfersController {
   static async getTransferDetails(
@@ -107,12 +109,16 @@ export default class transfersController {
         )
       }
 
+      sourceAccountData.balance = sourceAccountData.balance - amount;
+      sourceAccountData.expenses = sourceAccountData.expenses + amount;
+      destinationAccountData.balance = destinationAccountData.balance + amount;
+
       const operationNumber = await transactionHelper.generateOperationNumber();
 
-      const { historialData } = await HistorialUtils.updateHistorials(sourceAccountFound, destinationAccountData);
+      const { historialId, historialUpdatedData } = await HistorialUtils.updateHistorials(sourceAccountData, destinationAccountData);
 
       const transactionPayload: ITransaction = {
-        historial_id: historialData.id,
+        historial_id: historialId,
         operation_number: operationNumber,
         source_account: sourceAccountData.id,
         destination_account: destinationAccountFound.id,
@@ -126,7 +132,6 @@ export default class transfersController {
         transactionPayload,
         sourceAccountData,
         destinationAccountData,
-        amount
       )
 
       if (!transactionCreated) {
@@ -137,7 +142,12 @@ export default class transfersController {
         )
       }
 
-      const response = apiSuccessResponse(transactionCreated)
+      const transactionCreatedResponse: ITransactionCreatedResponse = {
+        ...transactionCreated.dataValues,
+        historial: { ...historialUpdatedData }
+      }
+
+      const response = apiSuccessResponse(transactionCreatedResponse)
 
       res.status(HTTP_STATUS.CREATED).json(response)
     } catch (err) {

@@ -29,11 +29,6 @@ export const Auth = sequelize.define<AuthModel>('auth', {
     allowNull: false,
     defaultValue: Roles.NORMAL,
   },
-  refreshToken: {
-    field: 'refresh_token',
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
   status: {
     type: DataTypes.BOOLEAN,
     allowNull: false,

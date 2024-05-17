@@ -1,6 +1,6 @@
 import { IBankAccount } from "../../../interfaces/bankAccount.interface";
 import { BankAccount } from "../entity/bank-account.entity";
-import { adminUser, normalUser } from "./2-user";
+import { adminUser, normalUser } from "./3-user";
 
 interface BankAccountFixture extends Omit<IBankAccount, 'userId'> {
   user_id: number;

@@ -1,8 +1,4 @@
-import { 
-  IUserTransactionReceivedData, 
-  IUserTransactionSentData, 
-  IUserTransactionsResponse 
-} from "./transaction.interface";
+import { IUserTransactionsResponse } from "./transaction.interface";
 
 export interface IHistorial {
   id: number;
@@ -25,7 +21,7 @@ export interface IUserHistorial {
 }
 
 export interface IUserHistorialResponse {
-  month?: number;
+  month: number;
   balance: number;
   expenses: number;
   investments: number;

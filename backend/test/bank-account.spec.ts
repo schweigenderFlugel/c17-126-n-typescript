@@ -6,7 +6,7 @@ import createExpressApp from '../src/config/createApp';
 import { sequelize } from '../src/models/db/database.manager';
 import { upSeed } from './utils/umzug';
 import { adminUserToken,
-  nonUserToken, 
+  authWithoutUserToken, 
   normalUserToken, 
   tokenWithInvalidPayload 
 } from '../src/models/db/seeders/1-auth';
@@ -44,7 +44,7 @@ describe('Testing the auth route', () => {
         amount: 10,
       }
       const { statusCode } = await api.put('/api/v1/bank-account/deposit/3')
-        .auth(nonUserToken, { type: 'bearer' })
+        .auth(authWithoutUserToken, { type: 'bearer' })
         .send(data);
       expect(statusCode).toBe(404);
     })

@@ -1,4 +1,5 @@
 import { IDestinationAccountData, ISourceAccountData } from "./bankAccount.interface"
+import { IHistorial } from "./historial.interface"
 
 export interface ITransaction {
   id?: number
@@ -117,4 +118,8 @@ export interface IUserTransactionReceivedResponse {
 export interface IUserTransactionsResponse {
   sent: Partial<IUserTransactionSentResponse[]>;
   received: Partial<IUserTransactionReceivedResponse[]>;
+}
+
+export interface ITransactionCreatedResponse extends ITransaction {
+  historial: Partial<IHistorial>
 }

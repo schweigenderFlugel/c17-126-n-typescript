@@ -213,7 +213,6 @@ export default class TransactionDao {
     transactionPayload: ITransaction,
     sourceAccountPayload: ISourceAccountData,
     destinationAccountPayload: IDestinationAccountData,
-    amount: number
   ): Promise<TransactionModel | null> {
     const transaction = await sequelize.transaction()
     try {
@@ -221,21 +220,14 @@ export default class TransactionDao {
         transaction: transaction,
       })
 
-      await BankAccount.update(
-        {
-          balance: sourceAccountPayload.balance - amount,
-          expenses: sourceAccountPayload.expenses + amount,
-        },
+      await BankAccount.update(sourceAccountPayload,
         {
           where: { id: sourceAccountPayload.id },
           transaction: transaction,
         }
       )
 
-      await BankAccount.update(
-        {
-          balance: destinationAccountPayload.balance + amount,
-        },
+      await BankAccount.update(destinationAccountPayload,
         {
           where: { id: destinationAccountPayload.id },
           transaction: transaction,

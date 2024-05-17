@@ -12,12 +12,14 @@ import {
   adminAuth,
   adminUserRefreshToken, 
   adminUserToken, 
+  authToLogoutToken, 
   expiredRefreshToken, 
   normalUserRefreshToken,
+  unexistingUserRefreshToken,
   normalUserToken,
   tokenWithInvalidPayload,
-  unexistingUserRefreshToken,
   unexistingUserToken,
+  authToLogoutRefreshToken,
 } from '../src/models/db/seeders/1-auth';
 import { ISign } from '../src/interfaces/auth.interface';
 
@@ -178,7 +180,7 @@ describe('Testing the auth route', () => {
     })
 
     it('Should logout', async () => {
-      const logoutResponse = await api.get('/api/v1/auth/logout').set('Cookie', `bankme=${normalUserRefreshToken}`);
+      const logoutResponse = await api.get('/api/v1/auth/logout').set('Cookie', `bankme=${authToLogoutRefreshToken}`);
       expect(logoutResponse.statusCode).toBe(200)
 
       const { statusCode, header } = await api.get('/api/v1/auth/refresh');

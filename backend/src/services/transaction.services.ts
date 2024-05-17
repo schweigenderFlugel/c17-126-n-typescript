@@ -157,7 +157,6 @@ export default class transactionService {
     transactionPayload: Omit<ITransaction, 'historial_id'>,
     sourceAccountData: ISourceAccountData,
     destinationAccountPayload: IDestinationAccountData,
-    amount: number
   ): Promise<TransactionModel | null> {
     const sourceAccountUpdated = await transactionDao
       .getInstance()
@@ -165,7 +164,6 @@ export default class transactionService {
         transactionPayload as ITransaction, 
         sourceAccountData, 
         destinationAccountPayload,
-        amount
       )
 
     return sourceAccountUpdated

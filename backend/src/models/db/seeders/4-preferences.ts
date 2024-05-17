@@ -1,6 +1,6 @@
 import { IPreferences } from "../../../interfaces/preference.interface";
 import { Preferences } from "../entity/preference.entity";
-import { adminUser, normalUser } from "./2-user";
+import { adminUser, normalUser } from "./3-user";
 
 interface IPrefrerenceFixture extends Omit<IPreferences, 'userId'> {
   user_id: number;

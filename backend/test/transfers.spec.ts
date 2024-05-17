@@ -6,10 +6,11 @@ import createExpressApp from '../src/config/createApp';
 import { sequelize } from '../src/models/db/database.manager';
 import { upSeed } from './utils/umzug';
 import { adminUserToken, normalUserToken, tokenWithInvalidPayload } from '../src/models/db/seeders/1-auth';
-import { bankAccount1, bankAccount2 } from '../src/models/db/seeders/5-bank-account';
 import { adminUser, normalUser } from '../src/models/db/seeders/3-user';
-import { TYPETRANSFERS } from '../src/config/constants';
+import { bankAccount1, bankAccount2 } from '../src/models/db/seeders/5-bank-account';
 import { transaction1 } from '../src/models/db/seeders/8-transaction';
+import { TYPETRANSFERS } from '../src/config/constants';
+import { ITransactionCreatedResponse } from '../src/interfaces/transaction.interface';
 
 describe('Testing the auth route', () => {
   let app;
@@ -129,16 +130,25 @@ describe('Testing the auth route', () => {
     })
 
     it('Should be allowed to create a transfer', async () => {
+      const currentMonth = new Date().getMonth() + 1;
       const data = {
         source_account: bankAccount2.id,
         destination_alias: adminUser.alias,
         amount: 10,
         type: TYPETRANSFERS.CREDIT,
       }
-      const { statusCode } = await api.post('/api/v1/transfer')
+      const { statusCode, body }: { statusCode: any, body: ITransactionCreatedResponse} = await api.post('/api/v1/transfer')
         .auth(normalUserToken, { type: 'bearer' })
         .send(data); 
         expect(statusCode).toBe(201);
+        expect(body.source_account).toEqual(bankAccount2.id);
+        expect(body.destination_account).toEqual(bankAccount1.id);
+        expect(body.type_transfer).toMatch(data.type);
+        expect(body.amount).toEqual(data.amount);
+        expect(body.status).toMatch('pending');
+        expect(body.historial.month).toEqual(currentMonth);
+        expect(body.historial.balance).toEqual(bankAccount2.balance - data.amount);
+        expect(body.historial.expenses).toEqual(bankAccount2.expenses + data.amount);
     })
   })
 

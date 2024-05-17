@@ -300,7 +300,7 @@ export default class authsController {
       const authFound = await authService.getAuthById(verified.id);
       const sessionsFound = await sessionService.getSessionsByAuthId(authFound.id);
       const sessionFiltered = sessionsFound.find(session => 
-        session.userAgent === userAgent
+        session.userAgent === userAgent && session.refreshToken === jwtCookie
       )
       const updateSessionPayload: Partial<ISession> = {
         refreshToken: null
