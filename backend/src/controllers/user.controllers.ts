@@ -10,12 +10,8 @@ import bankAccountHelper from '../utils/bankAccountHelper'
 import preferenceService from '../services/preferences.services'
 import { IAllUserData, ICreateUser, IUpdateUser, IUserResponse } from '../interfaces/user.interface'
 import { IPreferences } from '../interfaces/preference.interface'
-import { IAnualHistorial } from '../interfaces/anualHistorial.interface'
-import anualHistorialService from '../services/anualHistorial.services'
-import { IHistorial, IMonthsResponse, IUserHistorialResponse } from '../interfaces/historial.interface'
-import historialService from '../services/historial.services'
+import { IHistorial, IMonthsResponse  } from '../interfaces/historial.interface'
 import HistorialUtils from '../utils/historial.utils'
-import { IUserTransactionsResponse } from '../interfaces/transaction.interface'
 
 
 export default class userController {
@@ -257,7 +253,6 @@ export default class userController {
       
       res.status(200).json(userDataResponse)
     } catch (error) {
-      console.log(error)
       next(error)
     }
   }

@@ -123,3 +123,8 @@ export interface IUserTransactionsResponse {
 export interface ITransactionCreatedResponse extends ITransaction {
   historial: Partial<IHistorial>
 }
+
+export interface ITransactionCreatedResponseTesting {
+  success: boolean;
+  payload: ITransactionCreatedResponse;
+}
