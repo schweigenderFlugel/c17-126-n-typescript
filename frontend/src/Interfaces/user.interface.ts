@@ -50,6 +50,12 @@ export interface IMonths {
   dec: IHistorial | null;
 }
 
+export interface IChartData {
+  date: string;
+  Gastos: IHistorial['expenses'];
+  Balance: IHistorial['balance'];
+}
+
 export interface IHistorial {
   balance: number;
   expenses: number;

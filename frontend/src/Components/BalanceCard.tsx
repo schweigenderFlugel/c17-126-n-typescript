@@ -46,7 +46,7 @@ export const BalanceCard = ( { bank_account }: { bank_account: IBankAccount | un
               Semanal
             </button>
           </div>
-          <HistoryGraph />
+          <HistoryGraph anual_historial={bank_account?.anual_historial} />
         </div>
       </main>
     </section>

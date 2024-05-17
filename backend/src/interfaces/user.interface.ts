@@ -53,6 +53,7 @@ export interface IUserResponse {
     max_ammount_transfers: number;
   },
   bank_account: {
+    id: number;
     number_account: string;
     balance: number;
     expenses: number;

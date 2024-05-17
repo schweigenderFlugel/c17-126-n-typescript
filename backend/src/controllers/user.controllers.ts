@@ -243,6 +243,7 @@ export default class userController {
           max_ammount_transfers: userData.preference.dataValues.max_ammount_transfers,
         },
         bank_account: {
+          id: userData.bank_account.dataValues.id,
           number_account: userData.bank_account.dataValues.number_account,
           balance: userData.bank_account.dataValues.balance,
           expenses: userData.bank_account.dataValues.expenses,
