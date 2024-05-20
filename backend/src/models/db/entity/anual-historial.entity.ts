@@ -2,7 +2,6 @@ import { Model, DataTypes } from "sequelize";
 import { sequelize } from "../database.manager";
 import { IAnualHistorial } from "../../../interfaces/anualHistorial.interface";
 import { BankAccount } from "./bank-account.entity";
-import { Historial } from "./historial.entity";
 
 export interface AnualHistorialModel extends Model<IAnualHistorial>, IAnualHistorial {}
 
@@ -10,10 +9,10 @@ export const AnualHistorial = sequelize.define<AnualHistorialModel>('anual-histo
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
-    autoIncrement: true
+    autoIncrement: true,
   },
   bank_account: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING,
     allowNull: false,
     references: {
       model: BankAccount.getTableName(),

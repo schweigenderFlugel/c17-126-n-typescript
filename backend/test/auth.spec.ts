@@ -17,8 +17,10 @@ import {
   unexistingUserRefreshToken,
   normalUserToken,
   tokenWithInvalidPayload,
-  unexistingUserToken,
+  unexistingAuthToken,
   authToLogoutRefreshToken,
+  normalAuth,
+  unactivatedAuth,
 } from '../src/models/db/seeders/1-auth';
 import { ISign } from '../src/interfaces/auth.interface';
 
@@ -36,7 +38,7 @@ describe('Testing the auth route', () => {
 
   describe('POST /signup', () => {
     it('Should not register an user with invalid data', async () => {
-      const inputData: ISign = {
+      const inputData: Omit<ISign, 'id'> = {
         email: 'newuser',
         password: 'newuser1234'
       }
@@ -45,7 +47,7 @@ describe('Testing the auth route', () => {
     })
 
     it('Should not register an existing user', async () => {
-      const inputData: ISign = {
+      const inputData: Omit<ISign, 'id'> = {
         email: adminAuth.email,
         password: 'admin12345'
       }
@@ -56,7 +58,7 @@ describe('Testing the auth route', () => {
     })
 
     it('Should register an user succesfully', async () => {
-      const inputData: ISign = {
+      const inputData: Omit<ISign, 'id'> = {
         email: 'newuser@email.com',
         password: 'newuser1234'
       }
@@ -69,7 +71,7 @@ describe('Testing the auth route', () => {
 
   describe('POST /login', () => {
     it('User should not exists', async () => {
-      const inputData: ISign = {
+      const inputData: Omit<ISign, 'id'> = {
         email: 'anon@email.com',
         password: 'newuser1234'
       }
@@ -78,7 +80,7 @@ describe('Testing the auth route', () => {
     })
 
     it('Should not login', async () => {
-      const inputData: ISign = {
+      const inputData: Omit<ISign, 'id'> = {
         email: 'normal@email.com',
         password: 'newuser1234'
       }
@@ -86,8 +88,23 @@ describe('Testing the auth route', () => {
       expect(statusCode).toBe(401);
     })
 
+    it('Should not login with unactivated account', async () => {
+      const inputData: Omit<ISign, 'id'> = {
+        email: 'unactivated@email.com',
+        password: 'unactivated12345'
+      }
+      const { statusCode } = await api.post('/api/v1/auth/login').send(inputData)
+      expect(statusCode).toBe(403);
+    })
+
+    it('Should activate the account account', async () => {
+      const activationCode = unactivatedAuth.activation_code as string;
+      const { statusCode } = await api.post('/api/v1/auth/activate').send(activationCode);
+      expect(statusCode).toBe(200);
+    })
+
     it('Should not login with the session open', async () => {
-      const inputData: ISign = {
+      const inputData: Omit<ISign, 'id'> = {
         email: 'normal@email.com',
         password: 'newuser12345'
       }
@@ -98,26 +115,26 @@ describe('Testing the auth route', () => {
     })
 
     it('Should login and get an access and a refresh token from the normal user', async () => {
-      const inputData: ISign = {
+      const inputData: Omit<ISign, 'id'> = {
         email: 'normal@email.com',
         password: 'normal12345'
       }
       const { statusCode, body, header } = await api.post('/api/v1/auth/login').send(inputData);
       const token = decode(body.accessToken);
       expect(statusCode).toBe(200);
-      expect(token).toMatchObject({ id: 2, role: Roles.NORMAL });
+      expect(token).toMatchObject({ id: normalAuth.id, role: Roles.NORMAL });
       expect(header['set-cookie']).toBeDefined();
     })
 
     it('Should login and get an access and a refresh token from the admin user', async () => {
-      const inputData: ISign = {
+      const inputData: Omit<ISign, 'id'> = {
         email: 'admin@email.com',
         password: 'admin12345'
       }
       const { statusCode, body, header } = await api.post('/api/v1/auth/login').send(inputData);
       const token = decode(body.accessToken);
       expect(statusCode).toBe(200);
-      expect(token).toMatchObject({ id: 1, role: Roles.ADMIN });
+      expect(token).toMatchObject({ id: adminAuth.id, role: Roles.ADMIN });
       expect(header['set-cookie']).toBeDefined();
     })
   })
@@ -161,14 +178,14 @@ describe('Testing the auth route', () => {
       const { statusCode, body } = await api.get('/api/v1/auth/refresh').set('Cookie', `bankme=${adminUserRefreshToken}`);
       const token = decode(body.accessToken);
       expect(statusCode).toBe(200);
-      expect(token).toMatchObject({ id: 1, role: Roles.ADMIN });
+      expect(token).toMatchObject({ id: adminAuth.id, role: Roles.ADMIN });
     })
 
     it('Should refresh the session as normal user', async () => {
       const { statusCode, body } = await api.get('/api/v1/auth/refresh').set('Cookie', `bankme=${normalUserRefreshToken}`);
       const token = decode(body.accessToken);
       expect(statusCode).toBe(200);
-      expect(token).toMatchObject({ id: 2, role: Roles.NORMAL });
+      expect(token).toMatchObject({ id: normalAuth.id, role: Roles.NORMAL });
     })
   })
 
@@ -210,8 +227,8 @@ describe('Testing the auth route', () => {
         currentPassword: 'anonuser12345',
         newPassword: 'anonuser12345',
       }
-      const { statusCode } = await api.put('/api/v1/auth/change-password/5')
-        .auth(unexistingUserToken, { type: 'bearer' })
+      const { statusCode } = await api.put('/api/v1/auth/change-password/cbc5ddfd-8487-451a-be80-9f3ba46245a0')
+        .auth(unexistingAuthToken, { type: 'bearer' })
         .send(newData);
       expect(statusCode).toBe(404);
     })
@@ -221,7 +238,7 @@ describe('Testing the auth route', () => {
         currentPassword: 'anonuser1234',
         newPassword: 'anonuser12345',
       }
-      const { statusCode } = await api.put('/api/v1/auth/change-password/1')
+      const { statusCode } = await api.put(`/api/v1/auth/change-password/${adminAuth.id}`)
         .auth(normalUserToken, { type: 'bearer' })
         .send(newData);
       expect(statusCode).toBe(409);
@@ -232,7 +249,7 @@ describe('Testing the auth route', () => {
         currentPassword: 'admin1234',
         newPassword: 'admin1234',
       }
-      const { statusCode } = await api.put('/api/v1/auth/change-password/1')
+      const { statusCode } = await api.put(`/api/v1/auth/change-password/${adminAuth.id}`)
         .auth(adminUserToken, { type: 'bearer'})
         .send(newData);
       expect(statusCode).toBe(401);
@@ -243,7 +260,7 @@ describe('Testing the auth route', () => {
         currentPassword: 'admin12345',
         newPassword: 'admin12345',
       }
-      const { statusCode } = await api.put('/api/v1/auth/change-password/1')
+      const { statusCode } = await api.put(`/api/v1/auth/change-password/${adminAuth.id}`)
         .auth(adminUserToken, { type: 'bearer'})
         .send(newData);
       expect(statusCode).toBe(406);
@@ -254,7 +271,7 @@ describe('Testing the auth route', () => {
         currentPassword: 'admin12345',
         newPassword: 'newadmin12345',
       }
-      const { statusCode } = await api.put('/api/v1/auth/change-password/1')
+      const { statusCode } = await api.put(`/api/v1/auth/change-password/${adminAuth.id}`)
         .auth(adminUserToken, { type: 'bearer' })
         .send(newData);
       expect(statusCode).toBe(201);

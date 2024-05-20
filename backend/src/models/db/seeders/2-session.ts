@@ -1,8 +1,9 @@
+import * as crypto from "node:crypto"
 import { Session } from "../entity/session.entity";
 import { authToLogout, authToLogoutRefreshToken } from "./1-auth";
 
 export const sessionToLogout = {
-  id: 1,
+  id: crypto.randomUUID(),
   auth_id: authToLogout.id,
   user_agent: 'unknown',
   refresh_token: authToLogoutRefreshToken,

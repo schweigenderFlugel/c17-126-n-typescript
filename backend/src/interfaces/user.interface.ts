@@ -1,13 +1,13 @@
 import { IAnualHistorialResponse } from './anualHistorial.interface'
 import { IAuth, IAuthDataValues } from './auth.interface'
-import { IBankAccountDataValues } from './bankAccount.interface'
+import { IBankAccount, IBankAccountDataValues } from './bankAccount.interface'
 import { ICommon } from './common.interface'
 import { IPreferenceDataValues } from './preference.interface'
 
 export type AccountType = 'personal' | 'enterprise'
 
 export interface IUser extends ICommon {
-  id: `${string}-${string}-${string}-${string}-${string}-${string}-`;
+  id: `${string}-${string}-${string}-${string}-${string}`;
   name: string;
   lastname: string;
   avatar: string;
@@ -54,7 +54,7 @@ export interface IUserResponse {
     max_ammount_transfers: number;
   },
   bank_account: {
-    id: number;
+    id: IBankAccount['id'];
     number_account: string;
     balance: number;
     expenses: number;
@@ -70,7 +70,7 @@ export interface IUserCreatedData {
   }
 }
 
-export interface ICreateUser extends Omit<Omit<Omit<Omit<IUser, 'id'>, 'createdAt'>, 'updatedAt'>, 'avatar'> {}
+export interface ICreateUser extends Omit<Omit<IUser, 'createdAt'>, 'updatedAt'> {}
 
 export interface IUserToken {
   id: IAuth['id']

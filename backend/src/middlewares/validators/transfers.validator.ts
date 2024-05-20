@@ -2,7 +2,7 @@ import { z } from 'zod'
 import { TYPETRANSFERS } from '../../config/constants'
 
 export const createTransfer = z.object({
-  source_account: z.number().positive().int(),
+  source_account: z.string().trim(),
   destination_alias: z
     .string()
     .trim()

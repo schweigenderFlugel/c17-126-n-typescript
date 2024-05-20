@@ -2,7 +2,7 @@ import { IBankAccount, IDestinationAccountData, ISourceAccountData } from "./ban
 import { IHistorial } from "./historial.interface"
 
 export interface ITransaction {
-  id?: `${string}-${string}-${string}-${string}-${string}-${string}-`
+  id?: number;
   historial_id: IHistorial['id']
   operation_number: number
   source_account: IBankAccount['id']
@@ -25,9 +25,9 @@ export interface ITransactionDataDetails {
 
 export interface ITransactionSentDataValues {
   dataValues: {
-    id: number;
-    source_account: number;
-    destination_account: number;
+    id: ITransaction['id'];
+    source_account: IBankAccount['id'];
+    destination_account: IBankAccount['id'];
     amount: number;
     date_transaction: string;
     month: { 
@@ -54,9 +54,9 @@ export interface ITransactionSentDataValues {
 }
 
 export interface ITransactionSentResponse {
-  id: number;
-  source_account: number;
-  destination_account: number;
+  id: ITransaction['id'];
+  source_account: IBankAccount['id'];
+  destination_account: IBankAccount['id'];
   amount: number;
   date_transaction: string;
   month: number;
@@ -71,9 +71,9 @@ export interface ITransactionSentResponse {
 
 export interface ITransactionReceivedDataValues {
   dataValues: {
-    id: number;
-    source_account: number;
-    destination_account: number;
+    id: ITransaction['id'];
+    source_account: IBankAccount['id'];
+    destination_account: IBankAccount['id'];
     amount: number;
     date_transaction: string;
     month: { 
@@ -100,9 +100,9 @@ export interface ITransactionReceivedDataValues {
 }
 
 export interface ITransactionReceivedResponse {
-  id: number;
-  source_account: number;
-  destination_account: number;
+  id: ITransaction['id'];
+  source_account: IBankAccount['id'];
+  destination_account: IBankAccount['id'];
   amount: number;
   date_transaction: string;
   month: number;

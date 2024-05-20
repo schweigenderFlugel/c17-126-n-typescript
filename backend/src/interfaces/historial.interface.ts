@@ -2,7 +2,7 @@ import { IAnualHistorial } from "./anualHistorial.interface";
 import { ITransactionsResponse } from "./transaction.interface";
 
 export interface IHistorial {
-  id: `${string}-${string}-${string}-${string}-${string}-${string}-`;
+  id: number;
   anual_historial_id: IAnualHistorial['id'];
   month: number;
   balance: number;

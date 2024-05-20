@@ -5,15 +5,15 @@ import { ITransaction } from '../../../interfaces/transaction.interface'
 import { BankAccount } from './bank-account.entity'
 import { Historial } from './historial.entity'
 
-const { INTEGER, ENUM } = DataTypes
+const { INTEGER, ENUM, STRING } = DataTypes
 
 export interface TransactionModel extends Model<ITransaction>, ITransaction {}
 
 const Transaction = sequelize.define<TransactionModel>('transaction', {
   id: {
     type: INTEGER,
-    autoIncrement: true,
     primaryKey: true,
+    autoIncrement: true,
   },
   historial_id: {
     type: INTEGER,
@@ -30,7 +30,7 @@ const Transaction = sequelize.define<TransactionModel>('transaction', {
     allowNull: false
   },
   source_account: {
-    type: INTEGER,
+    type: STRING,
     allowNull: false,
     references: {
       model: BankAccount.getTableName(),
@@ -40,7 +40,7 @@ const Transaction = sequelize.define<TransactionModel>('transaction', {
     onDelete: 'SET NULL'
   },
   destination_account: {
-    type: INTEGER,
+    type: STRING,
     allowNull: false,
     references: {
       model: BankAccount.getTableName(),

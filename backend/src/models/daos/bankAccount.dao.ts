@@ -1,8 +1,4 @@
-import { Model } from 'sequelize'
-import {
-  IBankAccount,
-  IGenerateBankAccount,
-} from '../../interfaces/bankAccount.interface'
+import { IBankAccount } from '../../interfaces/bankAccount.interface'
 import { BankAccount, BankAccountModel } from '../db/entity/bank-account.entity'
 import { Preferences } from '../db/entity/preference.entity'
 import { User } from '../db/entity/user.entity'
@@ -29,7 +25,7 @@ export default class bankAccountDao {
    * @return {Promise<BankAccountModel>} The created bank account.
    */
   async createBankAccount(
-    bankAccountPayload: IGenerateBankAccount
+    bankAccountPayload: IBankAccount
   ): Promise<BankAccountModel> {
     const bankAccountCreated: BankAccountModel = await BankAccount.create(
       bankAccountPayload as IBankAccount

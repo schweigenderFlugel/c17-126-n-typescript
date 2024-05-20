@@ -1,9 +1,9 @@
 import { decode, sign, verify } from 'jsonwebtoken'
 import { HTTP_STATUS, envs } from '../config/constants'
-import { ITokenPayload } from '../interfaces/token.interface'
 import { Request, Response, NextFunction } from 'express'
 import HttpError from './HttpError.utils'
 import { ENVIROMENTS } from '../../enviroments'
+import { ITokenPayload } from '../interfaces/auth.interface'
 
 const { NODE_ENV, ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = envs;
 

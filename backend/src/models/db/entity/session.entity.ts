@@ -1,4 +1,4 @@
-import { DATE, INTEGER, Model, NOW, STRING } from "sequelize";
+import { DATE, Model, STRING } from "sequelize";
 import { ISession } from "../../../interfaces/session.interface";
 import { sequelize } from "../database.manager";
 import { Auth } from "./auth.entity";
@@ -8,12 +8,10 @@ export interface SessionModel extends Model<ISession>, ISession {}
 export const Session = sequelize.define<SessionModel>('session', {
   id: {
     type: STRING,
-    allowNull: false,
     primaryKey: true,
-    unique: true,
   },
   authId: {
-    type: INTEGER,
+    type: STRING,
     field: 'auth_id',
     allowNull: false,
     references: {

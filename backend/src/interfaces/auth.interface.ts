@@ -10,8 +10,10 @@ export interface IAuth extends ICommon {
 }
 
 export interface ISign {
+  id: IAuth['id'];
   email: string;
   password: string;
+  activationCode?: IAuth['activationCode'];
 }
 
 export type ITokenPayload = {

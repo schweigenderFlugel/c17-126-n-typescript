@@ -1,10 +1,11 @@
 import { NextFunction, Request, Response } from 'express'
+import * as crypto from 'node:crypto'
 import { HTTP_STATUS } from '../config/constants'
 import HttpError from '../utils/HttpError.utils'
 import apiSuccessResponse from '../utils/apiResponse.utils'
 import userService from '../services/user.services'
 import bankAccountService from '../services/bankAccount.services'
-import { IGenerateBankAccount } from '../interfaces/bankAccount.interface'
+import { IBankAccount } from '../interfaces/bankAccount.interface'
 import bankAccountHelper from '../utils/bankAccountHelper'
 import preferenceService from '../services/preferences.services'
 import { IAllUserDataValues, ICreateUser, IUser, IUserResponse } from '../interfaces/user.interface'
@@ -60,10 +61,12 @@ export default class userController {
       const { name, lastname, alias, address, phone, accountType } = req.body
 
       const userPayload: ICreateUser = {
+        id: crypto.randomUUID(),
         name,
         lastname,
         accountType,
         alias,
+        avatar: 'image',
         address,
         phone,
         authId: tokenPayload.id,
@@ -103,7 +106,8 @@ export default class userController {
       const numberAccount =
         await bankAccountHelper.generateAccountNumber(accountType)
 
-      const bankAccountPayload: IGenerateBankAccount = {
+      const bankAccountPayload: IBankAccount = {
+        id: crypto.randomUUID(),
         userId: userCreated.dataValues.id,
         number_account: numberAccount,
         balance: 0,

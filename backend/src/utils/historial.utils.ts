@@ -3,13 +3,13 @@ import { IAnualHistorial, IAnualHistorialResponse } from "../interfaces/anualHis
 import { IBankAccount } from "../interfaces/bankAccount.interface";
 import { IHistorial } from "../interfaces/historial.interface";
 import { ITransactionsResponse } from "../interfaces/transaction.interface";
-import { IAllUserData } from "../interfaces/user.interface";
+import { IAllUserDataValues } from "../interfaces/user.interface";
 import anualHistorialService from "../services/anualHistorial.services";
 import historialService from "../services/historial.services";
 import HttpError from "./HttpError.utils";
 
 export default class HistorialUtils {
-  static async generateAnualHistorial(userData: IAllUserData) {
+  static async generateAnualHistorial(userData: IAllUserDataValues) {
     let anual_historials: Partial<IAnualHistorialResponse[]> = [];
     let transactions: ITransactionsResponse = {
       sent: [],

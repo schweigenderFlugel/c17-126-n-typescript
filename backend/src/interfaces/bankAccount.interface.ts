@@ -4,7 +4,7 @@ import { ITransactionReceivedDataValues, ITransactionSentDataValues } from './tr
 import { IUser, IUserData } from './user.interface'
 
 export interface IBankAccount {
-  id: `${string}-${string}-${string}-${string}-${string}-${string}-`;
+  id: `${string}-${string}-${string}-${string}-${string}`;
   userId: IUser['id']
   number_account: string
   balance: number
@@ -14,7 +14,7 @@ export interface IBankAccount {
 
 export interface IBankAccountDataValues {
   dataValues: {
-    id: number;
+    id: IBankAccount['id'];
     number_account: string;
     balance: number;
     expenses: number;
@@ -51,5 +51,3 @@ export interface IDestinationAccountData {
   balance: number
   user?: IUserData
 }
-
-export interface IGenerateBankAccount extends Omit<IBankAccount, 'id'> {}

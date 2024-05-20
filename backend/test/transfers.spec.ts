@@ -66,7 +66,7 @@ describe('Testing the auth route', () => {
 
     it('Should not make a tranfer from an unexisting source account', async () => {
       const data = {
-        source_account: 999,
+        source_account: '9a1be672-d441-43d2-85ee-f4b8947ac1df',
         destination_alias: adminUser.alias,
         amount: 10,
         type: TYPETRANSFERS.CREDIT,

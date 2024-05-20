@@ -1,7 +1,4 @@
-import {
-  IBankAccount,
-  IGenerateBankAccount,
-} from '../interfaces/bankAccount.interface'
+import { IBankAccount } from '../interfaces/bankAccount.interface'
 import { IUser } from '../interfaces/user.interface'
 import bankAccountDao from '../models/daos/bankAccount.dao'
 import { BankAccountModel } from '../models/db/entity/bank-account.entity'
@@ -14,7 +11,7 @@ export default class bankAccountService {
    * @return {Promise<BankAccountModel>} The created bank account.
    */
   static async createBankAccount(
-    bankAccountPayload: IGenerateBankAccount
+    bankAccountPayload: IBankAccount
   ): Promise<BankAccountModel> {
     const bankAccountCreated = await bankAccountDao
       .getInstance()

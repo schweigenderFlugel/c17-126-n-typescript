@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction, response } from 'express'
+import { Request, Response, NextFunction } from 'express'
 import bankAccountService from '../services/bankAccount.services'
 import { HTTP_STATUS } from '../config/constants'
 import HttpError from '../utils/HttpError.utils'
@@ -81,7 +81,6 @@ export default class bankAccountController {
 
       res.status(HTTP_STATUS.OK).json(response)
     } catch (err) {
-      console.log(err)
       next(err)
     }
   }

@@ -2,7 +2,7 @@ import { IBankAccount } from "./bankAccount.interface";
 import { IHistorialDataValues, IMonthsResponse } from "./historial.interface";
 
 export interface IAnualHistorial {
-  id: `${string}-${string}-${string}-${string}-${string}-${string}-`;
+  id: number;
   bank_account: IBankAccount['id'];
   year: number;
 }

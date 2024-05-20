@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { UniqueConstraintError } from 'sequelize'
 import { TokenExpiredError } from 'jsonwebtoken'
+import * as crypto from 'node:crypto'
 import { IAuth, INewAuthResponse, ISign, ITokenPayload, IUpdateAuth } from '../interfaces/auth.interface'
 import { createHash, isValidPassword } from '../utils/bcrypt.utils'
 import authService from '../services/auth.services'
@@ -12,6 +13,7 @@ import JwtUtils from '../utils/jwt.utils'
 import { ENVIROMENTS } from '../../enviroments';
 import sessionService from '../services/session.service'
 import { ISession } from '../interfaces/session.interface'
+import CodeUtils from '../utils/activation-code.utils'
 
 const { NODE_ENV, HTTPONLY_COOKIE_NAME, DB_URL } = envs
 
@@ -33,10 +35,14 @@ export default class authsController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const payload: ISign = req.body
+      const payload: ISign = {
+        id: crypto.randomUUID(),
+        email: req.body.email as IAuth['email'],
+        password: req.body.password as IAuth['password'],
+      }
       payload.password = createHash(payload.password)
       const newAuth = await authService.createAuth(payload);
-      const newAuthResponse: INewAuthResponse = {
+      const newAuthResponse:  INewAuthResponse = {
         email: newAuth.email,
         role: newAuth.role,
         status: newAuth.status,
@@ -74,12 +80,13 @@ export default class authsController {
     try {
       const jwtCookie = req.cookies[cookieName]
       const userAgent = req.headers['user-agent'] ?? 'unknown';
+      const activationCode = CodeUtils.generateActivationCode();
       if (jwtCookie) throw new HttpError(
         'Session open', 
         'Cookie is still existing', 
         HTTP_STATUS.BAD_REQUEST,
       )
-      const payload: ISign = req.body
+      const payload: ISign = req.body;
       const authFound = await authService.getAuthByEmail(payload.email)
       if (!authFound) throw new HttpError(
         'Invalid Credentials',
@@ -95,6 +102,17 @@ export default class authsController {
         'Must provide valid credentials',
         HTTP_STATUS.UNAUTHORIZED
       )
+      if (authFound.status === false) {
+        const updatePayload: Partial<IAuth> = {
+          activationCode: activationCode,
+        }
+        await authService.updateAuth(authFound.id, updatePayload)
+        throw new HttpError(
+          'The authentication is not activ',
+          'The authentication is not activ',
+          HTTP_STATUS.FORBIDDEN,
+        )
+      }
       const tokenPayload: ITokenPayload = {
         id: authFound.id,
         role: authFound.role,
@@ -107,7 +125,8 @@ export default class authsController {
         refreshToken: refreshToken,
         lastEntry: new Date(),
       }
-      const newSessionPayload: Omit<ISession, 'id'> = {
+      const newSessionPayload: ISession = {
+        id: crypto.randomUUID(),
         authId: authFound.id,
         refreshToken: refreshToken,
         userAgent: userAgent,
@@ -116,7 +135,8 @@ export default class authsController {
       if (sessionFiltered) sessionService.updateSession(sessionFiltered.id, updateSessionPayload)
       else sessionService.createSession(newSessionPayload);
       await CookiesUtils.setJwtCookie(cookieName, res, refreshToken)
-      res.status(HTTP_STATUS.OK).json({ accessToken })
+      console.log(activationCode);
+      res.status(HTTP_STATUS.OK).json({ accessToken, refreshToken })
     } catch (err: any) {
       next(err)
     }
@@ -165,7 +185,8 @@ export default class authsController {
       const updateSessionPayload: Partial<ISession> = {
         refreshToken: newRefreshToken
       }
-      const newSessionPayload: Omit<ISession, 'id'> = {
+      const newSessionPayload: ISession = {
+        id: crypto.randomUUID(),
         authId: authFound.id,
         refreshToken: newRefreshToken,
         userAgent: userAgent,

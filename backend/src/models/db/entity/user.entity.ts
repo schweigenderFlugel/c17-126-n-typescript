@@ -1,4 +1,4 @@
-import { AssociationOptions, DataTypes, Model, NOW } from 'sequelize'
+import { DataTypes, Model, NOW } from 'sequelize'
 import { IUser } from '../../../interfaces/user.interface'
 import { sequelize } from '../database.manager'
 import { Auth } from './auth.entity';
@@ -9,8 +9,7 @@ export interface UserModel extends Model<IUser>, IUser {}
 
 const User = sequelize.define<UserModel>('users', {
   id: {
-    type: INTEGER,
-    autoIncrement: true,
+    type: STRING,
     primaryKey: true,
   },
   name: {
@@ -44,10 +43,9 @@ const User = sequelize.define<UserModel>('users', {
     allowNull: false,
   },
   authId: {
-    type: INTEGER,
+    type: STRING,
     field: 'auth_id',
     allowNull: false,
-    unique: true,
     references: {
       model: Auth.getTableName(),
       key: 'id',

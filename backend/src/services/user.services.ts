@@ -61,7 +61,7 @@ export default class userService {
   /**
    * Retrieves a user by their authentication ID.
    *
-   * @param {number} authId - The authentication ID of the user to retrieve.
+   * @param {IAuth['id']} authId - The authentication ID of the user to retrieve.
    * @return {Promise<Model<IUser> | null>} The user model if found, otherwise null.
    */
   static async getUserByAuthId(authId: IAuth['id']): Promise<UserModel | null> {

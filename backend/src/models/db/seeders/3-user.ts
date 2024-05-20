@@ -1,4 +1,4 @@
-import * as crypto from "node:crypto"
+import * as crypto from "node:crypto";
 import { AccountType, IUser } from "../../../interfaces/user.interface";
 import { User } from "../entity/user.entity";
 import { adminAuth, normalAuth } from "./1-auth";
@@ -26,7 +26,7 @@ export const adminUser: UserFixture = {
 }
 
 export const normalUser: UserFixture = {
-  id: 2,
+  id: crypto.randomUUID(),
   name: "normal",
   lastname: "normal",
   avatar: 'image',

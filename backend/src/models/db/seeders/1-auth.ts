@@ -1,6 +1,7 @@
 import * as crypto from "node:crypto"
 import { IAuth } from "../../../interfaces/auth.interface";
 import { Auth, Roles } from "../entity/auth.entity";
+import CodeUtils from "../../../utils/activation-code.utils";
 
 interface AuthFixture extends Omit<Omit<Omit<IAuth, 'activationCode'>, 'createdAt'>, 'updatedAt'> {
   activation_code: IAuth['activationCode'] | null;
@@ -8,10 +9,12 @@ interface AuthFixture extends Omit<Omit<Omit<IAuth, 'activationCode'>, 'createdA
   updated_at: Date;
 }
 
+const activationCode = CodeUtils.generateActivationCode();
+
 export const adminAuth: AuthFixture = {
-  id: crypto.randomUUID(),
+  id: '186e2c17-b6de-4b13-bd13-e8363a8e2dbb',
   email: 'admin@email.com',
-  password: "$2b$10$WfM1hoVWH8R/i0fC34Lh2.lzpLYP/i3ki7mLz62lAFchQw0yJC.Ue",
+  password: "$2b$10$tdC6oY4E3/xyudIx6oNN5uolD..TU3ZEcgH9nSY2DlIaKIraqL9aa",
   role: Roles.ADMIN,
   activation_code: null,
   status: true,
@@ -20,9 +23,9 @@ export const adminAuth: AuthFixture = {
 }
 
 export const normalAuth: AuthFixture = {
-  id: crypto.randomUUID(),
+  id: 'db8c2dbd-f381-4b83-ab27-80d7d40b0772',
   email: 'normal@email.com',
-  password: "$2b$10$85FoRWGIr7Z1Zyo5HHHA5O1a0RzC/oDvG3t/kjQSAblO3ZGGAJ1Nu",
+  password: "$2b$10$bzSTwaSVLykm.Wzho4lW5uy8ARdHiFKNT2LytUujufPd1o/EKZKxW",
   role: Roles.NORMAL,
   activation_code: null,
   status: true,
@@ -31,7 +34,7 @@ export const normalAuth: AuthFixture = {
 }
 
 export const authWithoutUser: AuthFixture = {
-  id: crypto.randomUUID(),
+  id: '7b8caf46-b10e-497e-aff7-3424c23e5372',
   email: 'nonuser@email.com',
   password: "$2b$10$85FoRWGIr7Z1Zyo5HHHA5O1a0RzC/oDvG3t/kjQSAblO3ZGGAJ1Nu",
   role: Roles.NORMAL,
@@ -42,9 +45,9 @@ export const authWithoutUser: AuthFixture = {
 }
 
 export const authToLogout: AuthFixture = {
-  id: crypto.randomUUID(),
-  email: 'tologout@email.com',
-  password: '',
+  id: '18b1a490-13a8-4f8f-9b6b-cd65d4770449',
+  email: 'authlologout@email.com',
+  password: '$2b$10$uACrSGlH/N60MdsxMs6eS.V5cKiaWy3SltI4YIXT.8LOeYxvABNGy',
   role: Roles.NORMAL,
   activation_code: null,
   status: true,
@@ -52,35 +55,44 @@ export const authToLogout: AuthFixture = {
   updated_at: new Date(),
 }
 
+export const unactivatedAuth: AuthFixture = {
+  id: '9c5f84bb-a4cb-4ff3-9903-03730b5aa65b',
+  email: 'unactivated@email.com',
+  password: '$2b$10$J6xz1mX2V.S0fotZwQIT9.6HZRTwsqRDEsT3zUzFu1x4RDjIaq.j6',
+  role: Roles.NORMAL,
+  activation_code: activationCode,
+  status: false,
+  created_at: new Date(),
+  updated_at: new Date(),
+}
+
 // ACCESS TOKENS
-export const adminUserToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzEzMzgzMTUwfQ.mMgrhUQ90TXRBA0LGJaMC7hy-s5C6Bh2n5GKSQ1KnzY";
+export const adminUserToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE4NmUyYzE3LWI2ZGUtNGIxMy1iZDEzLWU4MzYzYThlMmRiYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTcxNjI0MTE1OH0.cC88mZ8UxzjUXciw1dQP8USNmyFG72h77Rf29RUbFAc";
 
-export const normalUserToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwicm9sZSI6Im5vcm1hbCIsImlhdCI6MTcxMzQ4MDM4MX0.uf6OvGINpsGhY3DLNOQQwUYaRsgX5ZbqOV51ZK_SEJk";
+export const normalUserToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImRiOGMyZGJkLWYzODEtNGI4My1hYjI3LTgwZDdkNDBiMDc3MiIsInJvbGUiOiJub3JtYWwiLCJpYXQiOjE3MTYyMzE4ODZ9.Ml5Hl4pJgrpIL2GFYzSm3W1mfkt-3fSMRUupgXcVDqE";
 
-export const authWithoutUserToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6Im5vcm1hbCIsImlhdCI6MTcxMzQ2MzY5M30.T965-Oo-Rg0yg2GiAR9yl5elCFhBjyh3XaUCay6N5vU";
+export const authWithoutUserToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjdiOGNhZjQ2LWIxMGUtNDk3ZS1hZmY3LTM0MjRjMjNlNTM3MiIsInJvbGUiOiJub3JtYWwiLCJpYXQiOjE3MTYyMzQyNTl9.79mQCAxh2oIfSFfmOsavSDz2yG4KyBR_Q69cCWm8HsM";
 
-export const anonUserToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwicm9sZSI6Im5vcm1hbCIsImlhdCI6MTcxMzQ2NTY0NX0.UEnbMzafoGfCbKrW_sJn_5SXLt3w4aHB3xHo-aELDCE";
+export const anonUserToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgxNDA1MzhhLTIzMTMtNDEwNC04MDIwLWU4OTU5NWQ1MjFiMCIsInJvbGUiOiJub3JtYWwiLCJpYXQiOjE3MTYyMzQzMzJ9.qYEvMWnuiPtowOl8pQ0Zbn8XprQFSvDi0oTa549CUfw";
 
-export const unexistingUserToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6Im5vcm1hbCIsImlhdCI6MTcxNDQyMTQ4MX0.-serRr9wT-a2IdfLS5eH4ctXEGe8wfOTEdWqstTOvJI";
+export const unexistingAuthToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNiYzVkZGZkLTg0ODctNDUxYS1iZTgwLTlmM2JhNDYyNDVhMCIsInJvbGUiOiJub3JtYWwiLCJpYXQiOjE3MTYyMzQ1ODN9.kWo6A5PjejTKWNV5sUIxmBUg8RaPMHa-MbJnkt9LKd0";
 
-export const authToLogoutToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Niwicm9sZSI6Im5vcm1hbCIsImlhdCI6MTcxNTk2NzYwOH0.bK_9jNZsVtTDGz3lW5KD0b7jtR1MyklNwef3utvocqg";
+export const authToLogoutToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE4YjFhNDkwLTEzYTgtNGY4Zi05YjZiLWNkNjVkNDc3MDQ0OSIsInJvbGUiOiJub3JtYWwiLCJpYXQiOjE3MTYyMzIzMTN9.trMh5Zyr10FFRe6zUEh2kWJWzs8nzDCSvnm-CYZO2VY";
 
-export const tokenWithInvalidPayload = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoxLCJsYXN0bmFtZSI6Im5vcm1hbCIsImlhdCI6MTcxMzUzNjE3M30.V-Eva_24DcPeumsZpX3c_xl7Px3R-g1NJQj8XqylrRc";
+export const tokenWithInvalidPayload = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYjhmNDk5MmItZGE2NC00YmQ5LTkwMTctZDA3MTEzMmMwNzQ3IiwibGFzdG5hbWUiOiJub3JtYWwiLCJpYXQiOjE3MTYyMzU3OTZ9.glzinp4RayifVcpxmWm_lYDmmM1AGud_adNO7NTc15U";
 
 // REFRESH TOKENS
-export const adminUserRefreshToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzEzMzgzMTUwfQ.mMgrhUQ90TXRBA0LGJaMC7hy-s5C6Bh2n5GKSQ1KnzY";
+export const adminUserRefreshToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE4NmUyYzE3LWI2ZGUtNGIxMy1iZDEzLWU4MzYzYThlMmRiYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTcxNjI0MTE1OH0.cC88mZ8UxzjUXciw1dQP8USNmyFG72h77Rf29RUbFAc";
 
-export const normalUserRefreshToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwicm9sZSI6Im5vcm1hbCIsImlhdCI6MTcxMzQ4MDM4MX0.uf6OvGINpsGhY3DLNOQQwUYaRsgX5ZbqOV51ZK_SEJk";
+export const normalUserRefreshToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImRiOGMyZGJkLWYzODEtNGI4My1hYjI3LTgwZDdkNDBiMDc3MiIsInJvbGUiOiJub3JtYWwiLCJpYXQiOjE3MTYyMzE4ODZ9.Ml5Hl4pJgrpIL2GFYzSm3W1mfkt-3fSMRUupgXcVDqE";
 
-export const normalUserRefreshTokenToLogout = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwicm9sZSI6Im5vcm1hbCIsImlhdCI6MTcxMzQ4MDM4MX0.uf6OvGINpsGhY3DLNOQQwUYaRsgX5ZbqOV51ZK_SEJk";
+export const unexistingUserRefreshToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNiYzVkZGZkLTg0ODctNDUxYS1iZTgwLTlmM2JhNDYyNDVhMCIsInJvbGUiOiJub3JtYWwiLCJpYXQiOjE3MTYyMzQ1ODN9.kWo6A5PjejTKWNV5sUIxmBUg8RaPMHa-MbJnkt9LKd0";
 
-export const unexistingUserRefreshToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6Im5vcm1hbCIsImlhdCI6MTcxNDY2NzYwOH0.vI3YOh0eiDPXinvpeV9Xdz58Hst8OyoUQK4EVvhkJ1M";
+export const authToLogoutRefreshToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE4YjFhNDkwLTEzYTgtNGY4Zi05YjZiLWNkNjVkNDc3MDQ0OSIsInJvbGUiOiJub3JtYWwiLCJpYXQiOjE3MTYyMzIzMTN9.trMh5Zyr10FFRe6zUEh2kWJWzs8nzDCSvnm-CYZO2VY";
 
-export const authToLogoutRefreshToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Niwicm9sZSI6Im5vcm1hbCIsImlhdCI6MTcxNTk2NzYwOH0.bK_9jNZsVtTDGz3lW5KD0b7jtR1MyklNwef3utvocqg";
+export const expiredRefreshToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImI4ZjQ5OTJiLWRhNjQtNGJkOS05MDE3LWQwNzExMzJjMDc0NyIsInJvbGUiOiJub3JtYWwiLCJpYXQiOjE3MTYyMzU3OTYsImV4cCI6MTcxNjIzNTgxMX0.6SHY3r2YQlKlG1Lg1pczbiJ2kxMQAcXRYUFwnmlhS18";
 
-export const expiredRefreshToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzEzMzg0MjI3LCJleHAiOjE3MTMzODQyMzd9.HQeDUcSZD-hIcmxzgVJEbFJ5HFhujANZrJ8UgIraQpg";
-
-const authFixtures = [adminAuth, normalAuth, authWithoutUser, authToLogout];
+const authFixtures = [adminAuth, normalAuth, authWithoutUser, authToLogout, unactivatedAuth];
 
 export function up({context}: any) {
   return context.bulkInsert(Auth.getTableName(), authFixtures);

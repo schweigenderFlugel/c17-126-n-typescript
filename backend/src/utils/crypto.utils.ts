@@ -1,7 +1,7 @@
 import * as crypto from 'crypto';
 import { envs } from '../config/constants';
 import { ENVIROMENTS } from '../../enviroments';
-import { ITokenPayload } from '../interfaces/token.interface';
+import { ITokenPayload } from '../interfaces/auth.interface';
 
 const { NODE_ENV, SECRET_KEY, IV } = envs;
 

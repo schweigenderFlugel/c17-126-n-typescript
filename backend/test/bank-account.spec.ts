@@ -10,6 +10,7 @@ import { adminUserToken,
   normalUserToken, 
   tokenWithInvalidPayload 
 } from '../src/models/db/seeders/1-auth';
+import { bankAccount2 } from '../src/models/db/seeders/5-bank-account';
 
 describe('Testing the auth route', () => {
   let app;
@@ -53,7 +54,7 @@ describe('Testing the auth route', () => {
       const data = {
         amount: 10,
       }
-      const { statusCode } = await api.put('/api/v1/bank-account/deposit/2')
+      const { statusCode } = await api.put(`/api/v1/bank-account/deposit/${bankAccount2.id}`)
         .auth(adminUserToken, { type: 'bearer' })
         .send(data);
       expect(statusCode).toBe(409);
@@ -63,7 +64,7 @@ describe('Testing the auth route', () => {
       const data = {
         amount: 10,
       }
-      const { statusCode } = await api.put('/api/v1/bank-account/deposit/2')
+      const { statusCode } = await api.put(`/api/v1/bank-account/deposit/${bankAccount2.id}`)
         .auth(normalUserToken, { type: 'bearer' })
         .send(data);
       expect(statusCode).toBe(200);

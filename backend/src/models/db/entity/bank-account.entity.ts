@@ -13,10 +13,9 @@ const BankAccount = sequelize.define<BankAccountModel>(
       primaryKey: true,
     },
     userId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       field: 'user_id',
       allowNull: false,
-      unique: true,
       references: {
         model: User.getTableName(),
         key: 'id',
