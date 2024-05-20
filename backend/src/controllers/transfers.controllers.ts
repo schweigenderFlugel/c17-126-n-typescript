@@ -5,12 +5,10 @@ import HttpError from '../utils/HttpError.utils'
 import { IDestinationAccountData, ISourceAccountData } from '../interfaces/bankAccount.interface'
 import transactionService from '../services/transaction.services'
 import { ITransaction, ITransactionCreatedResponse, ITransactionDataDetails } from '../interfaces/transaction.interface'
-import { IUserToken } from '../interfaces/user.interface'
 import apiSuccessResponse from '../utils/apiResponse.utils'
 import transactionHelper from '../utils/transactionsHelper'
 import HistorialUtils from '../utils/historial.utils'
-import { TransactionModel } from '../models/db/entity/transaction.entity'
-import { IHistorial } from '../interfaces/historial.interface'
+import { ITokenPayload } from '../interfaces/auth.interface'
 
 export default class transfersController {
   static async getTransferDetails(
@@ -19,8 +17,8 @@ export default class transfersController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const transactionId = req.params.id as unknown as number;
-      const requestingUser = req.user as IUserToken;
+      const transactionId = req.params.id as unknown as ITransaction['id'];
+      const requestingUser = req.user as ITokenPayload;
     
       if (!requestingUser || !requestingUser.id) throw new HttpError(
         'Token payload error',
@@ -69,7 +67,7 @@ export default class transfersController {
       const sourceAccountData: ISourceAccountData =
         sourceAccountFound.dataValues as ISourceAccountData
 
-      const requestingUser = req.user as IUserToken
+      const requestingUser = req.user as ITokenPayload
 
       if (requestingUser.id !== sourceAccountData.user.dataValues.auth.dataValues.id) {
         throw new HttpError(

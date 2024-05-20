@@ -16,8 +16,8 @@ export default class authDao {
   /**
    * Create an authentication record.
    *
-   * @param {IAuth} authPayload - the authentication payload to create
-   * @return {Promise<any>} the created authentication record
+   * @param {ISign} authPayload - the authentication payload to create
+   * @return {Promise<AuthModel>} the created authentication record
    */
   async createAuth(authPayload: ISign): Promise<AuthModel> {
     const authCreated: AuthModel = await Auth.create(authPayload as IAuth)
@@ -27,10 +27,10 @@ export default class authDao {
   /**
    * Retrieve authentication information by ID.
    *
-   * @param {string} id - The ID of the authentication information to retrieve.
+   * @param {IAuth['id']} id - The ID of the authentication information to retrieve.
    * @return {Promise<AuthModel | null>} The retrieved authentication information, or null if not found.
    */
-  async getAuthById(id: number): Promise<AuthModel | null> {
+  async getAuthById(id: IAuth['id']): Promise<AuthModel | null> {
     const authFound: AuthModel | null = await Auth.findByPk(id)
     return authFound
   }
@@ -63,11 +63,11 @@ export default class authDao {
   /**
    * A function that updates authentication information.
    *
-   * @param {string} id - the ID of the authentication information to update
-   * @param {IAuth} authPayload - the new authentication payload
+   * @param {IAuth['id']} id - the ID of the authentication information to update
+   * @param {Partial<IAuth>} authPayload - the new authentication payload
    * @return {Promise<AuthModel | null>} the updated authentication model or null if not found
    */
-  async updateAuth(id: number, authPayload: Partial<IAuth>): Promise<AuthModel | null> {
+  async updateAuth(id: IAuth['id'], authPayload: Partial<IAuth>): Promise<AuthModel | null> {
     const authUpdated = await Auth.update(authPayload, {
       where: { id },
       returning: true,
@@ -78,10 +78,10 @@ export default class authDao {
   /**
    * A function that deletes an authentication record.
    *
-   * @param {string} id - The ID of the authentication record to delete
+   * @param {IAuth['id']} id - The ID of the authentication record to delete
    * @return {Promise<AuthModel | null>} The deleted authentication record or null if not found
    */
-  async deleteAuth(id: number): Promise<AuthModel | null> {
+  async deleteAuth(id: IAuth['id']): Promise<AuthModel | null> {
     const authDeleted = await Auth.update(
       { status: false },
       {

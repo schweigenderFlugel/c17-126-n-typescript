@@ -12,7 +12,6 @@ import {
   adminAuth,
   adminUserRefreshToken, 
   adminUserToken, 
-  authToLogoutToken, 
   expiredRefreshToken, 
   normalUserRefreshToken,
   unexistingUserRefreshToken,

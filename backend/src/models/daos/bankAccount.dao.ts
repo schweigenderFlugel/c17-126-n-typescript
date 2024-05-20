@@ -7,6 +7,7 @@ import { BankAccount, BankAccountModel } from '../db/entity/bank-account.entity'
 import { Preferences } from '../db/entity/preference.entity'
 import { User } from '../db/entity/user.entity'
 import { Auth } from '../db'
+import { IUser } from '../../interfaces/user.interface'
 
 export default class bankAccountDao {
   private static intance: bankAccountDao | null = null
@@ -40,10 +41,10 @@ export default class bankAccountDao {
   /**
    * A description of the entire function.
    *
-   * @param {number} id - The ID of the bank account to retrieve
+   * @param {IBankAccount['id']} id - The ID of the bank account to retrieve
    * @return {Promise<BankAccountModel | null>} The bank account found, or null if not found
    */
-  async getBankAccountById(id: number): Promise<BankAccountModel | null> {
+  async getBankAccountById(id: IBankAccount['id']): Promise<BankAccountModel | null> {
     const bankAccountFound: BankAccountModel | null =
       await BankAccount.findByPk(id, {
         include: [{
@@ -72,7 +73,7 @@ export default class bankAccountDao {
     return bankAccountFound
   }
 
-  async getBankAccountWithUserPreferences(bankAccountId: number) {
+  async getBankAccountWithUserPreferences(bankAccountId: IBankAccount['id']) {
     const bankAccountFound = await BankAccount.findOne({
       where: { id: bankAccountId },
       include: [
@@ -93,7 +94,7 @@ export default class bankAccountDao {
     return bankAccountFound;
   }
 
-  async getBankAccountByUserId(userId: number) {
+  async getBankAccountByUserId(userId: IUser['id']) {
     const bankAccountFound = await BankAccount.findOne({
       where: { userId: userId },
     })
@@ -116,12 +117,13 @@ export default class bankAccountDao {
   /**
    * Asynchronously updates a bank account by its ID.
    *
-   * @param {number} id - The ID of the bank account to update.
+   * @param {IBankAccount['id']} id - The ID of the bank account to update.
+   * @param {Partial<IBankAccount>} bankAccountPayload - The payload with the bank account data updated.
    * @return {Promise<BankAccountModel | null>} The updated bank account model or null if not found.
    */
   async updateBankAccount(
-    id: number,
-    bankAccountPayload: IBankAccount
+    id: IBankAccount['id'],
+    bankAccountPayload: Partial<IBankAccount>
   ): Promise<BankAccountModel | null> {
     const bankAccountUpdated = await BankAccount.update(bankAccountPayload, {
       where: { id },
@@ -130,7 +132,7 @@ export default class bankAccountDao {
     return bankAccountUpdated[1][0]
   }
 
-  async deleteBankAccount(id: number): Promise<number> {
+  async deleteBankAccount(id: IBankAccount['id']): Promise<number> {
     const bankAccountDeleted = await BankAccount.destroy({ where: { id } })
     return bankAccountDeleted
   }

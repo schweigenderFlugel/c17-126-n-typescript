@@ -1,19 +1,20 @@
-import { IMonthsResponse, IUserHistorial } from "./historial.interface";
+import { IBankAccount } from "./bankAccount.interface";
+import { IHistorialDataValues, IMonthsResponse } from "./historial.interface";
 
 export interface IAnualHistorial {
-  id: number;
-  bank_account: number;
+  id: `${string}-${string}-${string}-${string}-${string}-${string}-`;
+  bank_account: IBankAccount['id'];
   year: number;
 }
 
-export interface IUserAnualHistorialData {
+export interface IAnualHistorialDataValues {
   dataValues: {
     year: number;
-    months: IUserHistorial[]
+    months: IHistorialDataValues[]
   }
 }
 
-export interface IAnualHistorialDataResponse {
+export interface IAnualHistorialResponse {
   year: number;
   month: Partial<IMonthsResponse>;
 }

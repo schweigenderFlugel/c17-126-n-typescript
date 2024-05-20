@@ -1,8 +1,8 @@
 import { HTTP_STATUS } from "../config/constants";
-import { IAnualHistorial, IAnualHistorialDataResponse } from "../interfaces/anualHistorial.interface";
+import { IAnualHistorial, IAnualHistorialResponse } from "../interfaces/anualHistorial.interface";
 import { IBankAccount } from "../interfaces/bankAccount.interface";
 import { IHistorial } from "../interfaces/historial.interface";
-import { IUserTransactionsResponse } from "../interfaces/transaction.interface";
+import { ITransactionsResponse } from "../interfaces/transaction.interface";
 import { IAllUserData } from "../interfaces/user.interface";
 import anualHistorialService from "../services/anualHistorial.services";
 import historialService from "../services/historial.services";
@@ -10,8 +10,8 @@ import HttpError from "./HttpError.utils";
 
 export default class HistorialUtils {
   static async generateAnualHistorial(userData: IAllUserData) {
-    let anual_historials: Partial<IAnualHistorialDataResponse[]> = [];
-    let transactions: IUserTransactionsResponse = {
+    let anual_historials: Partial<IAnualHistorialResponse[]> = [];
+    let transactions: ITransactionsResponse = {
       sent: [],
       received: [],
     };
@@ -332,7 +332,7 @@ export default class HistorialUtils {
     const currentMonth = new Date().getMonth() + 1;
 
     const anualHistorialsFound = await anualHistorialService
-      .getAnualHistorialsByBankAccount(sourceAccount.id as number);
+      .getAnualHistorialsByBankAccount(sourceAccount.id as IBankAccount['id']);
 
     const currentAnualHistorial = anualHistorialsFound?.find(
       anual_historial => anual_historial.year === currentYear
@@ -351,12 +351,12 @@ export default class HistorialUtils {
       investments: sourceAccount.investments ?? 0,
     }
 
-    let historialId: IHistorial['id'] = 0;
+    let historialId: IHistorial['id'] | null = null;
     let historialUpdatedData: IHistorial | Partial<IHistorial> = {};
     
     if (!currentAnualHistorial) {
       const { historialCreated } = await this
-        .createNewAnualHistorial(sourceAccount.id as number, newHistorialPayload)
+        .createNewAnualHistorial(sourceAccount.id as IBankAccount['id'], newHistorialPayload)
       historialId = historialCreated.dataValues.id;
       historialUpdatedData = { ...historialCreated.dataValues }
     } else {
@@ -390,7 +390,7 @@ export default class HistorialUtils {
     const currentMonth = new Date().getMonth() + 1;
 
     const anualHistorialsFound = await anualHistorialService
-      .getAnualHistorialsByBankAccount(destinationAccount.id as number);
+      .getAnualHistorialsByBankAccount(destinationAccount.id as IBankAccount['id']);
 
     const currentAnualHistorial = anualHistorialsFound?.find(
       anual_historial => anual_historial.year === currentYear
@@ -410,7 +410,7 @@ export default class HistorialUtils {
     }
 
     if (!currentAnualHistorial) {
-      await this.createNewAnualHistorial(destinationAccount.id as number, newHistorialPayload);
+      await this.createNewAnualHistorial(destinationAccount.id as IBankAccount['id'], newHistorialPayload);
     } else {
       const historialsFound = await historialService.getHistorials(currentAnualHistorial.id);
       const currentHistorial = historialsFound?.find(historial => historial.month === currentMonth);
@@ -429,7 +429,7 @@ export default class HistorialUtils {
   }
 
   static async createNewAnualHistorial(
-    account: number, 
+    account: IBankAccount['id'], 
     newHistorialPayload: Omit<Omit<IHistorial, 'id'>, 'anual_historial_id'>
   ) {
     const newAnualHistorialPayload: Omit<IAnualHistorial, 'id'> = {

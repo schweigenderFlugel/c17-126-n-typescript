@@ -1,17 +1,17 @@
 import { NextFunction, Request, Response } from 'express'
 import { HTTP_STATUS } from '../config/constants'
 import HttpError from '../utils/HttpError.utils'
-import { ITokenPayload } from '../interfaces/token.interface'
 import apiSuccessResponse from '../utils/apiResponse.utils'
 import userService from '../services/user.services'
 import bankAccountService from '../services/bankAccount.services'
 import { IGenerateBankAccount } from '../interfaces/bankAccount.interface'
 import bankAccountHelper from '../utils/bankAccountHelper'
 import preferenceService from '../services/preferences.services'
-import { IAllUserData, ICreateUser, IUpdateUser, IUserResponse } from '../interfaces/user.interface'
+import { IAllUserDataValues, ICreateUser, IUser, IUserResponse } from '../interfaces/user.interface'
 import { IPreferences } from '../interfaces/preference.interface'
 import { IHistorial, IMonthsResponse  } from '../interfaces/historial.interface'
 import HistorialUtils from '../utils/historial.utils'
+import { ITokenPayload } from '../interfaces/auth.interface'
 
 
 export default class userController {
@@ -83,7 +83,7 @@ export default class userController {
         )
       }
 
-      const preferencesPayload = {
+      const preferencesPayload: Omit<IPreferences, 'id'> = {
         userId: userCreated.dataValues.id,
         min_ammount_transfers: 10,
         max_ammount_transfers: 999999,
@@ -222,7 +222,7 @@ export default class userController {
         )
       }
 
-      const userData: IAllUserData = userFound.dataValues as unknown as IAllUserData;
+      const userData: IAllUserDataValues = userFound.dataValues as unknown as IAllUserDataValues;
       const anual_historial = await HistorialUtils.generateAnualHistorial(userData);
 
       const userDataResponse: IUserResponse = {
@@ -379,7 +379,7 @@ export default class userController {
         )
       }
 
-      const userId = req.params.id as unknown as number; 
+      const userId = req.params.id as unknown as IUser['id']; 
 
       const userFound = await userService.getUserById(userId);
 
@@ -411,7 +411,7 @@ export default class userController {
 
       const { name, lastname, alias, address, phone, min_ammount_transfers, max_ammount_transfers } = req.body;
 
-      const userPayload: IUpdateUser = {
+      const userPayload: Partial<IUser> = {
         name,
         lastname,
         alias,
@@ -422,7 +422,7 @@ export default class userController {
 
       const userUpdated = await userService.updateUser(userFound.id, userPayload);
 
-      const preferencePayload: Omit<IPreferences, 'userId'> = {
+      const preferencePayload: Partial<IPreferences> = {
         min_ammount_transfers: min_ammount_transfers,
         max_ammount_transfers: max_ammount_transfers,
       }

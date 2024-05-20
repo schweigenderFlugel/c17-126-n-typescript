@@ -7,10 +7,10 @@ export interface SessionModel extends Model<ISession>, ISession {}
 
 export const Session = sequelize.define<SessionModel>('session', {
   id: {
-    type: INTEGER,
+    type: STRING,
     allowNull: false,
-    autoIncrement: true,
     primaryKey: true,
+    unique: true,
   },
   authId: {
     type: INTEGER,

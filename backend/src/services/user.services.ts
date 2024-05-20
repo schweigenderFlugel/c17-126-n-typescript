@@ -1,7 +1,8 @@
 import { Model } from 'sequelize'
 import userDao from '../models/daos/user.dao'
-import { ICreateUser, IUpdateUser, IUser } from '../interfaces/user.interface'
+import { ICreateUser, IUser } from '../interfaces/user.interface'
 import { UserModel } from '../models/db/entity/user.entity'
+import { IAuth } from '../interfaces/auth.interface'
 
 export default class userService {
   /**
@@ -18,10 +19,10 @@ export default class userService {
   /**
    * Retrieves a user by their ID.
    *
-   * @param {number} id - The ID of the user to retrieve
+   * @param {IUser['id']} id - The ID of the user to retrieve
    * @return {Promise<Model<IUser> | null>} The user found, or null if not found
    */
-  static async getUserById(id: number): Promise<UserModel | null> {
+  static async getUserById(id: IUser['id']): Promise<UserModel | null> {
     const userFound = await userDao.getInstance().getUserById(id)
     return userFound
   }
@@ -63,7 +64,7 @@ export default class userService {
    * @param {number} authId - The authentication ID of the user to retrieve.
    * @return {Promise<Model<IUser> | null>} The user model if found, otherwise null.
    */
-  static async getUserByAuthId(authId: number): Promise<UserModel | null> {
+  static async getUserByAuthId(authId: IAuth['id']): Promise<UserModel | null> {
     const userFound = await userDao.getInstance().getUserByAuthId(authId)
     return userFound;
   }
@@ -71,13 +72,13 @@ export default class userService {
   /**
    * Update a user by their ID with the provided user payload.
    *
-   * @param {number} id - The ID of the user to update
-   * @param {IUser} userPayload - The payload containing the updated user information
+   * @param {IUser['id']} id - The ID of the user to update
+   * @param {Partial<IUser>} userPayload - The payload containing the updated user information
    * @return {Promise<Model<IUser> | null>} A Promise resolving to the updated user model or null if the user was not found
    */
   static async updateUser(
-    id: number,
-    userPayload: IUpdateUser
+    id: IUser['id'],
+    userPayload: Partial<IUser>
   ): Promise<UserModel | null> {
     const userUpdated = await userDao.getInstance().updateUser(id, userPayload)
     return userUpdated
@@ -86,10 +87,10 @@ export default class userService {
   /**
    * A description of the entire function.
    *
-   * @param {number} id - description of parameter
+   * @param {IUser['id']} id - description of parameter
    * @return {Promise<number>} description of return value
    */
-  static async deleteUser(id: number): Promise<number> {
+  static async deleteUser(id: IUser['id']): Promise<number> {
     const qtyDeleted = await userDao.getInstance().deleteUser(id)
     return qtyDeleted
   }

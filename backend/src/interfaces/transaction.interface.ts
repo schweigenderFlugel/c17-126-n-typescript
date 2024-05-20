@@ -1,12 +1,12 @@
-import { IDestinationAccountData, ISourceAccountData } from "./bankAccount.interface"
+import { IBankAccount, IDestinationAccountData, ISourceAccountData } from "./bankAccount.interface"
 import { IHistorial } from "./historial.interface"
 
 export interface ITransaction {
-  id?: number
-  historial_id: number
+  id?: `${string}-${string}-${string}-${string}-${string}-${string}-`
+  historial_id: IHistorial['id']
   operation_number: number
-  source_account: number
-  destination_account: number
+  source_account: IBankAccount['id']
+  destination_account: IBankAccount['id']
   type_transfer: string
   amount: number
   date_transaction: Date
@@ -23,7 +23,7 @@ export interface ITransactionDataDetails {
   to?: Partial<IDestinationAccountData>
 }
 
-export interface IUserTransactionSentData {
+export interface ITransactionSentDataValues {
   dataValues: {
     id: number;
     source_account: number;
@@ -53,7 +53,7 @@ export interface IUserTransactionSentData {
   }
 }
 
-export interface IUserTransactionSentResponse {
+export interface ITransactionSentResponse {
   id: number;
   source_account: number;
   destination_account: number;
@@ -69,7 +69,7 @@ export interface IUserTransactionSentResponse {
   }
 }
 
-export interface IUserTransactionReceivedData {
+export interface ITransactionReceivedDataValues {
   dataValues: {
     id: number;
     source_account: number;
@@ -99,7 +99,7 @@ export interface IUserTransactionReceivedData {
   }
 }
 
-export interface IUserTransactionReceivedResponse {
+export interface ITransactionReceivedResponse {
   id: number;
   source_account: number;
   destination_account: number;
@@ -115,9 +115,9 @@ export interface IUserTransactionReceivedResponse {
   }
 }
 
-export interface IUserTransactionsResponse {
-  sent: Partial<IUserTransactionSentResponse[]>;
-  received: Partial<IUserTransactionReceivedResponse[]>;
+export interface ITransactionsResponse {
+  sent: Partial<ITransactionSentResponse[]>;
+  received: Partial<ITransactionReceivedResponse[]>;
 }
 
 export interface ITransactionCreatedResponse extends ITransaction {

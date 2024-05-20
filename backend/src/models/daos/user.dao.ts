@@ -1,9 +1,10 @@
 import { Model } from 'sequelize'
 import { Auth, User } from '../db'
-import { ICreateUser, IUpdateUser, IUser } from '../../interfaces/user.interface'
+import { ICreateUser, IUser } from '../../interfaces/user.interface'
 import { UserModel } from '../db/entity/user.entity'
 import { BankAccount } from '../db/entity/bank-account.entity'
 import { Preferences } from '../db/entity/preference.entity'
+import { IAuth } from '../../interfaces/auth.interface'
 
 export default class userDao {
   private static instance: userDao | null = null
@@ -32,10 +33,10 @@ export default class userDao {
   /**
    * Retrieves a user by their ID.
    *
-   * @param {number} id - The ID of the user to retrieve.
+   * @param {IUser['id']} id - The ID of the user to retrieve.
    * @return {Promise<Model<IUser> | null>} The user model if found, otherwise null.
    */
-  async getUserById(id: number): Promise<UserModel | null> {
+  async getUserById(id: IUser['id']): Promise<UserModel | null> {
     const userFound: UserModel | null = await User.findByPk(id)
     return userFound
   }
@@ -82,10 +83,10 @@ export default class userDao {
   /**
    * Retrieves a user by their authentication ID.
    *
-   * @param {number} authId - The authentication ID of the user to retrieve.
+   * @param {IAuth['id']} authId - The authentication ID of the user to retrieve.
    * @return {Promise<Model<IUser> | null>} The user model if found, otherwise null.
    */
-  async getUserByAuthId(authId: number): Promise<UserModel | null> {
+  async getUserByAuthId(authId: IAuth['id']): Promise<UserModel | null> {
     const userFound: UserModel | null = await User.findOne({
       where: {
         authId: authId,
@@ -188,8 +189,8 @@ export default class userDao {
    * @return {Promise<Model<IUser> | null>} The updated user model or null if not found
    */
   async updateUser(
-    id: number,
-    userPayload: IUpdateUser
+    id: IUser['id'],
+    userPayload: Partial<IUser>,
   ): Promise<UserModel| null> {
     const userUpdated = await User.update(userPayload, {
       where: { id },
@@ -201,10 +202,10 @@ export default class userDao {
   /**
    * Delete a user by their ID.
    *
-   * @param {number} id - The ID of the user to be deleted
+   * @param {IUser['id']} id - The ID of the user to be deleted
    * @return {Promise<number>} The number of users deleted
    */
-  async deleteUser(id: number): Promise<number> {
+  async deleteUser(id: IUser['id']): Promise<number> {
     const userDeleted = await User.destroy({
       where: { id },
     })

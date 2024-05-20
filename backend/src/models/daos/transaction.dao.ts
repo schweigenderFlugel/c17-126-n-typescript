@@ -40,10 +40,10 @@ export default class TransactionDao {
   /**
    * Retrieves a transaction by its ID.
    *
-   * @param {number} id - The ID of the transaction to retrieve
+   * @param {ITransaction['id']} id - The ID of the transaction to retrieve
    * @return {Promise<TransactionModel | null>} The transaction model if found, otherwise null
    */
-  async getTransactionById(id: number): Promise<TransactionModel | null> {
+  async getTransactionById(id:ITransaction['id']): Promise<TransactionModel | null> {
     const transactionFound = await Transaction.findByPk(id, {
       attributes: ['operation_number', 'type_transfer', 'amount', 'date_transaction', 'status'],
       include: [{
@@ -100,7 +100,7 @@ export default class TransactionDao {
    * @return {Promise<TransactionModel[]>} An array of transaction models.
    */
   async getAllTransactionsBySourceAccount(
-    accountId: number
+    accountId: IBankAccount['id']
   ): Promise<TransactionModel[]> {
     const transactionsFound = await Transaction.findAll({
       where: { source_account: accountId },
@@ -115,7 +115,7 @@ export default class TransactionDao {
    * @return {Promise<TransactionModel[]>} An array of transaction models.
    */
   async getAllTransactionsByDestinationAccount(
-    accountId: number
+    accountId: IBankAccount['id']
   ): Promise<TransactionModel[]> {
     const transactionsFound = await Transaction.findAll({
       where: { destination_account: accountId },
@@ -143,13 +143,13 @@ export default class TransactionDao {
   /**
    * Updates a transaction in the database.
    *
-   * @param {number} id - The ID of the transaction to update.
-   * @param {ITransaction} transactionPayload - The updated transaction payload.
+   * @param {ITransaction['id']} id - The ID of the transaction to update.
+   * @param {Partial<ITransaction>} transactionPayload - The updated transaction payload.
    * @return {Promise<TransactionModel | null>} The updated transaction model or null if not found.
    */
   async updateTransactionById(
-    id: number,
-    transactionPayload: ITransaction
+    id: ITransaction['id'],
+    transactionPayload: Partial<ITransaction>
   ): Promise<TransactionModel> {
     const transactionUpdated = await Transaction.update(transactionPayload, {
       where: { id },

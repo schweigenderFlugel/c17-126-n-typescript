@@ -1,47 +1,53 @@
+import * as crypto from "node:crypto"
 import { IAuth } from "../../../interfaces/auth.interface";
 import { Auth, Roles } from "../entity/auth.entity";
 
-interface AuthFixture extends Omit<Omit<IAuth, 'createdAt'>, 'updatedAt'> {
+interface AuthFixture extends Omit<Omit<Omit<IAuth, 'activationCode'>, 'createdAt'>, 'updatedAt'> {
+  activation_code: IAuth['activationCode'] | null;
   created_at: Date;
   updated_at: Date;
 }
 
 export const adminAuth: AuthFixture = {
-  id: 1,
+  id: crypto.randomUUID(),
   email: 'admin@email.com',
   password: "$2b$10$WfM1hoVWH8R/i0fC34Lh2.lzpLYP/i3ki7mLz62lAFchQw0yJC.Ue",
   role: Roles.ADMIN,
+  activation_code: null,
   status: true,
   created_at: new Date(),
   updated_at: new Date(),
 }
 
 export const normalAuth: AuthFixture = {
-  id: 2,
+  id: crypto.randomUUID(),
   email: 'normal@email.com',
   password: "$2b$10$85FoRWGIr7Z1Zyo5HHHA5O1a0RzC/oDvG3t/kjQSAblO3ZGGAJ1Nu",
   role: Roles.NORMAL,
+  activation_code: null,
   status: true,
   created_at: new Date(),
   updated_at: new Date(),
 }
 
 export const authWithoutUser: AuthFixture = {
-  id: 3,
+  id: crypto.randomUUID(),
   email: 'nonuser@email.com',
   password: "$2b$10$85FoRWGIr7Z1Zyo5HHHA5O1a0RzC/oDvG3t/kjQSAblO3ZGGAJ1Nu",
   role: Roles.NORMAL,
-  status: false,
+  activation_code: null,
+  status: true,
   created_at: new Date(),
   updated_at: new Date(),
 }
 
 export const authToLogout: AuthFixture = {
-  id: 6,
+  id: crypto.randomUUID(),
   email: 'tologout@email.com',
   password: '',
   role: Roles.NORMAL,
-  status: false,
+  activation_code: null,
+  status: true,
   created_at: new Date(),
   updated_at: new Date(),
 }

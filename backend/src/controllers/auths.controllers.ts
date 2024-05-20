@@ -1,8 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { UniqueConstraintError } from 'sequelize'
 import { TokenExpiredError } from 'jsonwebtoken'
-import { INewAuthResponse, ISign, IUpdateAuth } from '../interfaces/auth.interface'
-import { ITokenPayload } from '../interfaces/token.interface'
+import { IAuth, INewAuthResponse, ISign, ITokenPayload, IUpdateAuth } from '../interfaces/auth.interface'
 import { createHash, isValidPassword } from '../utils/bcrypt.utils'
 import authService from '../services/auth.services'
 import apiSuccessResponse from '../utils/apiResponse.utils'
@@ -200,7 +199,7 @@ export default class authsController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const id = req.params.id as unknown as number;
+      const id = req.params.id as unknown as IAuth['id'];
       const tokenPayload: ITokenPayload = req.user as ITokenPayload
       const body: IUpdateAuth = req.body
       const authFound = await authService.getAuthById(id);
@@ -305,7 +304,10 @@ export default class authsController {
       const updateSessionPayload: Partial<ISession> = {
         refreshToken: null
       }
-      await sessionService.updateSession(sessionFiltered?.id as number, updateSessionPayload)
+      await sessionService.updateSession(
+        sessionFiltered?.id as ISession['id'], 
+        updateSessionPayload
+      )
       await CookiesUtils.removeJwtCookie(cookieName, res)
       res.status(HTTP_STATUS.OK).json({ message: 'logout succesfully' })
     } catch (err: any) {

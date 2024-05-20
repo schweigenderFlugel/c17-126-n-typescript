@@ -1,4 +1,5 @@
 import { IAnualHistorial } from '../../interfaces/anualHistorial.interface' 
+import { IBankAccount } from '../../interfaces/bankAccount.interface'
 import { AnualHistorial } from '../db/entity/anual-historial.entity' 
 import { AnualHistorialModel } from '../db/entity/anual-historial.entity' 
 
@@ -21,7 +22,7 @@ export default class anualHistorialDao {
    * @param {IHistorial} bank_account - The ID of bank account to retrieve the anual historial.
    * @return {Promise<HistorialModel>} The created anual historial.
    */
-  async getAnualHistorialByBankAccountId(bank_account: number): Promise<AnualHistorialModel[] | null> {
+  async getAnualHistorialByBankAccountId(bank_account: IBankAccount['id']): Promise<AnualHistorialModel[] | null> {
     const bankAccountCreated: AnualHistorialModel[] | null = await AnualHistorial.findAll({
         where: { bank_account: bank_account }
     })
@@ -48,11 +49,11 @@ export default class anualHistorialDao {
    * @return {Promise<HistorialModel | null>} The updated historial model or null if not found.
    */
   async updateAnualHistorial(
-    bank_account: number,
+    id: IAnualHistorial['id'],
     historialPayload: Partial<IAnualHistorial>
   ): Promise<AnualHistorialModel | null> {
     const historialUpdated = await AnualHistorial.update(historialPayload, {
-      where: { bank_account: bank_account },
+      where: { id: id },
       returning: true,
     })
     return historialUpdated[1][0]
@@ -64,7 +65,7 @@ export default class anualHistorialDao {
    * @param {number} id - The ID of the anual historial to be deleted
    * @return {Promise<number>} The number of anual historials deleted
    */
-  async deleteAnualHistorial(id: number): Promise<number> {
+  async deleteAnualHistorial(id: IAnualHistorial['id']): Promise<number> {
     const anualHistorialDeleted = await AnualHistorial.destroy({
       where: { id },
     })

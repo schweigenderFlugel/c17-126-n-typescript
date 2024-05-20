@@ -9,8 +9,7 @@ const BankAccount = sequelize.define<BankAccountModel>(
   'bank_account',
   {
     id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
+      type: DataTypes.STRING,
       primaryKey: true,
     },
     userId: {

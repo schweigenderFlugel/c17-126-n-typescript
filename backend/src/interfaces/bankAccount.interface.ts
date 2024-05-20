@@ -1,42 +1,43 @@
-import { IUserAnualHistorialData } from './anualHistorial.interface'
-import { IUserTransactionReceivedData, IUserTransactionSentData } from './transaction.interface'
-import { IUserData } from './user.interface'
+import { IAnualHistorialDataValues } from './anualHistorial.interface'
+import { IAuth } from './auth.interface';
+import { ITransactionReceivedDataValues, ITransactionSentDataValues } from './transaction.interface'
+import { IUser, IUserData } from './user.interface'
 
 export interface IBankAccount {
-  id: number
-  userId: number
+  id: `${string}-${string}-${string}-${string}-${string}-${string}-`;
+  userId: IUser['id']
   number_account: string
   balance: number
   expenses: number
   investments: number
 }
 
-export interface IUserBankAccountData {
+export interface IBankAccountDataValues {
   dataValues: {
     id: number;
     number_account: string;
     balance: number;
     expenses: number;
     investments: number;
-    transactions_sent: IUserTransactionSentData[],
-    transactions_received: IUserTransactionReceivedData[],
-    anual_historial: IUserAnualHistorialData[],
+    transactions_sent: ITransactionSentDataValues[],
+    transactions_received: ITransactionReceivedDataValues[],
+    anual_historial: IAnualHistorialDataValues[],
   }
 }
 
 export interface IAccountData {
-  id: number;
+  id: IBankAccount['id'];
   user: {
-    id: number;
+    id: IUser['id'];
     auth: {
-      id: number;
+      id: IAuth['id'];
     }
   }
 }
 
 export interface ISourceAccountData {
-  id: number
-  userId: number
+  id: IBankAccount['id']
+  userId: IUser['id']
   number_account: string
   balance: number
   expenses: number
@@ -45,7 +46,7 @@ export interface ISourceAccountData {
 }
 
 export interface IDestinationAccountData {
-  id: number
+  id: IBankAccount['id']
   number_account: string
   balance: number
   user?: IUserData

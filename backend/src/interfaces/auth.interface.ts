@@ -1,10 +1,22 @@
 import { ICommon } from "./common.interface";
 
 export interface IAuth extends ICommon {
+  id: `${string}-${string}-${string}-${string}-${string}`;
   email: string;
   password: string;
   role: string;
+  activationCode: `${string}-${string}-${string}-${string}`;
   status: boolean;
+}
+
+export interface ISign {
+  email: string;
+  password: string;
+}
+
+export type ITokenPayload = {
+  id: IAuth['id'];
+  role: string;
 }
 
 export interface INewAuthResponse {
@@ -13,16 +25,14 @@ export interface INewAuthResponse {
   status: boolean;
 }
 
-export interface ISign extends Omit<Omit<Omit<Omit<Omit<Omit<IAuth, 'id'>, 'createdAt'>, 'updatedAt'>, 'role'>, 'refreshToken'>, 'status'> {}
-
 export interface IUpdateAuth extends Omit<Omit<Omit<IAuth, 'id'>, 'email'>, 'createdAt'> {
   currentPassword: string;
   newPassword: string;
 }
 
-export interface IUserAuthData { 
+export interface IAuthDataValues { 
   dataValues: {
-    id: number;
+    id: IAuth['id'];
     email: string;
   }
 } 

@@ -1,3 +1,4 @@
+import { IAuth } from '../../interfaces/auth.interface'
 import { ISession } from '../../interfaces/session.interface'
 import { Session, SessionModel } from '../db/entity/session.entity'
 
@@ -30,7 +31,7 @@ export default class sessionDao {
    * @param {number} authId - The auth id for session information to retrieve.
    * @return {Promise<SessionModel[] | null>} The retrieved session information, or null if not found.
    */
-  async getSessionsRecordsById(authId: number): Promise<SessionModel[] | null> {
+  async getSessionsRecordsById(authId: IAuth['id']): Promise<SessionModel[] | null> {
     const sessionsFound: SessionModel[] | null = await Session.findAll({
       where: { authId: authId }
     })
@@ -44,7 +45,7 @@ export default class sessionDao {
    * @param {IAuth} sessionPayload - the new authentication payload
    * @return {Promise<SessionModel | null>} the updated authentication model or null if not found
    */
-  async updateSession(id: number, sessionPayload: Partial<ISession>): Promise<SessionModel | null> {
+  async updateSession(id: ISession['id'], sessionPayload: Partial<ISession>): Promise<SessionModel | null> {
     const authUpdated = await Session.update(sessionPayload, {
       where: { id: id },
       returning: true,
@@ -55,10 +56,10 @@ export default class sessionDao {
   /**
    * A function that deletes a session record.
    *
-   * @param {number} id - The ID of the session record to delete
-   * @return {Promise<AuthModel | null>} The deleted session record or null if not found
+   * @param {IAuth['id']} id - The ID of the session record to delete
+   * @return {Promise<SessionModel | null>} The deleted session record or null if not found
    */
-  async deleteSession(id: number): Promise<SessionModel | null> {
+  async deleteSession(id: IAuth['id']): Promise<SessionModel | null> {
     await Session.destroy({
       where: { id },
     })

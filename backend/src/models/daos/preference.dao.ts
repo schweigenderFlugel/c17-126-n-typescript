@@ -1,4 +1,5 @@
 import { IPreferences } from '../../interfaces/preference.interface'
+import { IUser } from '../../interfaces/user.interface'
 import { Preferences, PreferencesModel } from '../db/entity/preference.entity'
 
 export default class preferenceDao {
@@ -21,7 +22,7 @@ export default class preferenceDao {
    * @return {Promise<PreferencesModel>} A promise that resolves to the created preference model.
    */
   async createPreference(
-    preferencePayload: IPreferences
+    preferencePayload: IPreferences,
   ): Promise<PreferencesModel> {
     const preferenceCreated: PreferencesModel =
       await Preferences.create(preferencePayload)
@@ -31,11 +32,11 @@ export default class preferenceDao {
   /**
    * Retrieves a preference by user ID.
    *
-   * @param {number} userId - The ID of the user.
+   * @param {IUser['id']} userId - The ID of the user.
    * @return {Promise<PreferencesModel | null>} The preference found, or null if not found.
    */
   async getPreferenceByUserId(
-    userId: number
+    userId: IUser['id']
   ): Promise<PreferencesModel | null> {
     const preferencesFound = await Preferences.findOne({
       where: { userId: userId },
@@ -46,13 +47,13 @@ export default class preferenceDao {
   /**
    * Updates a preference by user ID.
    *
-   * @param {number} userId - The ID of the user.
-   * @param {IPreferences} preferencePayload - The payload containing the updated preference information.
+   * @param {IUser['id']} userId - The ID of the user.
+   * @param {Partial<IPreferences>} preferencePayload - The payload containing the updated preference information.
    * @return {Promise<PreferencesModel>} A promise that resolves to the updated preference model.
    */
   async updatePreferenceByUserId(
-    userId: number,
-    preferencePayload: Omit<IPreferences, 'userId'>
+    userId: IUser['id'],
+    preferencePayload: Partial<IPreferences>
   ): Promise<PreferencesModel> {
     const preferenceUpdated = await Preferences.update(preferencePayload, {
       where: { userId: userId },
@@ -64,10 +65,10 @@ export default class preferenceDao {
   /**
    * Deletes a preference by user ID.
    *
-   * @param {number} userId - The ID of the user.
+   * @param {IUser['id']} userId - The ID of the user.
    * @return {Promise<void>} A promise that resolves when the preference is deleted.
    */
-  async deletePreferenceByUserId(userId: number): Promise<void> {
+  async deletePreferenceByUserId(userId: IUser['id']): Promise<void> {
     await Preferences.destroy({ where: { userId: userId } })
   }
 }

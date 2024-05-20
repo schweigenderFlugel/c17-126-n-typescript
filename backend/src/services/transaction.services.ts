@@ -27,11 +27,11 @@ export default class transactionService {
   /**
    * Retrieves a transaction by its ID.
    *
-   * @param {number} id - The ID of the transaction to retrieve
+   * @param {ITransaction['id']} id - The ID of the transaction to retrieve
    * @return {Promise<TransactionModel | null>} The transaction model if found, otherwise null
    */
   static async getTransactionById(
-    id: number
+    id: ITransaction['id']
   ): Promise<TransactionModel | null> {
     const transactionFound = await transactionDao
       .getInstance()
@@ -69,11 +69,11 @@ export default class transactionService {
   /**
    * Retrieves all transactions by the source account ID.
    *
-   * @param {number} accountId - The ID of the source account.
+   * @param {IBankAccount['id']} accountId - The ID of the source account.
    * @return {Promise<TransactionModel[]>} An array of transaction models.
    */
   static async getAllTransactionsBySourceAccount(
-    accountId: number
+    accountId: IBankAccount['id']
   ): Promise<TransactionModel[]> {
     const transactionsFound = await transactionDao
       .getInstance()
@@ -84,11 +84,11 @@ export default class transactionService {
   /**
    * Retrieves all transactions by the destination account ID.
    *
-   * @param {number} accountId - The ID of the destination account.
+   * @param {IBankAccount['id']} accountId - The ID of the destination account.
    * @return {Promise<TransactionModel[]>} An array of transaction models.
    */
   static async getAllTransactionsByDestinationAccount(
-    accountId: number
+    accountId: IBankAccount['id']
   ): Promise<TransactionModel[]> {
     const transactionsFound = await transactionDao
       .getInstance()
@@ -99,7 +99,7 @@ export default class transactionService {
   /**
    * Retrieves all transactions by the destination account ID and status.
    *
-   * @param {number} accountId - The ID of the destination account.
+   * @param {IBankAccount['id']} accountId - The ID of the destination account.
    * @param {TRANSACTION_STATUS} status - The status of the transactions.
    * @return {Promise<TransactionModel[]>} An array of transaction models.
    */
@@ -116,13 +116,13 @@ export default class transactionService {
   /**
    * Updates a transaction by its ID with the provided transaction payload.
    *
-   * @param {number} id - The ID of the transaction to update.
-   * @param {ITransaction} transactionPayload - The payload containing the updated transaction information.
+   * @param {ITransaction['id']} id - The ID of the transaction to update.
+   * @param {Partial<ITransaction>} transactionPayload - The payload containing the updated transaction information.
    * @return {Promise<TransactionModel>} A Promise that resolves to the updated transaction.
    */
   static async updateTransactionById(
-    id: number,
-    transactionPayload: ITransaction
+    id: ITransaction['id'],
+    transactionPayload: Partial<ITransaction>
   ): Promise<TransactionModel> {
     const transactionUpdated = await transactionDao
       .getInstance()

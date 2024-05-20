@@ -1,15 +1,16 @@
-import { IUserTransactionsResponse } from "./transaction.interface";
+import { IAnualHistorial } from "./anualHistorial.interface";
+import { ITransactionsResponse } from "./transaction.interface";
 
 export interface IHistorial {
-  id: number;
-  anual_historial_id: number;
+  id: `${string}-${string}-${string}-${string}-${string}-${string}-`;
+  anual_historial_id: IAnualHistorial['id'];
   month: number;
   balance: number;
   expenses: number;
   investments: number;
 }
 
-export interface IUserHistorial {
+export interface IHistorialDataValues {
   dataValues: {
     id: number;
     month: number;
@@ -20,25 +21,25 @@ export interface IUserHistorial {
   }
 }
 
-export interface IUserHistorialResponse {
+export interface IHistorialResponse {
   month: number;
   balance: number;
   expenses: number;
   investments: number;
-  transactions: IUserTransactionsResponse,
+  transactions: ITransactionsResponse,
 }
 
 export interface IMonthsResponse {
-  jan: IUserHistorialResponse;
-  feb: IUserHistorialResponse;
-  mar: IUserHistorialResponse;
-  apr: IUserHistorialResponse;
-  may: IUserHistorialResponse;
-  jun: IUserHistorialResponse;
-  jul: IUserHistorialResponse;
-  aug: IUserHistorialResponse;
-  sep: IUserHistorialResponse;
-  oct: IUserHistorialResponse;
-  nov: IUserHistorialResponse;
-  dec: IUserHistorialResponse;
+  jan: IHistorialResponse;
+  feb: IHistorialResponse;
+  mar: IHistorialResponse;
+  apr: IHistorialResponse;
+  may: IHistorialResponse;
+  jun: IHistorialResponse;
+  jul: IHistorialResponse;
+  aug: IHistorialResponse;
+  sep: IHistorialResponse;
+  oct: IHistorialResponse;
+  nov: IHistorialResponse;
+  dec: IHistorialResponse;
 }

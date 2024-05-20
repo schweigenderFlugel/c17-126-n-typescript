@@ -1,4 +1,5 @@
 import { DataTypes, Model } from 'sequelize'
+import * as crypto from 'node:crypto'
 import { sequelize } from '../database.manager'
 import { IPreferences } from '../../../interfaces/preference.interface'
 import { User } from './user.entity'
@@ -10,9 +11,10 @@ const Preferences = sequelize.define<PreferencesModel>('preferences', {
     type: DataTypes.INTEGER,
     autoIncrement: true,
     primaryKey: true,
+    defaultValue: crypto.randomUUID(),
   },
   userId: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING,
     field: 'user_id',
     allowNull: false,
     unique: true,

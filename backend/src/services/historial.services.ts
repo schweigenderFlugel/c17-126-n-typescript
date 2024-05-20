@@ -1,3 +1,4 @@
+import { IAnualHistorial } from '../interfaces/anualHistorial.interface';
 import { IHistorial } from '../interfaces/historial.interface'; 
 import historialDao from '../models/daos/historial.dao'; 
 import { HistorialModel } from '../models/db/entity/historial.entity'; 
@@ -6,11 +7,11 @@ import { HistorialModel } from '../models/db/entity/historial.entity';
     /**
      * Get all the historials with the given anual historial id.
      *
-     * @param {number} anual_historial_id - The id of the anual historial.
+     * @param {IAnualHistorial['id']} anual_historial_id - The id of the anual historial.
      * @return {Promise<HistorialModel>} All the monthly historials.
      */
     static async getHistorials(
-      anual_historial_id: number
+      anual_historial_id: IAnualHistorial['id']
     ): Promise<HistorialModel[] | null> {
       const historialsFound = await historialDao.getInstance().getHistorials(anual_historial_id);
       return historialsFound;
@@ -19,11 +20,11 @@ import { HistorialModel } from '../models/db/entity/historial.entity';
     /**
      * Get the historial with the given id.
      *
-     * @param {number} id - The id of the historial.
+     * @param {IHistorial['id']} id - The id of the historial.
      * @return {Promise<HistorialModel>} The monthly historial.
      */
     static async getHistorial(
-      id: number
+      id: IHistorial['id']
     ): Promise<HistorialModel | null> {
       const historialFound = await historialDao.getInstance().getHistorial(id);
       return historialFound;
@@ -47,12 +48,12 @@ import { HistorialModel } from '../models/db/entity/historial.entity';
     /**
      * Updates the historial by its ID with the provided historial payload.
      *
-     * @param {number} id - The ID of the historial to update.
-     * @param {IHistorial} historialPayload - The payload containing the updated historial information.
+     * @param {IHistorial['id']} id - The ID of the historial to update.
+     * @param {Partial<IHistorial>} historialPayload - The payload containing the updated historial information.
      * @return {Promise<HistorialModel | null>} The updated historial model or null if not found.
      */
     static async updateHistorial(
-      id: number,
+      id: IHistorial['id'],
       historialPayload: Partial<IHistorial>
     ): Promise<HistorialModel | null> {
       const historialUpdated = await historialDao
@@ -64,10 +65,10 @@ import { HistorialModel } from '../models/db/entity/historial.entity';
     /**
      * Deletes a historial with the given ID.
      *
-     * @param {number} id - The ID of the historial to be deleted.
+     * @param {IHistorial['id']} id - The ID of the historial to be deleted.
      * @return {Promise<number>} The number of historials deleted.
      */
-    static async deleteHistorial(id: number): Promise<number> {
+    static async deleteHistorial(id: IHistorial['id']): Promise<number> {
       const historialDeleted = await historialDao
         .getInstance()
         .deleteHistorial(id)

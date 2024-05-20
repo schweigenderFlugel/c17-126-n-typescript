@@ -1,4 +1,5 @@
 import { DataTypes, Model, NOW } from 'sequelize'
+import * as crypto from 'node:crypto'
 import { sequelize } from '../database.manager'
 import { IAuth } from '../../../interfaces/auth.interface'
 
@@ -11,9 +12,11 @@ export interface AuthModel extends Model<IAuth>, IAuth {}
 
 export const Auth = sequelize.define<AuthModel>('auth', {
   id: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING,
     autoIncrement: true,
     primaryKey: true,
+    unique: true,
+    defaultValue: crypto.randomUUID(),
   },
   email: {
     type: DataTypes.STRING,
@@ -27,6 +30,12 @@ export const Auth = sequelize.define<AuthModel>('auth', {
   role: {
     type: DataTypes.STRING,
     allowNull: false,
+    defaultValue: Roles.NORMAL,
+  },
+  activationCode: {
+    field: 'activation_code',
+    type: DataTypes.STRING,
+    allowNull: true,
     defaultValue: Roles.NORMAL,
   },
   status: {

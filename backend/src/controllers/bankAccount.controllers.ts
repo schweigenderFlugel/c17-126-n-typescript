@@ -3,12 +3,9 @@ import bankAccountService from '../services/bankAccount.services'
 import { HTTP_STATUS } from '../config/constants'
 import HttpError from '../utils/HttpError.utils'
 import apiSuccessResponse from '../utils/apiResponse.utils'
-import { IUserToken } from '../interfaces/user.interface'
-import transactionService from '../services/transaction.services'
-import transactionHelper from '../utils/transactionsHelper'
-import { ITokenPayload } from '../interfaces/token.interface'
-import { IAccountData } from '../interfaces/bankAccount.interface'
+import { IAccountData, IBankAccount } from '../interfaces/bankAccount.interface'
 import HistorialUtils from '../utils/historial.utils'
+import { ITokenPayload } from '../interfaces/auth.interface'
 
 export default class bankAccountController {
   /**
@@ -25,7 +22,7 @@ export default class bankAccountController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const accountId = req.params.id as unknown as number;
+      const accountId = req.params.id as unknown as IBankAccount['id'];
       const { amount } = req.body;
 
       const tokenPayload: ITokenPayload = req.user as ITokenPayload
@@ -86,61 +83,6 @@ export default class bankAccountController {
     } catch (err) {
       console.log(err)
       next(err)
-    }
-  }
-
-  static async getBalance(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> {
-    try {
-      const user = req.user as IUserToken
-
-      const accountFound = await bankAccountService.getBankAccountByUserId(
-        user.id
-      )
-
-      if (!accountFound) {
-        throw new HttpError(
-          'Account not found',
-          'Account not found',
-          HTTP_STATUS.NOT_FOUND
-        )
-      }
-
-      const transactionsReceivedFound =
-        await transactionService.getAllTransactionsByDestinationAccount(
-          accountFound.id
-        )
-
-      const transactionsMadeFound =
-        await transactionService.getAllTransactionsBySourceAccount(
-          accountFound.id
-        )
-
-      let response = apiSuccessResponse({
-        accountFound,
-        transactionsMade: transactionsMadeFound,
-        transactionsReceived: transactionsReceivedFound,
-      })
-
-      if (transactionsReceivedFound) {
-        const amountImproved = await transactionHelper.transactionsImprover(
-          transactionsReceivedFound,
-          accountFound.dataValues
-        )
-
-        response = apiSuccessResponse({
-          accountFound: amountImproved.resultBankAccount,
-          transactionsReceivedFound: amountImproved.allTransactions,
-          transactionsMade: transactionsMadeFound,
-        })
-      }
-
-      res.status(HTTP_STATUS.OK).json(response)
-    } catch (error) {
-      next(error)
     }
   }
 }

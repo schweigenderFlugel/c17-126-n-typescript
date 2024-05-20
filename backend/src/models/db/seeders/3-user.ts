@@ -1,16 +1,18 @@
+import * as crypto from "node:crypto"
 import { AccountType, IUser } from "../../../interfaces/user.interface";
 import { User } from "../entity/user.entity";
 import { adminAuth, normalAuth } from "./1-auth";
+import { IAuth } from "../../../interfaces/auth.interface";
 
 interface UserFixture extends Omit<Omit<Omit<Omit<IUser, 'authId'>, 'createdAt'>, 'updatedAt'>, 'accountType'> {
   account_type: AccountType;
-  auth_id: number;
+  auth_id: IAuth['id'];
   created_at: Date;
   updated_at: Date;
 }
 
 export const adminUser: UserFixture = {
-  id: 1,
+  id: crypto.randomUUID(),
   name: "admin",
   lastname: "admin",
   avatar: 'image',

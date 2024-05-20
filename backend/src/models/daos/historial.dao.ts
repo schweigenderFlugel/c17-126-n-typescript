@@ -1,3 +1,4 @@
+import { IAnualHistorial } from '../../interfaces/anualHistorial.interface'
 import { IHistorial } from '../../interfaces/historial.interface'
 import { Historial } from '../db/entity/historial.entity'
 import { HistorialModel } from '../db/entity/historial.entity'
@@ -18,11 +19,11 @@ export default class historialDao {
   /**
    * Get all monthly historials from anual historial.
    *
-   * @param {number} anual_historial_id The id of the anual historial.
+   * @param {IAnualHistorial['id']} anual_historial_id The id of the anual historial.
    * @return {Promise<HistorialModel>} All the monthly historials.
    */
   async getHistorials(
-    anual_historial_id: number
+    anual_historial_id: IAnualHistorial['id']
   ): Promise<HistorialModel[] | null> {
     const historialsFound: HistorialModel[] | null = await Historial.findAll({
       where: { anual_historial_id: anual_historial_id }
@@ -37,7 +38,7 @@ export default class historialDao {
    * @return {Promise<HistorialModel>} The monthly historial.
    */
   async getHistorial(
-    id: number
+    id: IHistorial['id']
   ): Promise<HistorialModel | null> {
     const historialFound: HistorialModel | null = await Historial.findOne({
       where: { id: id }
@@ -61,11 +62,11 @@ export default class historialDao {
   /**
    * Asynchronously updates the monthly historial
    *
-   * @param {number} id - The historial id to update historial.
+   * @param {IHistorial['id']} id - The historial id to update historial.
    * @return {Promise<HistorialModel | null>} The updated historial model or null if not found.
    */
   async updateHistorial(
-    id: number,
+    id: IHistorial['id'],
     historialPayload: Partial<IHistorial>
   ): Promise<HistorialModel | null> {
     const historialUpdated = await Historial.update(historialPayload, {
@@ -78,10 +79,10 @@ export default class historialDao {
   /**
    * Delete a historial by their ID.
    *
-   * @param {number} id - The ID of the historial to be deleted
+   * @param {IHistorial['id']} id - The ID of the historial to be deleted
    * @return {Promise<number>} The number of historials deleted
    */
-  async deleteHistorial(id: number): Promise<number> {
+  async deleteHistorial(id: IHistorial['id']): Promise<number> {
     const historialDeleted = await Historial.destroy({
       where: { id },
     })

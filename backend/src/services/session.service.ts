@@ -1,3 +1,4 @@
+import { IAuth } from '../interfaces/auth.interface';
 import { ISession } from '../interfaces/session.interface'; 
 import sessionDao from '../models/daos/session.dao';
 
@@ -5,7 +6,7 @@ export default class sessionService {
   /**
    * A description of the entire function.
    *
-   * @param {IAuth} sessionPayload - description of parameter
+   * @param {Omit<ISession, 'id'>} sessionPayload - description of parameter
    * @return {Promise<ISession>} description of return value
    */
   static async createSession(sessionPayload: Omit<ISession, 'id'>): Promise<ISession> {
@@ -16,10 +17,10 @@ export default class sessionService {
   /**
    * A description of the entire function.
    *
-   * @param {number} authId - description of parameter
+   * @param {IAuth['id']} authId - description of parameter
    * @return {Promise<ISession[]>} description of return value
    */
-  static async getSessionsByAuthId(authId: number): Promise<ISession[]> {
+  static async getSessionsByAuthId(authId: IAuth['id']): Promise<ISession[]> {
     const authFound = await sessionDao.getInstance().getSessionsRecordsById(authId)
     return authFound as ISession[]
   }
@@ -27,12 +28,12 @@ export default class sessionService {
   /**
    * Update session information.
    *
-   * @param {number} id - The ID of the session information.
-   * @param {IAuth} sessionPayload - The updated session payload.
+   * @param {ISession['id']} id - The ID of the session information.
+   * @param {Partial<ISession>} sessionPayload - The updated session payload.
    * @return {Promise<ISession>} The updated session information or null if not found.
    */
   static async updateSession(
-    id: number,
+    id: ISession['id'],
     sessionPayload: Partial<ISession>
   ): Promise<ISession> {
     const sessionUpdated = await sessionDao.getInstance().updateSession(id, sessionPayload)
@@ -42,10 +43,10 @@ export default class sessionService {
   /**
    * Delete session information by ID.
    *
-   * @param {number} id - The ID of the session information to delete.
+   * @param {IAuth['id']} id - The ID of the session information to delete.
    * @return {Promise<ISession | null>} The deleted session information if successful, otherwise null.
    */
-  static async deleteAuth(id: number): Promise<ISession> {
+  static async deleteAuth(id: IAuth['id']): Promise<ISession> {
     const sessionDeleted = await sessionDao.getInstance().deleteSession(id)
     return sessionDeleted as ISession
   }

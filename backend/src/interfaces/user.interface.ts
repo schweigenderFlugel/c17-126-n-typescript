@@ -1,27 +1,28 @@
-import { IAnualHistorial, IAnualHistorialDataResponse } from './anualHistorial.interface'
-import { IUserAuthData } from './auth.interface'
-import { IUserBankAccountData } from './bankAccount.interface'
+import { IAnualHistorialResponse } from './anualHistorial.interface'
+import { IAuth, IAuthDataValues } from './auth.interface'
+import { IBankAccountDataValues } from './bankAccount.interface'
 import { ICommon } from './common.interface'
-import { IUserPreferenceData } from './preference.interface'
+import { IPreferenceDataValues } from './preference.interface'
 
 export type AccountType = 'personal' | 'enterprise'
 
 export interface IUser extends ICommon {
-  name: string
-  lastname: string
-  avatar: string
-  accountType: AccountType
-  alias: string
-  address: string
-  phone: string
-  authId: number
+  id: `${string}-${string}-${string}-${string}-${string}-${string}-`;
+  name: string;
+  lastname: string;
+  avatar: string;
+  accountType: AccountType;
+  alias: string;
+  address: string;
+  phone: string;
+  authId: IAuth['id'];
 }
 
 export interface IUserData {
-  dataValues: { id: number; alias: string; preference: IUserPreferenceData; auth: IUserAuthData  }
+  dataValues: { id: number; alias: string; preference: IPreferenceDataValues; auth: IAuthDataValues }
 }
 
-export interface IAllUserData {
+export interface IAllUserDataValues {
   id: number;
   name: string;
   lastname: string;
@@ -30,9 +31,9 @@ export interface IAllUserData {
   address: string;
   phone: string
   alias: string;
-  auth: IUserAuthData,
-  preference: IUserPreferenceData,
-  bank_account: IUserBankAccountData,
+  auth: IAuthDataValues,
+  preference: IPreferenceDataValues,
+  bank_account: IBankAccountDataValues,
 }
 
 export interface IUserResponse {
@@ -45,7 +46,7 @@ export interface IUserResponse {
   phone: string;        
   alias: string;
   auth: {
-    id: number,
+    id: IAuth['id'],
     email: string,
   },
   preferences: {
@@ -58,7 +59,7 @@ export interface IUserResponse {
     balance: number;
     expenses: number;
     investments: number;
-    anual_historial: Partial<IAnualHistorialDataResponse[]>,
+    anual_historial: Partial<IAnualHistorialResponse[]>,
   }
 }
 
@@ -69,11 +70,9 @@ export interface IUserCreatedData {
   }
 }
 
-export interface IUpdateUser extends Partial<IUser> {}
-
 export interface ICreateUser extends Omit<Omit<Omit<Omit<IUser, 'id'>, 'createdAt'>, 'updatedAt'>, 'avatar'> {}
 
 export interface IUserToken {
-  id: number
+  id: IAuth['id']
   role: string
 }
