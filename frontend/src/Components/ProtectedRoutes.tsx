@@ -12,3 +12,13 @@ export const RequireLogin = ({ children }: PropsWithChildren) => {
     <Navigate to="/login" state={{ from: location }} replace />
   );
 };
+
+export const RequireEmail = ({ children }: PropsWithChildren) => {
+  const { emailToActivate } = useAuth();
+
+  return emailToActivate ? (
+    children
+  ) : (
+    <Navigate to="/activar" replace />
+  );
+}

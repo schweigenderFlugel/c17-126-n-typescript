@@ -14,7 +14,7 @@ export const ChangePasswordForm = ({ user, onClose }: { user: IUser | null, onCl
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const id = user?.auth.id as number;
+    const id = user?.auth.id as string;
     toast.promise(
       changePassword(id, formValues),
       {

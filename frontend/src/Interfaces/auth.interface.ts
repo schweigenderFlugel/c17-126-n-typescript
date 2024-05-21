@@ -1,11 +1,7 @@
-export interface ILoginPayload {
+export interface ISign {
   email: string;
   password: string;
-}
-
-export interface ISignUpPayload {
-  email: string;
-  password: string;
+  activationCode: `${string}-${string}-${string}-${string}`
 }
 
 export interface IChangePassword {
@@ -32,3 +28,10 @@ export interface UserSettingsType {
   min_ammount_transfers: number;
   max_ammount_transfers: number;
 };
+
+export interface ICodeBlocks {
+  first: string;
+  second: string;
+  third: string;
+  fourth: string;
+}

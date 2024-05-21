@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import * as crypto from 'node:crypto'
-import { HTTP_STATUS } from '../config/constants'
+import { ERROR_MESSAGES, HTTP_STATUS } from '../config/constants'
 import HttpError from '../utils/HttpError.utils'
 import apiSuccessResponse from '../utils/apiResponse.utils'
 import userService from '../services/user.services'
@@ -30,33 +30,27 @@ export default class userController {
     next: NextFunction
   ): Promise<void> {
     try {
-      if (!req.user) {
-        throw new HttpError(
-          'Not logged in',
-          'Must be logged in',
-          HTTP_STATUS.UNAUTHORIZED
-        )
-      }
+      if (!req.user) throw new HttpError(
+        ERROR_MESSAGES.NOT_LOGGED_IN,
+        'Must be logged in',
+        HTTP_STATUS.UNAUTHORIZED
+      )
 
       const tokenPayload: ITokenPayload = req.user as ITokenPayload
 
-      if (!tokenPayload || !tokenPayload.id) {
-        throw new HttpError(
-          'Token payload error',
-          'Token payload error',
-          HTTP_STATUS.FORBIDDEN
-        )
-      }
+      if (!tokenPayload || !tokenPayload.id) throw new HttpError(
+        ERROR_MESSAGES.TOKEN_ERROR,
+        'Token payload error',
+        HTTP_STATUS.FORBIDDEN
+      )
 
       const userFound = await userService.getUserByAuthId(tokenPayload.id)
 
-      if (userFound) {
-        throw new HttpError(
-          'User already exists',
-          'User already exists',
-          HTTP_STATUS.CONFLICT
-        )
-      }
+      if (userFound) throw new HttpError(
+        ERROR_MESSAGES.USER_EXISTS,
+        'User already exists',
+        HTTP_STATUS.CONFLICT
+      )
 
       const { name, lastname, alias, address, phone, accountType } = req.body
 
@@ -78,13 +72,11 @@ export default class userController {
         !userCreated ||
         !userCreated.dataValues ||
         !userCreated.dataValues.id
-      ) {
-        throw new HttpError(
-          'User not created',
-          'User not created',
-          HTTP_STATUS.SERVER_ERROR
-        )
-      }
+      ) throw new HttpError(
+        'User not created',
+        'User not created',
+        HTTP_STATUS.SERVER_ERROR
+      )
 
       const preferencesPayload: Omit<IPreferences, 'id'> = {
         userId: userCreated.dataValues.id,
@@ -95,13 +87,11 @@ export default class userController {
       const preferencesCreated =
         await preferenceService.createPrefernce(preferencesPayload)
 
-      if (!preferencesCreated) {
-        throw new HttpError(
-          'Preferences not created',
-          'Preferences not created',
-          HTTP_STATUS.SERVER_ERROR
-        )
-      }
+      if (!preferencesCreated) throw new HttpError(
+        'Preferences not created',
+        'Preferences not created',
+        HTTP_STATUS.SERVER_ERROR
+      )
 
       const numberAccount =
         await bankAccountHelper.generateAccountNumber(accountType)
@@ -118,13 +108,11 @@ export default class userController {
       const bankAccountCreated =
         await bankAccountService.createBankAccount(bankAccountPayload)
 
-      if (!bankAccountCreated) {
-        throw new HttpError(
-          'Bank account not created',
-          'Bank account not created',
-          HTTP_STATUS.SERVER_ERROR
-        )
-      }
+      if (!bankAccountCreated) throw new HttpError(
+        'Bank account not created',
+        'Bank account not created',
+        HTTP_STATUS.SERVER_ERROR
+      )
 
       const historialPayload: Omit<Omit<IHistorial, 'id'>, 'anual_historial_id'> = {
         month: new Date().getMonth() + 1,
@@ -204,14 +192,14 @@ export default class userController {
   ): Promise<void> {
     try {
       if (!req.user) throw new HttpError(
-        'Not logged in',
+        ERROR_MESSAGES.NOT_LOGGED_IN,
         'Must be logged in',
         HTTP_STATUS.UNAUTHORIZED
       )
 
       const tokenPayload = req.user as ITokenPayload;
       if (!tokenPayload || !tokenPayload.id) throw new HttpError(
-        'Token payload error',
+        ERROR_MESSAGES.TOKEN_ERROR,
         'Token payload error',
         HTTP_STATUS.FORBIDDEN
       )
@@ -220,7 +208,7 @@ export default class userController {
       
       if (!userFound) {
         throw new HttpError(
-          'User not found',
+          ERROR_MESSAGES.INVALID_CREDENTIALS,
           'The user does not exist',
           HTTP_STATUS.NOT_FOUND
         )
@@ -277,7 +265,7 @@ export default class userController {
   ): Promise<void> {
     try {
       if (!req.user) throw new HttpError(
-        'Not logged in',
+        ERROR_MESSAGES.NOT_LOGGED_IN,
         'Must be logged in',
         HTTP_STATUS.UNAUTHORIZED
       )
@@ -285,7 +273,7 @@ export default class userController {
       const tokenPayload = req.user as ITokenPayload;
 
       if (!tokenPayload || !tokenPayload.id) throw new HttpError(
-        'Token payload error',
+        ERROR_MESSAGES.TOKEN_ERROR,
         'Token payload error',
         HTTP_STATUS.FORBIDDEN
       )
@@ -314,7 +302,7 @@ export default class userController {
     let aliases: string[] = [];
     try {
       if (!req.user) throw new HttpError(
-        'Not logged in',
+        ERROR_MESSAGES.NOT_LOGGED_IN,
         'Must be logged in',
         HTTP_STATUS.UNAUTHORIZED
       );
@@ -322,7 +310,7 @@ export default class userController {
       const tokenPayload = req.user as ITokenPayload;
 
       if (!tokenPayload || !tokenPayload.id) throw new HttpError(
-        'Token payload error',
+        ERROR_MESSAGES.TOKEN_ERROR,
         'Token payload error',
         HTTP_STATUS.FORBIDDEN
       )
@@ -331,7 +319,7 @@ export default class userController {
 
       if (!currentUser) {
         throw new HttpError(
-          'Current user not found',
+          ERROR_MESSAGES.INVALID_CREDENTIALS,
           'The user does not exist',
           HTTP_STATUS.NOT_FOUND
         )
@@ -350,7 +338,7 @@ export default class userController {
       const aliasesFiltered = aliasesFound.filter(alias => alias !== currentUser.alias);
 
       if (aliasesFiltered.length === 0) throw new HttpError(
-        'Alias not found',
+        ERROR_MESSAGES.ALIAS_NOT_FOUND,
         'Alias not found',
         HTTP_STATUS.NOT_FOUND,
       )
@@ -377,7 +365,7 @@ export default class userController {
     try {
       if (!req.user) {
         throw new HttpError(
-          'User not found',
+          ERROR_MESSAGES.NOT_LOGGED_IN,
           'Must be logged in',
           HTTP_STATUS.UNAUTHORIZED
         )
@@ -389,7 +377,7 @@ export default class userController {
 
       if (!userFound) {
         throw new HttpError(
-          'User does not exist',
+          ERROR_MESSAGES.INVALID_CREDENTIALS,
           'User does not exist',
           HTTP_STATUS.NOT_FOUND
         )
@@ -399,7 +387,7 @@ export default class userController {
 
       if (!tokenPayload || !tokenPayload.id) {
         throw new HttpError(
-          'Token payload error',
+          ERROR_MESSAGES.TOKEN_ERROR,
           'Token payload error',
           HTTP_STATUS.FORBIDDEN
         )
@@ -407,7 +395,7 @@ export default class userController {
 
       if (tokenPayload.id !== userFound.authId) {
         throw new HttpError(
-          'Ids Conflict',
+          ERROR_MESSAGES.INVALID_CREDENTIALS,
           'The user found auth id does not match with auth id from the access token',
           HTTP_STATUS.CONFLICT
         )

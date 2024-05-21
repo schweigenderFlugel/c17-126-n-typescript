@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import schemaValidator from '../../middlewares/schemasValidator.middlewares'
 import {
+  activateSchema,
   loginSchema,
   recoverySchema,
   signUpSchema,
@@ -42,6 +43,13 @@ authRouter.get(
 authRouter.get(
   '/logout',
   authsController.logout,
+  errorHandler
+)
+
+authRouter.post(
+  '/activate',
+  schemaValidator(activateSchema, null),
+  authsController.activate,
   errorHandler
 )
 

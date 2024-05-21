@@ -39,12 +39,11 @@ export const PersonalDataForm = () => {
       createUser(formValues);
       setUpdateData(true);
     } catch (serverError) {
-      console.log(serverError);
       if (
         serverError instanceof AxiosError &&
         !!serverError.response?.data.length
       ) {
-        serverError.response?.data.forEach(error => {
+        serverError.response?.data.forEach((error: { path: string; message: string; }) => {
           toast.error(`Error en el campo "${error.path}": ${error.message}`);
         });
       } else if (serverError instanceof AxiosError && serverError.message) {

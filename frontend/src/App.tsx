@@ -12,13 +12,14 @@ import { ResetPasswordForm } from './Pages/ResetPasswordForm';
 import { ForgotPasswordForm } from './Pages/ForgotPasswordForm';
 
 import { Layout } from './Components/Layout';
-import { RequireLogin } from './Components/ProtectedRoutes';
+import { RequireEmail, RequireLogin } from './Components/ProtectedRoutes';
 import { DashboardStart } from './Components/DashboardStart';
 import { TransfersList } from './Components/TransfersList';
 import { Settings } from './Components/Settings';
 import { Statistics } from './Components/Statistics';
 import { Investments } from './Components/Investments';
 import { ToastNotification } from './Components/ToastNotification';
+import { ActivationForm } from './Pages/AccountActivation';
 
 function App() {
   return (
@@ -38,9 +39,17 @@ function App() {
               element={<ResetPasswordForm />}
             />
             <Route element={
+              <RequireEmail>
+                <Layout/>
+              </RequireEmail>
+            }>
+              <Route path='/activar' element={<ActivationForm />} />
+            </Route>
+            <Route element={
               <RequireLogin>
                 <Layout/>
-              </RequireLogin>}>
+              </RequireLogin>
+            }>
               <Route path='/datos-personales' element={<PersonalDataForm />} />
               <Route element={<Dashboard />}>
                 <Route path="/dashboard" element={<DashboardStart />} />

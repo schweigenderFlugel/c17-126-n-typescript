@@ -33,6 +33,11 @@ export const Auth = sequelize.define<AuthModel>('auth', {
     type: DataTypes.STRING,
     allowNull: true,
   },
+  attempts: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0,
+  },
   status: {
     type: DataTypes.BOOLEAN,
     allowNull: false,

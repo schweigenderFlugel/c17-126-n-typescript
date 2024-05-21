@@ -24,7 +24,7 @@ export const TransferForm = ({ bank_account, onClose }: { bank_account: IBankAcc
   const { setUpdateData } = useAuth();
 
   const initialValue: ICreateTransaction = {
-    source_account: bank_account?.id ?? 0,
+    source_account: bank_account?.id ?? '',
     destination_alias: '',
     amount: 0,
     type: TYPETRANSFERS.DEFERRED,

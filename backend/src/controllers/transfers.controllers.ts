@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
-import { HTTP_STATUS, TRANSACTION_STATUS } from '../config/constants'
+import { ERROR_MESSAGES, HTTP_STATUS, TRANSACTION_STATUS } from '../config/constants'
 import bankAccountService from '../services/bankAccount.services'
 import HttpError from '../utils/HttpError.utils'
 import { IDestinationAccountData, ISourceAccountData } from '../interfaces/bankAccount.interface'
@@ -21,7 +21,7 @@ export default class transfersController {
       const requestingUser = req.user as ITokenPayload;
     
       if (!requestingUser || !requestingUser.id) throw new HttpError(
-        'Token payload error',
+        ERROR_MESSAGES.TOKEN_ERROR,
         'Token payload error',
         HTTP_STATUS.FORBIDDEN
       )
@@ -29,7 +29,7 @@ export default class transfersController {
       const transactionFound = await transactionService.getTransactionById(transactionId);
 
       if (!transactionFound) throw new HttpError(
-        'Transaction not found',
+        ERROR_MESSAGES.NOT_FOUND,
         'Transaction not found',
         HTTP_STATUS.NOT_FOUND
       )
@@ -58,7 +58,7 @@ export default class transfersController {
 
       if (!sourceAccountFound) {
         throw new HttpError(
-          'Source Account not found',
+          ERROR_MESSAGES.INVALID_CREDENTIALS,
           'Source Account not found',
           HTTP_STATUS.NOT_FOUND
         )
@@ -71,7 +71,7 @@ export default class transfersController {
 
       if (requestingUser.id !== sourceAccountData.user.dataValues.auth.dataValues.id) {
         throw new HttpError(
-          'You are not allowed to perform this action',
+          ERROR_MESSAGES.INVALID_CREDENTIALS,
           'You are not allowed to perform this action',
           HTTP_STATUS.CONFLICT
         )
@@ -82,7 +82,7 @@ export default class transfersController {
 
       if (!destinationAccountFound) {
         throw new HttpError(
-          'Destination Account not found',
+          ERROR_MESSAGES.ALIAS_NOT_FOUND,
           'Destination Account not found',
           HTTP_STATUS.NOT_FOUND
         )
@@ -93,7 +93,7 @@ export default class transfersController {
 
       if (sourceAccountData.id === destinationAccountFound.id) {
         throw new HttpError(
-          'The source and the destination account are the same',
+          ERROR_MESSAGES.ACCOUNTS_VALIDATION_ERROR,
           'The source and the destination account are the same',
           HTTP_STATUS.BAD_REQUEST
         )
@@ -101,7 +101,7 @@ export default class transfersController {
 
       if (sourceAccountData.balance < amount) {
         throw new HttpError(
-          'Insufficient funds',
+          ERROR_MESSAGES.INSUFFICIENT_FUNDS,
           'Insufficient funds',
           HTTP_STATUS.FORBIDDEN
         )

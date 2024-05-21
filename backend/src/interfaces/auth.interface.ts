@@ -5,7 +5,8 @@ export interface IAuth extends ICommon {
   email: string;
   password: string;
   role: string;
-  activationCode: `${string}-${string}-${string}-${string}`;
+  activationCode: `${string}-${string}-${string}-${string}` | null;
+  attempts: number;
   status: boolean;
 }
 
@@ -13,7 +14,6 @@ export interface ISign {
   id: IAuth['id'];
   email: string;
   password: string;
-  activationCode?: IAuth['activationCode'];
 }
 
 export type ITokenPayload = {

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import bankAccountService from '../services/bankAccount.services'
-import { HTTP_STATUS } from '../config/constants'
+import { ERROR_MESSAGES, HTTP_STATUS } from '../config/constants'
 import HttpError from '../utils/HttpError.utils'
 import apiSuccessResponse from '../utils/apiResponse.utils'
 import { IAccountData, IBankAccount } from '../interfaces/bankAccount.interface'
@@ -29,7 +29,7 @@ export default class bankAccountController {
 
       if (!tokenPayload || !tokenPayload.id) {
         throw new HttpError(
-          'Token payload error',
+          ERROR_MESSAGES.TOKEN_ERROR,
           'Token payload error',
           HTTP_STATUS.FORBIDDEN
         )
@@ -40,7 +40,7 @@ export default class bankAccountController {
 
       if (!accountFound) {
         throw new HttpError(
-          'Account not found',
+          ERROR_MESSAGES.INVALID_CREDENTIALS,
           'Account not found',
           HTTP_STATUS.NOT_FOUND
         )
@@ -51,7 +51,7 @@ export default class bankAccountController {
 
       if (accountData.user.auth.id !== tokenPayload.id) {
         throw new HttpError(
-          'Conflict',
+          ERROR_MESSAGES.INVALID_CREDENTIALS,
           'Conclict with bank account and id from the token payload',
           HTTP_STATUS.CONFLICT
         )
@@ -59,7 +59,7 @@ export default class bankAccountController {
 
       if (!amount || amount <= 0) {
         throw new HttpError(
-          'Must provide an amount',
+          ERROR_MESSAGES.NO_AMOUNT,
           'Amount not found',
           HTTP_STATUS.BAD_REQUEST
         )

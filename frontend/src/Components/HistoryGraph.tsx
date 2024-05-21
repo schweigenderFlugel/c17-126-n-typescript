@@ -2,7 +2,7 @@ import { LineChart } from '@tremor/react';
 import { chartData } from '../data/chartData';
 import { IAnualHistorial } from '../Interfaces/user.interface';
 
-const dataFormatter = number =>
+const dataFormatter = (number: number | bigint) =>
   `$${Intl.NumberFormat('us').format(number).toString()}`;
 
 export function HistoryGraph({ anual_historial }: { anual_historial: IAnualHistorial[] | undefined }) {

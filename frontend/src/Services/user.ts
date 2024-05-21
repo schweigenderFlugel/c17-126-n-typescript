@@ -1,11 +1,29 @@
 import { AxiosResponse } from 'axios'
 import { Axios, AxiosAuth } from './axios'
-import { IChangePassword, ICreateUserPayload, ILoginPayload, ISignUpPayload, UserSettingsType } from '../Interfaces/auth.interface'
+import { 
+  IChangePassword, 
+  ICreateUserPayload, 
+  ISign,
+  UserSettingsType 
+} from '../Interfaces/auth.interface'
 import { IUser } from '../Interfaces/user.interface'
 
 const controller = new AbortController()
 
-export const login = async (payload: ILoginPayload): Promise<{ accessToken: string }> => {
+export const signup = async (
+  payload: Omit<ISign, 'activationCode'>
+): Promise<void> => {
+  await Axios({
+    method: 'POST',
+    url: '/auth/signup',
+    data: payload,
+    signal: controller.signal,
+  })
+}
+
+export const login = async (
+  payload: Omit<ISign, 'activationCode'>
+): Promise<{ accessToken: string }> => {
   const res: AxiosResponse<{ accessToken: string }> = await AxiosAuth({
     method: 'POST',
     url: '/auth/login',
@@ -15,16 +33,22 @@ export const login = async (payload: ILoginPayload): Promise<{ accessToken: stri
   return res.data;
 }
 
-export const signup = async (payload: ISignUpPayload): Promise<void> => {
-  await Axios({
+export const activate = async ( 
+  email: ISign['email'] | null, activationCode: ISign['activationCode'] | null,
+): Promise<{ accessToken: string }> => {
+  console.log(activationCode)
+  const res: AxiosResponse<{ accessToken: string }> = await AxiosAuth({
     method: 'POST',
-    url: '/auth/signup',
-    data: payload,
+    url: '/auth/activate',
+    data: { email, activationCode }, 
     signal: controller.signal,
   })
+  return res.data;
 }
 
-export const forgotPassword = async (payload: Omit<ISignUpPayload, 'id'>): Promise<{ recoveryToken : string}> => {
+export const forgotPassword = async (
+  payload: Omit<Omit<ISign, 'id'>, 'activationCode'>
+): Promise<{ recoveryToken : string}> => {
   const res: AxiosResponse<{ recoveryToken: string }> = await Axios({
     method: 'POST',
     url: '/auth/forgot-password',
@@ -34,7 +58,7 @@ export const forgotPassword = async (payload: Omit<ISignUpPayload, 'id'>): Promi
   return res.data;
 }
 
-export const changePassword = async (id: number, payload: IChangePassword) => {
+export const changePassword = async (id: string, payload: IChangePassword) => {
   const res: AxiosResponse<{ recoveryToken: string }> = await Axios({
     method: 'PUT',
     url: `/auth/change-password/${id}`,
@@ -93,7 +117,7 @@ export const createUser = async (payload: ICreateUserPayload): Promise<void> => 
   })
 }
 
-export const updateUser = async (id: number | undefined, payload: UserSettingsType): Promise<void> => {
+export const updateUser = async (id: string, payload: UserSettingsType): Promise<void> => {
   await Axios({
     method: 'PUT',
     url: `/user/${id}`,

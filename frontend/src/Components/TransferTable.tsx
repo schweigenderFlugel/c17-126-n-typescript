@@ -1,30 +1,30 @@
 import { HiChevronLeft, HiChevronRight } from 'react-icons/hi2';
 import { TableRow } from './TransferRow';
 import { 
-  IBankAccount, 
-  ITransactionReceived, 
-  ITransactionSent, 
+  ITransactionsReceived, 
+  ITransactionsSent, 
   ITransactionsTable 
-} from '../Interfaces/user.interface';
-import { MONTHS } from '../data/enums';
+} from '../Interfaces/transactions.interface';
+import { IBankAccount } from '../Interfaces/user.interface';
+import { setMonth } from '../data/months';
 
 export const TransferTable = ({ 
   sent,
   received,
   bank_account 
 }: { 
-  sent: ITransactionSent[]
-  received: ITransactionReceived[],
+  sent: ITransactionsSent[]
+  received: ITransactionsReceived[],
   bank_account: IBankAccount | undefined
 }) => {
 
   let transactionsTable: ITransactionsTable[] = [];
   
-  sent.forEach((item: ITransactionSent) => {
+  sent.forEach((item: ITransactionsSent) => {
     transactionsTable.push(item)
   })
   
-  received.forEach((item: ITransactionReceived) => {
+  received.forEach((item: ITransactionsReceived) => {
     transactionsTable.push(item);
   })
 
@@ -41,50 +41,12 @@ export const TransferTable = ({
         ({ destination_account, id, amount, from, to, date_transaction }) => {
           const isReceived = destination_account === bank_account?.id;
           const year = parseInt(date_transaction.substring(0, 4));
+
           const monthNumber = parseInt(date_transaction.substring(5, 7))
+          const month = setMonth(monthNumber);
+
           const day = parseInt(date_transaction.substring(8, 10))
-          let month: string;
-          switch (monthNumber) {
-            case 1:
-              month = MONTHS.JANUARY;
-              break;
-            case 2: 
-              month = MONTHS.FEBRUARY;
-              break;
-            case 3:
-              month = MONTHS.MARCH;
-              break;
-            case 4: 
-              month = MONTHS.APRIL;
-              break;
-            case 5:
-              month = MONTHS.MAY;
-              break;
-            case 6: 
-              month = MONTHS.JUNE;
-              break;
-            case 7:
-              month = MONTHS.JULY;
-              break;
-            case 8: 
-              month = MONTHS.AUGUST;
-              break;
-            case 9:
-              month = MONTHS.SEPTEMBER;
-              break;
-            case 10: 
-              month = MONTHS.OCTOBER;
-              break;
-            case 11:
-              month = MONTHS.NOVEMBER;
-              break;
-            case 12: 
-              month = MONTHS.DECEMBER;
-              break;
-            default: 
-              month = 'Invalid month';
-              break;
-          }
+          
           const dateTransaction  = `${day} de ${month}, ${year}`
           const timeTransaction =  date_transaction.substring(11, 16)
           const nameDisplayed = isReceived

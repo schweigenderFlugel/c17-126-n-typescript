@@ -52,7 +52,7 @@ export const Settings = () => {
     try {
       formValues.min_ammount_transfers = parseInt(formValues.min_ammount_transfers as unknown as string);
       formValues.max_ammount_transfers = parseInt(formValues.max_ammount_transfers as unknown as string);
-      updateUser(userData?.id, formValues);
+      updateUser(userData?.id ?? '', formValues);
       toast('Actualizado', {
         icon: '👋',
       });

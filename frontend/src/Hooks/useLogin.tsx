@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { AxiosError } from 'axios';
 import { login } from '../Services/user';
-import { ILoginPayload } from '../Interfaces/auth.interface'; 
+import { ISign} from '../Interfaces/auth.interface'; 
 import { useAuth } from './useAuth';
 
 type options = {
@@ -13,7 +13,7 @@ export const useLogin = ({ onSuccess, onReject }: options) => {
   const { setAccessToken, setLoadingUser } = useAuth();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const setLogin = async (payload: ILoginPayload) => {
+  const setLogin = async (payload: Omit<ISign, 'activationCode'>) => {
     setIsLoading(true);
     await login(payload)
       .then(res => {

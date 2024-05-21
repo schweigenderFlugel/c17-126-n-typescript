@@ -6,7 +6,7 @@ import { IAuth, INewAuthResponse, ISign, ITokenPayload, IUpdateAuth } from '../i
 import { createHash, isValidPassword } from '../utils/bcrypt.utils'
 import authService from '../services/auth.services'
 import apiSuccessResponse from '../utils/apiResponse.utils'
-import { HTTP_STATUS, envs } from '../config/constants'
+import { ERROR_MESSAGES, HTTP_STATUS, envs } from '../config/constants'
 import HttpError from '../utils/HttpError.utils'
 import CookiesUtils from '../utils/cookies.utils';
 import JwtUtils from '../utils/jwt.utils'
@@ -82,14 +82,14 @@ export default class authsController {
       const userAgent = req.headers['user-agent'] ?? 'unknown';
       const activationCode = CodeUtils.generateActivationCode();
       if (jwtCookie) throw new HttpError(
-        'Session open', 
+        ERROR_MESSAGES.SESSION_OPEN, 
         'Cookie is still existing', 
         HTTP_STATUS.BAD_REQUEST,
       )
       const payload: ISign = req.body;
       const authFound = await authService.getAuthByEmail(payload.email)
       if (!authFound) throw new HttpError(
-        'Invalid Credentials',
+        ERROR_MESSAGES.INVALID_CREDENTIALS,
         'Auth not found',
         HTTP_STATUS.NOT_FOUND
       )
@@ -97,21 +97,38 @@ export default class authsController {
         authFound.password,
         payload.password
       )
-      if (!validPassword) throw new HttpError(
-        'Invalid Credentials',
-        'Must provide valid credentials',
-        HTTP_STATUS.UNAUTHORIZED
-      )
+      if (!validPassword) {
+        const attemptsPayload: Partial<IAuth> = { 
+          attempts: authFound.attempts + 1
+        };
+        await authService.updateAuth(authFound.id, attemptsPayload);
+        const { id, attempts } = await authService.getAuthById(authFound.id);
+        
+        if (attempts <= 5) throw new HttpError(
+          ERROR_MESSAGES.INVALID_CREDENTIALS,
+          'Must provide valid credentials',
+          HTTP_STATUS.UNAUTHORIZED
+        )
+        else {
+          await authsController.block(id)
+          throw new HttpError(
+            ERROR_MESSAGES.AUTH_BLOCKED,
+            'Number of attempts exceeded',
+            HTTP_STATUS.UNAUTHORIZED
+          )
+        }
+      }
+
       if (authFound.status === false) {
         const updatePayload: Partial<IAuth> = {
           activationCode: activationCode,
         }
-        await authService.updateAuth(authFound.id, updatePayload)
+        await authService.updateAuth(authFound.id, updatePayload);
         throw new HttpError(
-          'The authentication is not activ',
-          'The authentication is not activ',
+          ERROR_MESSAGES.NOT_ACTIVE,
+          'The account must be activ',
           HTTP_STATUS.FORBIDDEN,
-        )
+        );
       }
       const tokenPayload: ITokenPayload = {
         id: authFound.id,
@@ -120,7 +137,9 @@ export default class authsController {
       const accessToken = await JwtUtils.generateToken(tokenPayload);
       const refreshToken = await JwtUtils.generateRefreshToken(tokenPayload);
       const sessionsFound = await sessionService.getSessionsByAuthId(authFound.id);
-      const sessionFiltered = sessionsFound.find(session => session.userAgent === userAgent);
+      const sessionFiltered = sessionsFound.find(session => 
+        session.userAgent === userAgent
+      );
       const updateSessionPayload: Partial<ISession> = {
         refreshToken: refreshToken,
         lastEntry: new Date(),
@@ -132,13 +151,82 @@ export default class authsController {
         userAgent: userAgent,
         lastEntry: new Date(),
       }
+      const attemptsPayload: Partial<IAuth> = { 
+        attempts: 0
+      };
+      await authService.updateAuth(authFound.id, attemptsPayload);
       if (sessionFiltered) sessionService.updateSession(sessionFiltered.id, updateSessionPayload)
       else sessionService.createSession(newSessionPayload);
-      await CookiesUtils.setJwtCookie(cookieName, res, refreshToken)
-      console.log(activationCode);
-      res.status(HTTP_STATUS.OK).json({ accessToken, refreshToken })
+      await CookiesUtils.setJwtCookie(cookieName, res, refreshToken);
+      res.status(HTTP_STATUS.OK).json({ accessToken })
     } catch (err: any) {
       next(err)
+    }
+  }
+
+  /**
+   * Activate an existing user.
+   *
+   * @param {Request} req - the request object containing auth id
+   * @param {Response} res - a message of activation sucessfully 
+   * @param {NextFunction} next - the next middleware function
+   * @return {Promise<void>} - a promise that resolves when the auth is activated
+   */
+  static async activate(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const userAgent = req.headers['user-agent'] ?? 'unknown';
+      const { email, activationCode } = req.body as IAuth;
+      const authFound = await authService.getAuthByEmail(email);
+
+      if (!authFound) throw new HttpError(
+        ERROR_MESSAGES.INVALID_CREDENTIALS,
+        'Auth not found',
+        HTTP_STATUS.NOT_FOUND
+      )
+
+      if (authFound.status === true) throw new HttpError(
+        ERROR_MESSAGES.ACTIVE,
+        'The auth is already activated',
+        HTTP_STATUS.NOT_ACCEPTABLE,
+      )
+
+      if (authFound.activationCode != activationCode) throw new HttpError(
+        ERROR_MESSAGES.INVALID_CODE,
+        'Activation code invalid',
+        HTTP_STATUS.FORBIDDEN,
+      )
+
+      const activatePayload: Partial<IAuth> = {
+        activationCode: null,
+        status: true,
+      }
+
+      const tokenPayload: ITokenPayload = {
+        id: authFound.id,
+        role: authFound.role,
+      }
+
+      await authService.updateAuth(authFound.id, activatePayload);
+      const accessToken = await JwtUtils.generateToken(tokenPayload);
+      const refreshToken = await JwtUtils.generateRefreshToken(tokenPayload);
+
+      const newSessionPayload: ISession = {
+        id: crypto.randomUUID(),
+        authId: authFound.id,
+        refreshToken: refreshToken,
+        userAgent: userAgent,
+        lastEntry: new Date(),
+      }
+
+      sessionService.createSession(newSessionPayload);
+      await CookiesUtils.setJwtCookie(cookieName, res, refreshToken);
+      res.status(HTTP_STATUS.OK).json({ accessToken });
+    } catch (error: any) {
+      next(error)
     }
   }
 
@@ -159,7 +247,7 @@ export default class authsController {
       const jwtCookie = req.cookies[cookieName];
       const userAgent = req.headers['user-agent'] ?? 'unknown';
       if (!jwtCookie) throw new HttpError(
-        'Refresh token not found', 
+        ERROR_MESSAGES.SESSION_NOT_FOUND, 
         'Refresh token should exist to refresh', 
         HTTP_STATUS.NOT_FOUND
       )
@@ -168,7 +256,7 @@ export default class authsController {
       if (!authFound) {
         await CookiesUtils.removeJwtCookie(cookieName, res);
         throw new HttpError(
-          'Invalid Credentials',
+          ERROR_MESSAGES.INVALID_CREDENTIALS,
           'Auth not Found',
           HTTP_STATUS.NOT_FOUND,
         )
@@ -225,17 +313,17 @@ export default class authsController {
       const body: IUpdateAuth = req.body
       const authFound = await authService.getAuthById(id);
       if (!tokenPayload || !tokenPayload.id) throw new HttpError(
-        'Token payload error',
+        ERROR_MESSAGES.TOKEN_ERROR,
         'Token payload error',
         HTTP_STATUS.FORBIDDEN
       )
       if(!authFound) throw new HttpError(
-        'User not found',
-        'User not found',
+        ERROR_MESSAGES.INVALID_CREDENTIALS,
+        'Auth not found',
         HTTP_STATUS.NOT_FOUND
       )
       if (authFound.id != tokenPayload.id) throw new HttpError(
-        'You are not allowed to perform this action',
+        ERROR_MESSAGES.INVALID_CREDENTIALS,
         'Conflict with id and the id from token payload',
         HTTP_STATUS.CONFLICT
       )
@@ -244,12 +332,12 @@ export default class authsController {
         body.currentPassword
       )
       if (!validPassword) throw new HttpError(
-        'You are not allowed to perform this action',
+        ERROR_MESSAGES.INVALID_CREDENTIALS,
         'The password is invalid',
         HTTP_STATUS.UNAUTHORIZED
       )
       if (body.currentPassword === body.newPassword) throw new HttpError(
-        'The password should not be the same',
+        ERROR_MESSAGES.SAME_PASSWORD,
         'The password should not be the same',
         HTTP_STATUS.NOT_ACCEPTABLE
       )
@@ -281,7 +369,7 @@ export default class authsController {
       const payload: ISign = req.body;
       const authFound = await authService.getAuthByEmail(payload.email);
       if(!authFound) throw new HttpError(
-        'User not found',
+        ERROR_MESSAGES.INVALID_CREDENTIALS,
         'User not found',
         HTTP_STATUS.NOT_FOUND
       )
@@ -293,6 +381,18 @@ export default class authsController {
     } catch (error) {
       next(error);
     }
+  }
+
+  /**
+   * 
+   * @param {IAuth['id']} id - the email of the authentication
+   * @return {Promise<void>} - a promise that resolves when the user is blocked
+   */
+  static async block(id: IAuth['id']): Promise<void> {
+    const updatePayload: Partial<IAuth> = {
+      status: false,
+    }
+    await authService.updateAuth(id, updatePayload);
   }
 
   /**
@@ -312,7 +412,7 @@ export default class authsController {
       const jwtCookie = req.cookies[cookieName]
       const userAgent = req.headers['user-agent'] ?? 'unknown';
       if (!jwtCookie) throw new HttpError(
-        'Cookie not found',
+        ERROR_MESSAGES.SESSION_NOT_FOUND,
         'Cookie should exist to logout',
         HTTP_STATUS.NOT_FOUND
       )

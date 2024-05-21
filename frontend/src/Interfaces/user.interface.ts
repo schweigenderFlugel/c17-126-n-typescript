@@ -1,5 +1,7 @@
+import { ITransactions } from "./transactions.interface";
+
 export interface IUser {
-  id: number;
+  id: string;
   name: string;
   lastname: string;
   avatar: string | null;
@@ -7,12 +9,21 @@ export interface IUser {
   alias: string;
   address: string;
   phone: string;
-  auth: {
-    id: number;
-    email: string;
-  };
+  auth: IAuth;
   preference: IPreference;
   bank_account: IBankAccount;
+}
+
+export interface IUserRelated {
+  user: {
+    name: string;
+    lastname: string;
+  }
+}
+
+export interface IAuth {
+  id: string;
+  email: string;
 }
 
 export interface IPreference {
@@ -21,7 +32,7 @@ export interface IPreference {
 }
 
 export interface IBankAccount {
-  id: number;
+  id: string;
   number_account: string;
   balance: number;
   expenses: number;
@@ -60,64 +71,6 @@ export interface IHistorial {
   balance: number;
   expenses: number;
   investments: number;
-  transactions: ITransactions,
+  transactions: ITransactions;
 }
 
-export interface ITransactions {
-  sent: ITransactionSent[] | null;
-  received: ITransactionReceived[] | null;
-}
-
-export interface ITransactionSent {
-  id: number;
-  source_account: number;
-  destination_account: number;
-  amount: number;
-  date_transaction: string;
-  month: number;
-  year: number;
-  to: {
-    user: {
-      name: string;
-      lastname: string;
-    }
-  }
-}
-
-export interface ITransactionReceived {
-  id: number;
-  source_account: number;
-  destination_account: number;
-  amount: number;
-  date_transaction: string;
-  month: number;
-  year: number;
-  from: {
-    user: {
-      name: string;
-      lastname: string;
-    }
-  }
-}
-
-export interface ITransactionsTable {
-  id: number;
-  source_account: number;
-  destination_account: number;
-  amount: number;
-  date_transaction: string;
-  month: number;
-  year: number;
-  to?: {
-    user: {
-      name: string;
-      lastname: string;
-    }
-  },
-  from?: {
-    user: {
-      name: string;
-      lastname: string;
-    }
-  }
-}

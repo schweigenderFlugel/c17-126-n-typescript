@@ -8,9 +8,12 @@ import { AuthFormContainer } from '../Components/AuthFormContainer';
 import { AuthFormRow } from '../Components/AuthFormRow';
 import { ButtonAuthForm } from '../Components/ButtonAuthForm';
 import { useAuth } from '../Hooks/useAuth';
+import { ServerErrorResponse } from '../Interfaces/error.interface';
+import { ERROR_MESSAGES } from '../data/enums';
 
 export const Login = () => {
-  const [email, setEmail] = useState<string>('');
+  const { setEmailToActivate } = useAuth()
+  const [ email, setEmail ] = useState<string>('')
   const [password, setPassword] = useState<string>('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
@@ -18,33 +21,47 @@ export const Login = () => {
 
   const { accessToken, setLoadingUser } = useAuth();
 
-  const onLoginError = (serverError: AxiosError) => {
-    let error: string;
-    if (serverError.response?.status === 401) {
-      error = 'Datos inválidos';
-    } else if (serverError.response?.status === 404) {
-      error = 'Usuario no encontrado';
+  const onLoginError = (serverError: AxiosError<ServerErrorResponse>) => {
+    if (
+      serverError.response?.status === 401 && 
+      serverError.response.data.error.message === ERROR_MESSAGES.INVALID_CREDENTIALS
+    ) {
+      const error = 'Datos inválidos';
+      toast.error(error);
+    } else if (
+      serverError.response?.status === 403 &&
+      serverError.response.data.error.message === ERROR_MESSAGES.NOT_ACTIVE
+    ) {
+      navigate('/activar', { replace: true })
+    } else if (
+      serverError.response?.status === 404 &&
+      serverError.response.data.error.message === ERROR_MESSAGES.INVALID_CREDENTIALS
+    ) {
+      const error = 'Usuario no encontrado';
+      toast.error(error);
     } else {
-      error = 'Error desconocido';
+      const error = 'Error desconocido';
+      toast.error(error);
     }
-    toast.error(error);
   };
 
   const { setLogin, isLoading, setIsLoading } = useLogin({
     onSuccess: () => {
       setLoadingUser(true);
+      setEmailToActivate(null);
       toast('Bienvenido', {
         icon: '👋',
       })
     },
     onReject: error => {
       setIsLoading(false)
-      onLoginError(error)
+      onLoginError(error as AxiosError<ServerErrorResponse>)
     },
   });
 
   const handleSubmit = e => {
     e.preventDefault();
+    setEmailToActivate(email);
     setLogin({ email, password });
   };
 

@@ -44,3 +44,23 @@ export enum TRANSACTION_STATUS {
   SUCCESS = 'success',
   FAILED = 'failed',
 }
+
+export enum ERROR_MESSAGES {
+  SAME_PASSWORD = 'Passwords equal',
+  INVALID_CREDENTIALS = 'Invalid credentials',
+  VALIDATION_ERROR = 'Validation error',
+  SESSION_OPEN = 'Session open',
+  AUTH_BLOCKED = 'Auth blocked',
+  NOT_ACTIVE = 'Authentication not activ',
+  ACTIVE = 'Authentication already activ',
+  INVALID_CODE = 'Invalid code',
+  SESSION_NOT_FOUND = 'Session not found',
+  TOKEN_ERROR = 'Token error',
+  NOT_LOGGED_IN = 'Not logged in',
+  USER_EXISTS = 'User exists',
+  ALIAS_NOT_FOUND = 'Alias not found',
+  NOT_FOUND = 'Not Found',
+  ACCOUNTS_VALIDATION_ERROR = 'Accounts validation error',
+  INSUFFICIENT_FUNDS = 'Insufficient funds',
+  NO_AMOUNT = 'No amount',
+}

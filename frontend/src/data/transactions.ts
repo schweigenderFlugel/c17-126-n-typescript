@@ -1,12 +1,12 @@
+import { IBankAccount } from "../Interfaces/user.interface";
 import { 
-  IBankAccount, 
-  ITransactionReceived, 
-  ITransactionSent 
-} from "../Interfaces/user.interface";
+  ITransactionsReceived, 
+  ITransactionsSent 
+} from "../Interfaces/transactions.interface";
 
 export const transactions = (bank_account: IBankAccount | undefined ) => {
-  let sent: ITransactionSent[] = [];
-  let received: ITransactionReceived[] = [];
+  let sent: ITransactionsSent[] = [];
+  let received: ITransactionsReceived[] = [];
     
   bank_account?.anual_historial.forEach(anual => {
     anual.month.jan?.transactions.received?.forEach(item => {

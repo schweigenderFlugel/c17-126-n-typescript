@@ -1,7 +1,5 @@
-import * as crypto from "node:crypto"
 import { IAuth } from "../../../interfaces/auth.interface";
 import { Auth, Roles } from "../entity/auth.entity";
-import CodeUtils from "../../../utils/activation-code.utils";
 
 interface AuthFixture extends Omit<Omit<Omit<IAuth, 'activationCode'>, 'createdAt'>, 'updatedAt'> {
   activation_code: IAuth['activationCode'] | null;
@@ -9,14 +7,13 @@ interface AuthFixture extends Omit<Omit<Omit<IAuth, 'activationCode'>, 'createdA
   updated_at: Date;
 }
 
-const activationCode = CodeUtils.generateActivationCode();
-
 export const adminAuth: AuthFixture = {
   id: '186e2c17-b6de-4b13-bd13-e8363a8e2dbb',
   email: 'admin@email.com',
   password: "$2b$10$tdC6oY4E3/xyudIx6oNN5uolD..TU3ZEcgH9nSY2DlIaKIraqL9aa",
   role: Roles.ADMIN,
   activation_code: null,
+  attempts: 0,
   status: true,
   created_at: new Date(),
   updated_at: new Date(),
@@ -28,6 +25,7 @@ export const normalAuth: AuthFixture = {
   password: "$2b$10$bzSTwaSVLykm.Wzho4lW5uy8ARdHiFKNT2LytUujufPd1o/EKZKxW",
   role: Roles.NORMAL,
   activation_code: null,
+  attempts: 0,
   status: true,
   created_at: new Date(),
   updated_at: new Date(),
@@ -39,6 +37,7 @@ export const authWithoutUser: AuthFixture = {
   password: "$2b$10$85FoRWGIr7Z1Zyo5HHHA5O1a0RzC/oDvG3t/kjQSAblO3ZGGAJ1Nu",
   role: Roles.NORMAL,
   activation_code: null,
+  attempts: 0,
   status: true,
   created_at: new Date(),
   updated_at: new Date(),
@@ -50,6 +49,7 @@ export const authToLogout: AuthFixture = {
   password: '$2b$10$uACrSGlH/N60MdsxMs6eS.V5cKiaWy3SltI4YIXT.8LOeYxvABNGy',
   role: Roles.NORMAL,
   activation_code: null,
+  attempts: 0,
   status: true,
   created_at: new Date(),
   updated_at: new Date(),
@@ -60,8 +60,33 @@ export const unactivatedAuth: AuthFixture = {
   email: 'unactivated@email.com',
   password: '$2b$10$J6xz1mX2V.S0fotZwQIT9.6HZRTwsqRDEsT3zUzFu1x4RDjIaq.j6',
   role: Roles.NORMAL,
-  activation_code: activationCode,
+  activation_code: null,
+  attempts: 0,
   status: false,
+  created_at: new Date(),
+  updated_at: new Date(),
+}
+
+export const authToActivate: AuthFixture = {
+  id: '6cf65c30-e6e5-491e-92cc-eaa2ebb820c1',
+  email: 'toactivate@email.com',
+  password: '$2b$10$cCGuvnW5RU.6gUYd3xHhLeruLVugznf1Uer.vMCwTJUn6Td7Q.vaW',
+  role: Roles.NORMAL,
+  activation_code: 'LPNB-Z4Z5-FPTK-1LTS',
+  attempts: 0,
+  status: false,
+  created_at: new Date(),
+  updated_at: new Date(),
+}
+
+export const authToBlock: AuthFixture = {
+  id: '8ac5b7f3-dd41-4d5b-83a9-84df82d2ce82',
+  email: 'toblock@email.com',
+  password: '$2b$10$1Z1SNaAaQm3NGVTNGozpA.PDwGYIc0tfiAdy7j2YN2D30l2D0tVm6',
+  role: Roles.NORMAL,
+  activation_code: null,
+  attempts: 5,
+  status: true,
   created_at: new Date(),
   updated_at: new Date(),
 }
@@ -92,7 +117,15 @@ export const authToLogoutRefreshToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.ey
 
 export const expiredRefreshToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImI4ZjQ5OTJiLWRhNjQtNGJkOS05MDE3LWQwNzExMzJjMDc0NyIsInJvbGUiOiJub3JtYWwiLCJpYXQiOjE3MTYyMzU3OTYsImV4cCI6MTcxNjIzNTgxMX0.6SHY3r2YQlKlG1Lg1pczbiJ2kxMQAcXRYUFwnmlhS18";
 
-const authFixtures = [adminAuth, normalAuth, authWithoutUser, authToLogout, unactivatedAuth];
+const authFixtures = [
+  adminAuth, 
+  normalAuth, 
+  authWithoutUser, 
+  authToLogout, 
+  unactivatedAuth, 
+  authToActivate,
+  authToBlock,
+];
 
 export function up({context}: any) {
   return context.bulkInsert(Auth.getTableName(), authFixtures);

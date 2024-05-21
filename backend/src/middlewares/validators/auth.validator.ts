@@ -26,6 +26,15 @@ export const loginSchema = z.object({
     .trim(),
 })
 
+export const activateSchema = z.object({
+  email: z
+    .string()
+    .trim()
+    .email('it should be a valid email')
+    .min(1, 'Email is required'),
+  activationCode: z.string().trim()
+})
+
 export const recoverySchema = z.object({
   email: z
     .string()
