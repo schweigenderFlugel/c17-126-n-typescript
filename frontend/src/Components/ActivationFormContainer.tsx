@@ -1,13 +1,13 @@
 import { PropsWithChildren } from 'react';
 
-type AuthFormContainerProps = {
+type NormalContainerProps = {
   subtitle: string;
 };
 
-export const ActivationFormContainer = ({
+export const NormalContainer = ({
   children,
   subtitle,
-}: PropsWithChildren<AuthFormContainerProps>) => {
+}: PropsWithChildren<NormalContainerProps>) => {
   return (
     <main className="justify-items-center border-indigo-200 dark:border-indigo-500 grid bg-white dark:bg-black bg-opacity-25 dark:bg-opacity-25 mx-6 p-12 max-sm:p-8 border rounded-2xl w-[450px]">
       <h2 className="mt-2 mb-4 text-center text-lg dark:text-white">

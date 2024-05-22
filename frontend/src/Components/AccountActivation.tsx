@@ -7,12 +7,12 @@ import { ICodeBlocks, ISign } from "../Interfaces/auth.interface";
 import { activate } from "../Services/user";
 import { useAuth } from "../Hooks/useAuth";
 import { ButtonAuthForm } from "../Components/ButtonAuthForm";
-import { ActivationFormContainer } from "../Components/ActivationFormContainer";
+import { NormalContainer } from "../Components/ActivationFormContainer";
 import { ERROR_MESSAGES } from "../data/enums";
 import { ServerErrorResponse } from "../Interfaces/error.interface";
 
-export const ActivationForm = () => {
-  const { emailToActivate, setEmailToActivate, setLoadingUser, setUpdateData, setAccessToken } = useAuth()
+export const ActivationForm = ({ email }: { email: ISign['email']}) => {
+  const { setLoadingUser, setUpdateData, setAccessToken } = useAuth()
   const [showCode, setShowCode] = useState<boolean>(false);
   const [inputError, setInputError] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -55,7 +55,6 @@ export const ActivationForm = () => {
   }, [formValues])
 
   const handleReset = () => {
-    setEmailToActivate(null);
     setFormValues(initialValue);
     setActivationCode(null);
   }
@@ -74,14 +73,13 @@ export const ActivationForm = () => {
     e.preventDefault();
     activationCode === activationCode?.toUpperCase()
     try {
+      const { accessToken } = await activate(email, activationCode);
       setIsLoading(true);
       setLoadingUser(true);
-      const { accessToken } = await activate(emailToActivate, activationCode);
       setAccessToken(accessToken);
       setUpdateData(true);
       setActivationCode(null);
       setFormValues(initialValue);
-      setEmailToActivate(null);
     } catch (error) {
       onActivationError(error as AxiosError<ServerErrorResponse>)
     } finally {
@@ -91,7 +89,7 @@ export const ActivationForm = () => {
   }
 
   return(
-    <ActivationFormContainer subtitle="Debemos validar que eres tú. Te hemos enviado un código a tu correo, el cual deberás ingresar aquí">
+    <NormalContainer subtitle="Debemos validar que eres tú. Te hemos enviado un código a tu correo, el cual deberás ingresar aquí">
       <form onSubmit={handleSubmit}>
         <div className="inline-flex items-center">
           <ActivationRow
@@ -162,6 +160,6 @@ export const ActivationForm = () => {
           </button>
         </div>
       </form>
-    </ActivationFormContainer>
+    </NormalContainer>
   )
 }

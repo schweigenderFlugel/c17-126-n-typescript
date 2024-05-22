@@ -12,8 +12,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { IUser } from '../Interfaces/user.interface';
 
 interface AuthContextInterface {
-  emailToActivate: string | null;
-  setEmailToActivate: Dispatch<SetStateAction<string | null>>;
   accessToken: string | null;
   setAccessToken: Dispatch<SetStateAction<string | null>>;
   userData: IUser | null;
@@ -33,8 +31,6 @@ interface AuthProviderProps {
 }
 
 const defaultValues = {
-  emailToActivate: null,
-  setEmailToActivate: () => {},
   accessToken: null,
   setAccessToken: () => {},
   userData: null,
@@ -52,7 +48,6 @@ const defaultValues = {
 export const AuthContext = createContext<AuthContextInterface>(defaultValues);
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [emailToActivate, setEmailToActivate] = useState<string| null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [userData, setUserData] = useState<IUser | null>(null);
   const [updateData, setUpdateData] = useState<boolean>(false);
@@ -80,8 +75,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   return (
     <AuthContext.Provider
       value={{
-        emailToActivate,
-        setEmailToActivate,
         accessToken,
         setAccessToken,
         userData,

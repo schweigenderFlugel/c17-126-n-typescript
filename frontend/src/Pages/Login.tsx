@@ -7,14 +7,18 @@ import { useLogin } from '../Hooks/useLogin';
 import { AuthFormContainer } from '../Components/AuthFormContainer';
 import { AuthFormRow } from '../Components/AuthFormRow';
 import { ButtonAuthForm } from '../Components/ButtonAuthForm';
+import { ActivationForm } from '../Components/AccountActivation';
 import { useAuth } from '../Hooks/useAuth';
 import { ServerErrorResponse } from '../Interfaces/error.interface';
 import { ERROR_MESSAGES } from '../data/enums';
+import { ISign } from '../Interfaces/auth.interface';
+import { BlockedAccountMessage } from '../Components/BlockedAccountMessage';
 
 export const Login = () => {
-  const { setEmailToActivate } = useAuth()
-  const [ email, setEmail ] = useState<string>('')
-  const [password, setPassword] = useState<string>('');
+  const [email, setEmail] = useState<ISign['email']>('')
+  const [password, setPassword] = useState<ISign['password']>('');
+  const [activate, setActivate] = useState<boolean>(false)
+  const [block, setBlock] = useState<boolean>(false)
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const navigate = useNavigate();
@@ -28,11 +32,17 @@ export const Login = () => {
     ) {
       const error = 'Datos inválidos';
       toast.error(error);
+    } 
+    if (
+      serverError.response?.status === 401 && 
+      serverError.response.data.error.message === ERROR_MESSAGES.AUTH_BLOCKED
+    ) {
+      setBlock(true);
     } else if (
       serverError.response?.status === 403 &&
       serverError.response.data.error.message === ERROR_MESSAGES.NOT_ACTIVE
     ) {
-      navigate('/activar', { replace: true })
+      setActivate(true);
     } else if (
       serverError.response?.status === 404 &&
       serverError.response.data.error.message === ERROR_MESSAGES.INVALID_CREDENTIALS
@@ -48,7 +58,6 @@ export const Login = () => {
   const { setLogin, isLoading, setIsLoading } = useLogin({
     onSuccess: () => {
       setLoadingUser(true);
-      setEmailToActivate(null);
       toast('Bienvenido', {
         icon: '👋',
       })
@@ -61,7 +70,6 @@ export const Login = () => {
 
   const handleSubmit = e => {
     e.preventDefault();
-    setEmailToActivate(email);
     setLogin({ email, password });
   };
 
@@ -73,59 +81,67 @@ export const Login = () => {
 
   return (
     <>
-      <AuthFormContainer subtitle="¡Nos alegra tenerte de vuelta!">
-        <form className="w-full" onSubmit={handleSubmit}>
-          <div className="flex flex-col gap-2">
-            <AuthFormRow
-              onChange={e => setEmail(e.target.value)}
-              value={email}
-              type="email"
-              label="E-Mail"
-              key="email"
-              name="email"
-              autoComplete="email"
-              required
-              disable={isLoading}
-            />
-            <AuthFormRow
-              onChange={e => setPassword(e.target.value)}
-              value={password}
-              type={passwordInputType}
-              label="Contraseña"
-              key="password"
-              name="password"
-              autoComplete="current-password"
-              onClickPasswordBtn={() =>
-                setShowPassword(showPassword => !showPassword)
-              }
-              required
-              showPassword={showPassword}
-              disable={isLoading}
-            />
+      {!activate && !block &&
+        <AuthFormContainer subtitle="¡Nos alegra tenerte de vuelta!">
+          <form className="w-full" onSubmit={handleSubmit}>
+            <div className="flex flex-col gap-2">
+              <AuthFormRow
+                onChange={e => setEmail(e.target.value)}
+                value={email}
+                type="email"
+                label="E-Mail"
+                key="email"
+                name="email"
+                autoComplete="email"
+                required
+                disable={isLoading}
+              />
+              <AuthFormRow
+                onChange={e => setPassword(e.target.value)}
+                value={password}
+                type={passwordInputType}
+                label="Contraseña"
+                key="password"
+                name="password"
+                autoComplete="current-password"
+                onClickPasswordBtn={() =>
+                  setShowPassword(showPassword => !showPassword)
+                }
+                required
+                showPassword={showPassword}
+                disable={isLoading}
+              />
+            </div>
+            <div className="flex justify-end mt-2 mb-4 w-full">
+              <Link
+                to="../contrasena-olvidada"
+                className="text-gray-500 text-xs hover:text-gray-900 dark:text-white"
+              >
+                ¿Olvidaste la contraseña?
+              </Link>
+            </div>
+            <div className="mb-4">
+              <ButtonAuthForm
+                label="Ingresar"
+                disabled={email.length < 6 || password.length < 6}
+                isLoading={isLoading}
+              />
+            </div>
+          </form>
+          <div className="text-base text-black text-center dark:text-white">
+            <p>
+              <span className="text-base text-gray-500">¿No tenés cuenta? </span>
+              <Link to={'/registro'}>Registrate ahora</Link>
+            </p>
           </div>
-          <div className="flex justify-end mt-2 mb-4 w-full">
-            <Link
-              to="../contrasena-olvidada"
-              className="text-gray-500 text-xs hover:text-gray-900 dark:text-white"
-            >
-              ¿Olvidaste la contraseña?
-            </Link>
-          </div>
-          <div className="mb-4">
-            <ButtonAuthForm
-              label="Ingresar"
-              disabled={email.length < 6 || password.length < 6}
-              isLoading={isLoading}
-            />
-          </div>
-        </form>
-        <div className="text-base text-black text-center dark:text-white">
-          <p>
-            <span className="text-base text-gray-500">¿No tenés cuenta? </span>
-            <Link to={'/registro'}>Registrate ahora</Link>
-          </p>
-        </div>
-      </AuthFormContainer>
+        </AuthFormContainer>
+      }
+      {activate && 
+        <ActivationForm email={email} />
+      }
+      {block &&
+        <BlockedAccountMessage />
+      }
     </>
   );
 };
